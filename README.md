@@ -31,6 +31,7 @@ Read these documents first:
 - `docs/03-gameplay-foundation.md`
 - `docs/04-demo-scope.md`
 - `docs/05-handoff.md`
+- `docs/06-project-plan.md`
 
 The original PRD is preserved at:
 
