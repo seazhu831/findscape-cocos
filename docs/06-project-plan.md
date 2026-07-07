@@ -30,7 +30,35 @@ Each stage should create one GitHub issue before or during the work. The issue i
 - Done criteria.
 - Links to commits, docs, builds, screenshots, or assets.
 
-Commits should stay small enough to explain one stage or one coherent capability.
+## Commit Granularity
+
+Commits should stay small enough to explain one stage, one coherent capability, or one isolated fix.
+
+Use granular commits so the project history can answer three questions clearly:
+
+- What changed?
+- Why did it change?
+- Which issue or stage does it belong to?
+
+Commit rules:
+
+- Keep unrelated concerns in separate commits.
+- Separate documentation, scaffold setup, gameplay logic, asset imports, and generated content when they are not part of one atomic change.
+- Prefer one commit per stage output when the stage is small.
+- Split larger stages into capability commits such as schema, runtime logic, UI wiring, asset manifest, and docs.
+- Do not mix formatting-only changes with behavior changes unless the formatter is required for the touched files.
+- Do not include temporary debug files, local editor state, build output, or unrelated workspace changes.
+- Mention the stage issue in the commit body when the commit is part of an open stage.
+
+Suggested commit message shape:
+
+```text
+Short imperative summary
+
+- What changed.
+- Why it matters.
+- Issue: #N
+```
 
 ## Stage 0: Project Asset Baseline
 
