@@ -104,6 +104,8 @@ Dependencies:
 
 ## Stage 2: Cocos Project Scaffold
 
+Issue: https://github.com/seazhu831/findscape-cocos/issues/4
+
 Goal:
 
 - Create a Cocos Creator project structure suitable for Web preview and later WeChat mini game publishing.
@@ -125,6 +127,10 @@ Dependencies:
 
 - Chosen Cocos Creator version.
 - Local Cocos Creator installation or agreed generated structure.
+
+Current constraint:
+
+- The local machine does not currently expose `cocos` CLI or a visible Cocos Creator app, so the repo scaffold should avoid hand-authoring editor-generated metadata until the selected Creator version can generate it.
 
 ## Stage 3: Gameplay Data Schemas
 

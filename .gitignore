@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Cocos Creator generated folders
+cocos/library/
+cocos/local/
+cocos/temp/
+cocos/build/
+cocos/profiles/
+
+# Cocos Creator cache / import artifacts
+cocos/**/.cache/
+
+# Logs
+*.log
