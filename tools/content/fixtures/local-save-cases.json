@@ -1,0 +1,139 @@
+[
+  {
+    "name": "empty save parses from missing raw value",
+    "rawValue": null,
+    "expectedSave": {
+      "version": 1,
+      "bestByModeId": {}
+    }
+  },
+  {
+    "name": "completed result creates best and last result",
+    "initialSave": {
+      "version": 1,
+      "bestByModeId": {}
+    },
+    "result": {
+      "modeId": "hidden_object_demo",
+      "status": "completed",
+      "score": 850,
+      "foundCount": 4,
+      "totalCount": 4,
+      "accuracy01": 1,
+      "starRating": 3,
+      "completedAtUnixMs": 1783490000000
+    },
+    "expectedSave": {
+      "version": 1,
+      "bestByModeId": {
+        "hidden_object_demo": {
+          "modeId": "hidden_object_demo",
+          "bestScore": 850,
+          "bestStarRating": 3,
+          "bestAccuracy01": 1,
+          "bestFoundCount": 4,
+          "totalCount": 4,
+          "updatedAtUnixMs": 1783490000000
+        }
+      },
+      "lastResult": {
+        "modeId": "hidden_object_demo",
+        "status": "completed",
+        "score": 850
+      }
+    }
+  },
+  {
+    "name": "lower score updates last result but keeps best",
+    "initialSave": {
+      "version": 1,
+      "bestByModeId": {
+        "hidden_object_demo": {
+          "modeId": "hidden_object_demo",
+          "bestScore": 850,
+          "bestStarRating": 3,
+          "bestAccuracy01": 1,
+          "bestFoundCount": 4,
+          "totalCount": 4,
+          "updatedAtUnixMs": 1783490000000
+        }
+      }
+    },
+    "result": {
+      "modeId": "hidden_object_demo",
+      "status": "expired",
+      "score": 210,
+      "foundCount": 2,
+      "totalCount": 4,
+      "accuracy01": 0.5,
+      "starRating": 1,
+      "completedAtUnixMs": 1783490100000
+    },
+    "expectedSave": {
+      "bestByModeId": {
+        "hidden_object_demo": {
+          "bestScore": 850,
+          "updatedAtUnixMs": 1783490000000
+        }
+      },
+      "lastResult": {
+        "modeId": "hidden_object_demo",
+        "status": "expired",
+        "score": 210
+      }
+    }
+  },
+  {
+    "name": "tie score with better star rating replaces best",
+    "initialSave": {
+      "version": 1,
+      "bestByModeId": {
+        "balloon_blast_demo": {
+          "modeId": "balloon_blast_demo",
+          "bestScore": 300,
+          "bestStarRating": 1,
+          "bestAccuracy01": 0.5,
+          "bestFoundCount": 1,
+          "totalCount": 2,
+          "updatedAtUnixMs": 1783490200000
+        }
+      }
+    },
+    "result": {
+      "modeId": "balloon_blast_demo",
+      "status": "completed",
+      "score": 300,
+      "foundCount": 2,
+      "totalCount": 2,
+      "accuracy01": 0.8,
+      "starRating": 2,
+      "completedAtUnixMs": 1783490300000
+    },
+    "expectedSave": {
+      "bestByModeId": {
+        "balloon_blast_demo": {
+          "bestScore": 300,
+          "bestStarRating": 2,
+          "bestAccuracy01": 0.8,
+          "updatedAtUnixMs": 1783490300000
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid raw value falls back to empty save",
+    "rawValue": "{not json",
+    "expectedSave": {
+      "version": 1,
+      "bestByModeId": {}
+    }
+  },
+  {
+    "name": "invalid best map falls back to empty save",
+    "rawValue": "{\"version\":1,\"bestByModeId\":null}",
+    "expectedSave": {
+      "version": 1,
+      "bestByModeId": {}
+    }
+  }
+]

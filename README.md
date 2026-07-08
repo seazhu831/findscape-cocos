@@ -40,6 +40,7 @@ Read these documents first:
 - `docs/12-map-viewport.md`
 - `docs/13-round-runtime.md`
 - `docs/14-round-view-model.md`
+- `docs/15-local-save.md`
 
 The original PRD is preserved at:
 

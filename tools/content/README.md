@@ -27,3 +27,4 @@ Individual checks:
 - `npm run check:viewport`: validate map viewport coordinate fixtures.
 - `npm run check:round`: validate round runtime fixtures.
 - `npm run check:view-model`: validate HUD, target-list, timer, and settlement view-model fixtures.
+- `npm run check:save`: validate local save fixtures.
