@@ -136,6 +136,8 @@ Current constraint:
 
 ## Stage 3: Gameplay Data Schemas
 
+Issue: https://github.com/seazhu831/findscape-cocos/issues/6
+
 Goal:
 
 - Make the hidden-object foundation data-driven before building too much scene logic.

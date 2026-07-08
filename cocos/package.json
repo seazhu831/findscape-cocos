@@ -2,5 +2,8 @@
   "name": "findscape-cocos-client",
   "version": "0.1.0",
   "private": true,
-  "description": "Cocos Creator client workspace for the findscape hidden-object gameplay foundation."
+  "description": "Cocos Creator client workspace for the findscape hidden-object gameplay foundation.",
+  "scripts": {
+    "validate:config": "node ../tools/content/validate-gameplay-config.mjs assets/resources/config/demo-gameplay.json"
+  }
 }

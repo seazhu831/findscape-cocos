@@ -1,0 +1,396 @@
+{
+  "version": 1,
+  "maps": [
+    {
+      "mapId": "demo_cozy_town",
+      "name": "Demo Cozy Town",
+      "theme": "cozy-town",
+      "assetBundle": "main",
+      "backgroundAsset": "art/maps/demo_cozy_town_placeholder",
+      "worldSize": {
+        "width": 2400,
+        "height": 1600
+      },
+      "defaultCamera": {
+        "center": {
+          "x": 1200,
+          "y": 800
+        },
+        "zoom": 0.75
+      },
+      "minZoom": 0.5,
+      "maxZoom": 2,
+      "targetPointSetId": "demo_cozy_town_points"
+    }
+  ],
+  "targetTypes": [
+    {
+      "typeId": "pineapple",
+      "displayName": "Pineapple",
+      "iconAsset": "art/icons/icon_pineapple",
+      "targetAsset": "art/targets/target_pineapple",
+      "defaultFeedbackPresetId": "find_success",
+      "defaultScore": 100,
+      "tags": ["food", "hidden-object"]
+    },
+    {
+      "typeId": "balloon",
+      "displayName": "Balloon",
+      "iconAsset": "art/icons/icon_balloon",
+      "targetAsset": "art/targets/target_balloon",
+      "defaultFeedbackPresetId": "pop_success",
+      "defaultScore": 100,
+      "tags": ["toy", "pop"]
+    },
+    {
+      "typeId": "thief",
+      "displayName": "Thief",
+      "iconAsset": "art/icons/icon_thief",
+      "targetAsset": "art/targets/target_thief",
+      "defaultFeedbackPresetId": "catch_success",
+      "defaultScore": 150,
+      "tags": ["character", "catch"]
+    },
+    {
+      "typeId": "puppy",
+      "displayName": "Puppy",
+      "iconAsset": "art/icons/icon_puppy",
+      "targetAsset": "art/targets/target_puppy",
+      "defaultFeedbackPresetId": "find_success",
+      "defaultScore": 120,
+      "tags": ["animal", "hidden-object"]
+    },
+    {
+      "typeId": "gem",
+      "displayName": "Gem",
+      "iconAsset": "art/icons/icon_gem",
+      "targetAsset": "art/targets/target_gem",
+      "defaultFeedbackPresetId": "find_success",
+      "defaultScore": 130,
+      "tags": ["treasure", "hidden-object"]
+    }
+  ],
+  "targetPointSets": [
+    {
+      "targetPointSetId": "demo_cozy_town_points",
+      "mapId": "demo_cozy_town",
+      "targetPoints": [
+        {
+          "targetId": "demo_pineapple_001",
+          "mapId": "demo_cozy_town",
+          "typeId": "pineapple",
+          "position": {
+            "x": 420,
+            "y": 980
+          },
+          "hitShape": {
+            "type": "circle",
+            "radius": 42
+          },
+          "difficulty": 1,
+          "visibilityRule": "camouflaged",
+          "triggerBehavior": "tapToFind",
+          "feedbackPresetId": "find_success",
+          "reward": {
+            "score": 100,
+            "comboValue": 1
+          },
+          "tags": ["demo", "food"]
+        },
+        {
+          "targetId": "demo_pineapple_002",
+          "mapId": "demo_cozy_town",
+          "typeId": "pineapple",
+          "position": {
+            "x": 1670,
+            "y": 1160
+          },
+          "hitShape": {
+            "type": "rectangle",
+            "width": 80,
+            "height": 60
+          },
+          "difficulty": 2,
+          "visibilityRule": "camouflaged",
+          "triggerBehavior": "tapToFind",
+          "feedbackPresetId": "find_success",
+          "reward": {
+            "score": 100,
+            "comboValue": 1
+          },
+          "tags": ["demo", "food"]
+        },
+        {
+          "targetId": "demo_balloon_001",
+          "mapId": "demo_cozy_town",
+          "typeId": "balloon",
+          "position": {
+            "x": 980,
+            "y": 360
+          },
+          "hitShape": {
+            "type": "circle",
+            "radius": 55
+          },
+          "difficulty": 1,
+          "visibilityRule": "alwaysVisible",
+          "triggerBehavior": "tapToPop",
+          "feedbackPresetId": "pop_success",
+          "reward": {
+            "score": 100,
+            "comboValue": 1
+          },
+          "tags": ["demo", "pop"]
+        },
+        {
+          "targetId": "demo_balloon_002",
+          "mapId": "demo_cozy_town",
+          "typeId": "balloon",
+          "position": {
+            "x": 2040,
+            "y": 520
+          },
+          "hitShape": {
+            "type": "circle",
+            "radius": 48
+          },
+          "difficulty": 2,
+          "visibilityRule": "alwaysVisible",
+          "triggerBehavior": "tapToPop",
+          "feedbackPresetId": "pop_success",
+          "reward": {
+            "score": 100,
+            "comboValue": 1
+          },
+          "tags": ["demo", "pop"]
+        },
+        {
+          "targetId": "demo_thief_001",
+          "mapId": "demo_cozy_town",
+          "typeId": "thief",
+          "position": {
+            "x": 1320,
+            "y": 840
+          },
+          "hitShape": {
+            "type": "rectangle",
+            "width": 92,
+            "height": 128
+          },
+          "difficulty": 3,
+          "visibilityRule": "modeControlled",
+          "triggerBehavior": "tapToCatch",
+          "feedbackPresetId": "catch_success",
+          "reward": {
+            "score": 150,
+            "comboValue": 2
+          },
+          "tags": ["demo", "catch"]
+        },
+        {
+          "targetId": "demo_puppy_001",
+          "mapId": "demo_cozy_town",
+          "typeId": "puppy",
+          "position": {
+            "x": 720,
+            "y": 1340
+          },
+          "hitShape": {
+            "type": "circle",
+            "radius": 46
+          },
+          "difficulty": 2,
+          "visibilityRule": "hiddenUntilHint",
+          "triggerBehavior": "tapToFind",
+          "feedbackPresetId": "find_success",
+          "reward": {
+            "score": 120,
+            "comboValue": 1
+          },
+          "tags": ["demo", "hidden-object"]
+        },
+        {
+          "targetId": "demo_gem_001",
+          "mapId": "demo_cozy_town",
+          "typeId": "gem",
+          "position": {
+            "x": 1880,
+            "y": 1380
+          },
+          "hitShape": {
+            "type": "polygon",
+            "points": [
+              {
+                "x": -36,
+                "y": -22
+              },
+              {
+                "x": 34,
+                "y": -20
+              },
+              {
+                "x": 48,
+                "y": 20
+              },
+              {
+                "x": 0,
+                "y": 46
+              },
+              {
+                "x": -48,
+                "y": 18
+              }
+            ]
+          },
+          "difficulty": 4,
+          "visibilityRule": "camouflaged",
+          "triggerBehavior": "tapToFind",
+          "feedbackPresetId": "find_success",
+          "reward": {
+            "score": 130,
+            "comboValue": 1
+          },
+          "tags": ["demo", "treasure"]
+        }
+      ]
+    }
+  ],
+  "feedbackPresets": [
+    {
+      "feedbackPresetId": "find_success",
+      "name": "Find Success",
+      "visuals": ["ring", "sparkle", "flyToList"],
+      "soundAsset": "audio/sfx_find_success",
+      "durationMs": 700
+    },
+    {
+      "feedbackPresetId": "pop_success",
+      "name": "Pop Success",
+      "visuals": ["burst", "puff"],
+      "soundAsset": "audio/sfx_pop_success",
+      "durationMs": 500
+    },
+    {
+      "feedbackPresetId": "catch_success",
+      "name": "Catch Success",
+      "visuals": ["stamp", "sparkle"],
+      "soundAsset": "audio/sfx_catch_success",
+      "durationMs": 800
+    },
+    {
+      "feedbackPresetId": "hint_reveal",
+      "name": "Hint Reveal",
+      "visuals": ["pulse"],
+      "soundAsset": "audio/sfx_hint_reveal",
+      "durationMs": 2000
+    },
+    {
+      "feedbackPresetId": "wrong_tap",
+      "name": "Wrong Tap",
+      "visuals": ["shake"],
+      "soundAsset": "audio/sfx_wrong_tap",
+      "durationMs": 300
+    }
+  ],
+  "scoringRules": [
+    {
+      "scoringRuleId": "demo_default_scoring",
+      "correctHitScore": 100,
+      "wrongTapPenalty": 0,
+      "combo": {
+        "windowMs": 2500,
+        "bonusPerStreak": 10,
+        "maxBonus": 50
+      },
+      "timeBonus": {
+        "pointsPerSecondRemaining": 5,
+        "maxBonus": 300
+      }
+    }
+  ],
+  "tools": [
+    {
+      "toolId": "hint",
+      "name": "Hint",
+      "usesPerRound": 3,
+      "cooldownSeconds": 10,
+      "effect": "highlightTarget",
+      "durationSeconds": 2,
+      "iconAsset": "art/icons/tool_hint"
+    },
+    {
+      "toolId": "magnifier",
+      "name": "Magnifier",
+      "usesPerRound": 1,
+      "cooldownSeconds": 15,
+      "effect": "zoomArea",
+      "durationSeconds": 4,
+      "value": 1.5,
+      "iconAsset": "art/icons/tool_magnifier"
+    }
+  ],
+  "gameModes": [
+    {
+      "modeId": "hidden_object_demo",
+      "name": "Hidden Object Demo",
+      "description": "Find a small set of requested objects from the bottom target list.",
+      "mapId": "demo_cozy_town",
+      "targetSelectionRule": {
+        "type": "byCategoryCounts",
+        "countsByType": {
+          "pineapple": 2,
+          "puppy": 1,
+          "gem": 1
+        }
+      },
+      "timeLimitSeconds": 60,
+      "scoringRuleId": "demo_default_scoring",
+      "toolIds": ["hint", "magnifier"],
+      "successRule": "findAllSelectedTargets",
+      "failureRule": "timeExpired",
+      "feedbackOverrides": {}
+    },
+    {
+      "modeId": "balloon_blast_demo",
+      "name": "Balloon Blast Demo",
+      "description": "Pop all balloons using the same target point runtime.",
+      "mapId": "demo_cozy_town",
+      "targetSelectionRule": {
+        "type": "allOfType",
+        "typeId": "balloon"
+      },
+      "timeLimitSeconds": 60,
+      "scoringRuleId": "demo_default_scoring",
+      "toolIds": ["hint"],
+      "successRule": "findAllSelectedTargets",
+      "failureRule": "timeExpired",
+      "feedbackOverrides": {
+        "balloon": {
+          "triggerBehavior": "tapToPop",
+          "feedbackPresetId": "pop_success"
+        }
+      }
+    },
+    {
+      "modeId": "crime_hunt_demo",
+      "name": "Crime Hunt Demo",
+      "description": "Catch thief targets using mode-specific copy and feedback.",
+      "mapId": "demo_cozy_town",
+      "targetSelectionRule": {
+        "type": "allOfType",
+        "typeId": "thief"
+      },
+      "timeLimitSeconds": 60,
+      "scoringRuleId": "demo_default_scoring",
+      "toolIds": ["hint"],
+      "successRule": "findAllSelectedTargets",
+      "failureRule": "timeExpired",
+      "feedbackOverrides": {
+        "thief": {
+          "triggerBehavior": "tapToCatch",
+          "feedbackPresetId": "catch_success"
+        }
+      }
+    }
+  ]
+}
