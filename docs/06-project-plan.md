@@ -80,6 +80,8 @@ Dependencies:
 
 ## Stage 1: Planning And Design Pipeline
 
+Related detail issue: https://github.com/seazhu831/findscape-cocos/issues/7
+
 Goal:
 
 - Establish the working plan and Claude Design asset pipeline.
