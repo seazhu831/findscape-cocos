@@ -10,3 +10,19 @@ Planned uses:
 - Run consistency checks for asset names, target IDs, and mode references.
 
 Keep tools small and deterministic so they can be run before committing content changes.
+
+## Current Checks
+
+From `cocos/`:
+
+```sh
+npm run check:all
+```
+
+Individual checks:
+
+- `npm run validate:config`: validate gameplay config references and basic structure.
+- `npm run preview:modes`: print selected target counts for each demo mode.
+- `npm run check:hit-test`: validate target hit-test geometry fixtures.
+- `npm run check:viewport`: validate map viewport coordinate fixtures.
+- `npm run check:round`: validate round runtime fixtures.
