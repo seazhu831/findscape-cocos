@@ -165,6 +165,8 @@ Dependencies:
 
 Related prework issue: https://github.com/seazhu831/findscape-cocos/issues/8
 
+Related viewport issue: https://github.com/seazhu831/findscape-cocos/issues/9
+
 Goal:
 
 - Prove the core feel of exploring a large map.

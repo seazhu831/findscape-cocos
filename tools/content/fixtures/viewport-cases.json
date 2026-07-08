@@ -1,0 +1,179 @@
+[
+  {
+    "name": "screen center maps to viewport center",
+    "viewport": {
+      "viewSize": {
+        "width": 800,
+        "height": 600
+      },
+      "mapSize": {
+        "width": 2400,
+        "height": 1600
+      },
+      "center": {
+        "x": 1200,
+        "y": 800
+      },
+      "zoom": 1,
+      "minZoom": 0.5,
+      "maxZoom": 2
+    },
+    "screenToMap": [
+      {
+        "screenPoint": {
+          "x": 400,
+          "y": 300
+        },
+        "expected": {
+          "x": 1200,
+          "y": 800
+        }
+      },
+      {
+        "screenPoint": {
+          "x": 500,
+          "y": 250
+        },
+        "expected": {
+          "x": 1300,
+          "y": 750
+        }
+      }
+    ],
+    "mapToScreen": [
+      {
+        "mapPoint": {
+          "x": 1300,
+          "y": 750
+        },
+        "expected": {
+          "x": 500,
+          "y": 250
+        }
+      }
+    ]
+  },
+  {
+    "name": "zoom changes screen to map scale",
+    "viewport": {
+      "viewSize": {
+        "width": 800,
+        "height": 600
+      },
+      "mapSize": {
+        "width": 2400,
+        "height": 1600
+      },
+      "center": {
+        "x": 1200,
+        "y": 800
+      },
+      "zoom": 2,
+      "minZoom": 0.5,
+      "maxZoom": 2
+    },
+    "screenToMap": [
+      {
+        "screenPoint": {
+          "x": 500,
+          "y": 300
+        },
+        "expected": {
+          "x": 1250,
+          "y": 800
+        }
+      }
+    ]
+  },
+  {
+    "name": "pan moves camera opposite screen drag",
+    "viewport": {
+      "viewSize": {
+        "width": 800,
+        "height": 600
+      },
+      "mapSize": {
+        "width": 2400,
+        "height": 1600
+      },
+      "center": {
+        "x": 1200,
+        "y": 800
+      },
+      "zoom": 1,
+      "minZoom": 0.5,
+      "maxZoom": 2
+    },
+    "pan": {
+      "screenDelta": {
+        "x": 80,
+        "y": -40
+      },
+      "expectedCenter": {
+        "x": 1120,
+        "y": 840
+      }
+    }
+  },
+  {
+    "name": "center clamps to visible map bounds",
+    "viewport": {
+      "viewSize": {
+        "width": 800,
+        "height": 600
+      },
+      "mapSize": {
+        "width": 2400,
+        "height": 1600
+      },
+      "center": {
+        "x": 1200,
+        "y": 800
+      },
+      "zoom": 1,
+      "minZoom": 0.5,
+      "maxZoom": 2
+    },
+    "clampCenter": {
+      "center": {
+        "x": 50,
+        "y": 50
+      },
+      "expectedCenter": {
+        "x": 400,
+        "y": 300
+      }
+    }
+  },
+  {
+    "name": "zoom at anchor preserves map point under anchor",
+    "viewport": {
+      "viewSize": {
+        "width": 800,
+        "height": 600
+      },
+      "mapSize": {
+        "width": 2400,
+        "height": 1600
+      },
+      "center": {
+        "x": 1200,
+        "y": 800
+      },
+      "zoom": 1,
+      "minZoom": 0.5,
+      "maxZoom": 2
+    },
+    "zoomAt": {
+      "nextZoom": 2,
+      "anchorScreenPoint": {
+        "x": 500,
+        "y": 300
+      },
+      "expectedCenter": {
+        "x": 1250,
+        "y": 800
+      }
+    }
+  }
+]
