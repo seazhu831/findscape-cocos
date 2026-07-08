@@ -30,6 +30,8 @@ Each stage should create one GitHub issue before or during the work. The issue i
 - Done criteria.
 - Links to commits, docs, builds, screenshots, or assets.
 
+Ongoing work should follow the autonomous loop in `docs/08-work-loop.md`: select the next unblocked stage, record it in an issue, make a granular change, verify, commit, update the issue, push, and continue.
+
 ## Commit Granularity
 
 Commits should stay small enough to explain one stage, one coherent capability, or one isolated fix.

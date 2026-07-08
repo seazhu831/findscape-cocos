@@ -33,6 +33,7 @@ Read these documents first:
 - `docs/05-handoff.md`
 - `docs/06-project-plan.md`
 - `docs/07-cocos-scaffold.md`
+- `docs/08-work-loop.md`
 
 The original PRD is preserved at:
 
