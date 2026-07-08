@@ -36,6 +36,7 @@ Read these documents first:
 - `docs/08-work-loop.md`
 - `docs/09-gameplay-data-schemas.md`
 - `docs/10-claude-design-asset-pipeline.md`
+- `docs/11-hit-testing.md`
 
 The original PRD is preserved at:
 

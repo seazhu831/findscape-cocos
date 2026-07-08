@@ -163,6 +163,8 @@ Dependencies:
 
 ## Stage 4: Minimal Map Interaction Prototype
 
+Related prework issue: https://github.com/seazhu831/findscape-cocos/issues/8
+
 Goal:
 
 - Prove the core feel of exploring a large map.

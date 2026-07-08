@@ -1,0 +1,147 @@
+[
+  {
+    "name": "circle hit area",
+    "targetPoint": {
+      "targetId": "circle_target",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "hitShape": {
+        "type": "circle",
+        "radius": 25
+      }
+    },
+    "cases": [
+      {
+        "point": {
+          "x": 100,
+          "y": 100
+        },
+        "expected": true
+      },
+      {
+        "point": {
+          "x": 124,
+          "y": 100
+        },
+        "expected": true
+      },
+      {
+        "point": {
+          "x": 126,
+          "y": 100
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "rectangle hit area",
+    "targetPoint": {
+      "targetId": "rectangle_target",
+      "position": {
+        "x": 200,
+        "y": 160
+      },
+      "hitShape": {
+        "type": "rectangle",
+        "width": 80,
+        "height": 40
+      }
+    },
+    "cases": [
+      {
+        "point": {
+          "x": 240,
+          "y": 180
+        },
+        "expected": true
+      },
+      {
+        "point": {
+          "x": 241,
+          "y": 180
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "polygon hit area",
+    "targetPoint": {
+      "targetId": "polygon_target",
+      "position": {
+        "x": 300,
+        "y": 300
+      },
+      "hitShape": {
+        "type": "polygon",
+        "points": [
+          {
+            "x": -30,
+            "y": -20
+          },
+          {
+            "x": 30,
+            "y": -20
+          },
+          {
+            "x": 0,
+            "y": 40
+          }
+        ]
+      }
+    },
+    "cases": [
+      {
+        "point": {
+          "x": 300,
+          "y": 300
+        },
+        "expected": true
+      },
+      {
+        "point": {
+          "x": 300,
+          "y": 345
+        },
+        "expected": false
+      }
+    ]
+  },
+  {
+    "name": "sprite bounds hit area",
+    "targetPoint": {
+      "targetId": "sprite_bounds_target",
+      "position": {
+        "x": 400,
+        "y": 400
+      },
+      "hitShape": {
+        "type": "spriteBounds",
+        "padding": 10
+      }
+    },
+    "spriteBounds": {
+      "width": 60,
+      "height": 80
+    },
+    "cases": [
+      {
+        "point": {
+          "x": 440,
+          "y": 450
+        },
+        "expected": true
+      },
+      {
+        "point": {
+          "x": 441,
+          "y": 450
+        },
+        "expected": false
+      }
+    ]
+  }
+]
