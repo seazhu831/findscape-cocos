@@ -42,6 +42,7 @@ Read these documents first:
 - `docs/14-round-view-model.md`
 - `docs/15-local-save.md`
 - `docs/16-storage-port.md`
+- `docs/17-tool-runtime.md`
 
 The original PRD is preserved at:
 

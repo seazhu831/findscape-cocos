@@ -199,6 +199,8 @@ Related local save issue: https://github.com/seazhu831/findscape-cocos/issues/13
 
 Related storage port issue: https://github.com/seazhu831/findscape-cocos/issues/14
 
+Related tool runtime issue: https://github.com/seazhu831/findscape-cocos/issues/15
+
 Goal:
 
 - Turn the prototype into a complete hidden-object round.

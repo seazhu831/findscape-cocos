@@ -29,3 +29,4 @@ Individual checks:
 - `npm run check:view-model`: validate HUD, target-list, timer, and settlement view-model fixtures.
 - `npm run check:save`: validate local save fixtures.
 - `npm run check:storage`: validate storage port fixtures.
+- `npm run check:tools`: validate hint/tool runtime fixtures.

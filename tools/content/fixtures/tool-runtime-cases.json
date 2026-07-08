@@ -1,0 +1,109 @@
+[
+  {
+    "name": "hint selects first remaining target",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "useHint",
+        "expectedStatus": "used",
+        "expectedEvents": ["hintReveal"],
+        "expectedTargetId": "demo_pineapple_001",
+        "expectedToolState": {
+          "usesRemaining": 2,
+          "cooldownRemainingSeconds": 10
+        }
+      }
+    ]
+  },
+  {
+    "name": "hint skips found targets",
+    "modeId": "hidden_object_demo",
+    "roundFoundTargetIds": ["demo_pineapple_001"],
+    "steps": [
+      {
+        "type": "useHint",
+        "expectedStatus": "used",
+        "expectedTargetId": "demo_pineapple_002"
+      }
+    ]
+  },
+  {
+    "name": "hint cannot be used during cooldown",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "useHint",
+        "expectedStatus": "used"
+      },
+      {
+        "type": "useHint",
+        "expectedStatus": "coolingDown",
+        "expectedEvents": ["toolUnavailable"]
+      },
+      {
+        "type": "advanceCooldown",
+        "deltaSeconds": 10,
+        "expectedToolState": {
+          "cooldownRemainingSeconds": 0
+        }
+      },
+      {
+        "type": "useHint",
+        "expectedStatus": "used",
+        "expectedToolState": {
+          "usesRemaining": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "hint unavailable after uses exhausted",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "useHint",
+        "expectedStatus": "used"
+      },
+      {
+        "type": "advanceCooldown",
+        "deltaSeconds": 10
+      },
+      {
+        "type": "useHint",
+        "expectedStatus": "used"
+      },
+      {
+        "type": "advanceCooldown",
+        "deltaSeconds": 10
+      },
+      {
+        "type": "useHint",
+        "expectedStatus": "used"
+      },
+      {
+        "type": "advanceCooldown",
+        "deltaSeconds": 10
+      },
+      {
+        "type": "useHint",
+        "expectedStatus": "unavailable",
+        "expectedEvents": ["toolUnavailable"],
+        "expectedToolState": {
+          "usesRemaining": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "hint unavailable when all targets found",
+    "modeId": "crime_hunt_demo",
+    "roundFoundTargetIds": ["demo_thief_001"],
+    "steps": [
+      {
+        "type": "useHint",
+        "expectedStatus": "noTargets",
+        "expectedEvents": ["toolUnavailable"]
+      }
+    ]
+  }
+]
