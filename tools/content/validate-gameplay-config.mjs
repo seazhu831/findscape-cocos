@@ -220,6 +220,7 @@ function validateTargetSelectionRule(rule, label) {
     for (const [typeId, count] of Object.entries(rule.countsByType ?? {})) {
       requireRef(targetTypeIds, typeId, `${label}.targetSelectionRule.countsByType`);
       requirePositiveNumber(count, `${label}.targetSelectionRule.countsByType.${typeId}`);
+      requireAvailableTargets(rule, typeId, count, label);
     }
     return;
   }
@@ -234,8 +235,27 @@ function validateTargetSelectionRule(rule, label) {
 
   if (rule.type === "allOfType") {
     requireRef(targetTypeIds, rule.typeId, `${label}.targetSelectionRule.typeId`);
+    requireAvailableTargets(rule, rule.typeId, 1, label);
     return;
   }
 
   errors.push(`${label}.targetSelectionRule.type is unsupported: ${rule.type}`);
+}
+
+function requireAvailableTargets(rule, typeId, count, label) {
+  const modeId = label.replace("gameMode ", "");
+  const gameMode = gameModes.find((mode) => mode.modeId === modeId);
+  const mapConfig = maps.find((map) => map.mapId === gameMode?.mapId);
+  const targetPointSet = targetPointSets.find(
+    (pointSet) => pointSet.targetPointSetId === mapConfig?.targetPointSetId,
+  );
+  const availableCount =
+    targetPointSet?.targetPoints?.filter((targetPoint) => targetPoint.typeId === typeId)
+      .length ?? 0;
+
+  if (availableCount < count) {
+    errors.push(
+      `${label}.targetSelectionRule requests ${count} ${typeId} targets, but only ${availableCount} are available`,
+    );
+  }
 }

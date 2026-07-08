@@ -9,8 +9,10 @@ This stage makes the hidden-object foundation data-driven before runtime scene l
 ## Files
 
 - `cocos/assets/scripts/config/gameplay-schema.ts`: TypeScript interfaces for gameplay config.
+- `cocos/assets/scripts/config/gameplay-config.ts`: pure TypeScript config indexing, mode runtime assembly, target selection, and score helper functions.
 - `cocos/assets/resources/config/demo-gameplay.json`: demo map, targets, modes, scoring, tools, and feedback presets.
 - `tools/content/validate-gameplay-config.mjs`: deterministic JSON/reference validator.
+- `tools/content/preview-gameplay-modes.mjs`: CLI preview for mode target selection counts.
 
 ## Initial Config Shape
 
@@ -54,6 +56,7 @@ From the repository root:
 
 ```sh
 node tools/content/validate-gameplay-config.mjs cocos/assets/resources/config/demo-gameplay.json
+node tools/content/preview-gameplay-modes.mjs cocos/assets/resources/config/demo-gameplay.json
 ```
 
 The validator currently checks:
@@ -64,6 +67,14 @@ The validator currently checks:
 - Basic positive numeric fields.
 - Hit shape structure.
 - Target selection rule references.
+- Basic availability for requested target counts.
+
+From `cocos/`:
+
+```sh
+npm run validate:config
+npm run preview:modes
+```
 
 ## Next Schema Work
 

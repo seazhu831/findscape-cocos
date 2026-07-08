@@ -16,4 +16,5 @@ Validate from the repository root:
 
 ```sh
 node tools/content/validate-gameplay-config.mjs cocos/assets/resources/config/demo-gameplay.json
+node tools/content/preview-gameplay-modes.mjs cocos/assets/resources/config/demo-gameplay.json
 ```
