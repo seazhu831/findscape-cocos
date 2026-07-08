@@ -193,6 +193,8 @@ Dependencies:
 
 ## Stage 5: Core Round Loop
 
+Related view model issue: https://github.com/seazhu831/findscape-cocos/issues/12
+
 Goal:
 
 - Turn the prototype into a complete hidden-object round.

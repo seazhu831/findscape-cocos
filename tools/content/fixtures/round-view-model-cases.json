@@ -1,0 +1,155 @@
+[
+  {
+    "name": "initial hidden object hud",
+    "modeId": "hidden_object_demo",
+    "steps": [],
+    "expectedHud": {
+      "modeName": "Hidden Object Demo",
+      "status": "playing",
+      "score": 0,
+      "comboStreak": 0,
+      "foundCount": 0,
+      "totalCount": 4,
+      "progress01": 0,
+      "timer": {
+        "label": "1:00",
+        "urgency": "normal",
+        "progress01": 1
+      },
+      "targetList": [
+        {
+          "typeId": "pineapple",
+          "foundCount": 0,
+          "requiredCount": 2,
+          "isComplete": false
+        },
+        {
+          "typeId": "puppy",
+          "foundCount": 0,
+          "requiredCount": 1,
+          "isComplete": false
+        },
+        {
+          "typeId": "gem",
+          "foundCount": 0,
+          "requiredCount": 1,
+          "isComplete": false
+        }
+      ]
+    },
+    "expectedSettlement": null
+  },
+  {
+    "name": "in progress hud after one find",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        }
+      },
+      {
+        "type": "advanceTime",
+        "deltaSeconds": 47
+      }
+    ],
+    "expectedHud": {
+      "status": "playing",
+      "score": 110,
+      "comboStreak": 1,
+      "foundCount": 1,
+      "totalCount": 4,
+      "progress01": 0.25,
+      "timer": {
+        "label": "0:13",
+        "urgency": "warning"
+      },
+      "targetList": [
+        {
+          "typeId": "pineapple",
+          "foundCount": 1,
+          "requiredCount": 2,
+          "isComplete": false
+        }
+      ]
+    },
+    "expectedSettlement": null
+  },
+  {
+    "name": "completed settlement",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1670,
+          "y": 1160
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 720,
+          "y": 1340
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1880,
+          "y": 1380
+        }
+      }
+    ],
+    "expectedHud": {
+      "status": "completed",
+      "score": 850,
+      "foundCount": 4,
+      "totalCount": 4,
+      "progress01": 1
+    },
+    "expectedSettlement": {
+      "title": "Round Complete",
+      "foundCount": 4,
+      "totalCount": 4,
+      "score": 850,
+      "accuracy01": 1,
+      "starRating": 3
+    }
+  },
+  {
+    "name": "expired settlement",
+    "modeId": "crime_hunt_demo",
+    "steps": [
+      {
+        "type": "advanceTime",
+        "deltaSeconds": 61
+      }
+    ],
+    "expectedHud": {
+      "status": "expired",
+      "timer": {
+        "label": "0:00",
+        "urgency": "critical",
+        "progress01": 0
+      }
+    },
+    "expectedSettlement": {
+      "title": "Time Up",
+      "foundCount": 0,
+      "totalCount": 1,
+      "score": 0,
+      "accuracy01": 0,
+      "starRating": 0
+    }
+  }
+]

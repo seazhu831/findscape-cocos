@@ -4,9 +4,10 @@
   "private": true,
   "description": "Cocos Creator client workspace for the findscape hidden-object gameplay foundation.",
   "scripts": {
-    "check:all": "npm run validate:config && npm run preview:modes && npm run check:hit-test && npm run check:viewport && npm run check:round",
+    "check:all": "npm run validate:config && npm run preview:modes && npm run check:hit-test && npm run check:viewport && npm run check:round && npm run check:view-model",
     "check:hit-test": "node ../tools/content/check-hit-test-fixtures.mjs",
     "check:round": "node ../tools/content/check-round-runtime-fixtures.mjs",
+    "check:view-model": "node ../tools/content/check-round-view-model-fixtures.mjs",
     "check:viewport": "node ../tools/content/check-viewport-fixtures.mjs",
     "preview:modes": "node ../tools/content/preview-gameplay-modes.mjs assets/resources/config/demo-gameplay.json",
     "validate:config": "node ../tools/content/validate-gameplay-config.mjs assets/resources/config/demo-gameplay.json"
