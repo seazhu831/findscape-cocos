@@ -1,0 +1,150 @@
+[
+  {
+    "name": "hidden object round completes with time bonus",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        },
+        "expectedEvents": ["correctHit"],
+        "expectedState": {
+          "status": "playing",
+          "score": 110,
+          "comboStreak": 1,
+          "correctHits": 1,
+          "wrongTaps": 0
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1670,
+          "y": 1160
+        },
+        "expectedEvents": ["correctHit"],
+        "expectedState": {
+          "status": "playing",
+          "score": 230,
+          "comboStreak": 2,
+          "correctHits": 2,
+          "wrongTaps": 0
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 720,
+          "y": 1340
+        },
+        "expectedEvents": ["correctHit"],
+        "expectedState": {
+          "status": "playing",
+          "score": 380,
+          "comboStreak": 3,
+          "correctHits": 3,
+          "wrongTaps": 0
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1880,
+          "y": 1380
+        },
+        "expectedEvents": ["correctHit", "roundCompleted"],
+        "expectedState": {
+          "status": "completed",
+          "score": 850,
+          "comboStreak": 4,
+          "correctHits": 4,
+          "wrongTaps": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "wrong tap resets combo and duplicate does not score",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        },
+        "expectedEvents": ["correctHit"],
+        "expectedState": {
+          "score": 110,
+          "comboStreak": 1,
+          "correctHits": 1,
+          "wrongTaps": 0
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 10,
+          "y": 10
+        },
+        "expectedEvents": ["wrongTap"],
+        "expectedState": {
+          "score": 110,
+          "comboStreak": 0,
+          "correctHits": 1,
+          "wrongTaps": 1
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        },
+        "expectedEvents": ["duplicateHit"],
+        "expectedState": {
+          "score": 110,
+          "comboStreak": 0,
+          "correctHits": 1,
+          "wrongTaps": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "balloon mode selects only balloon targets",
+    "modeId": "balloon_blast_demo",
+    "expectedInitialSelectedTargets": ["demo_balloon_001", "demo_balloon_002"],
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 980,
+          "y": 360
+        },
+        "expectedEvents": ["correctHit"],
+        "expectedState": {
+          "score": 110,
+          "comboStreak": 1,
+          "correctHits": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "round can expire",
+    "modeId": "crime_hunt_demo",
+    "steps": [
+      {
+        "type": "advanceTime",
+        "deltaSeconds": 61,
+        "expectedState": {
+          "status": "expired",
+          "remainingSeconds": 0
+        }
+      }
+    ]
+  }
+]

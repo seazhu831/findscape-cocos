@@ -167,6 +167,8 @@ Related prework issue: https://github.com/seazhu831/findscape-cocos/issues/8
 
 Related viewport issue: https://github.com/seazhu831/findscape-cocos/issues/9
 
+Related round runtime issue: https://github.com/seazhu831/findscape-cocos/issues/10
+
 Goal:
 
 - Prove the core feel of exploring a large map.
