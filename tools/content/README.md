@@ -30,3 +30,4 @@ Individual checks:
 - `npm run check:save`: validate local save fixtures.
 - `npm run check:storage`: validate storage port fixtures.
 - `npm run check:tools`: validate hint/tool runtime fixtures.
+- `npm run check:controller`: validate round controller facade fixtures.

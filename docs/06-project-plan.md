@@ -201,6 +201,8 @@ Related storage port issue: https://github.com/seazhu831/findscape-cocos/issues/
 
 Related tool runtime issue: https://github.com/seazhu831/findscape-cocos/issues/15
 
+Related round controller issue: https://github.com/seazhu831/findscape-cocos/issues/16
+
 Goal:
 
 - Turn the prototype into a complete hidden-object round.

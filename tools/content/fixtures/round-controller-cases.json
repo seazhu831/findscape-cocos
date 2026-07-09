@@ -1,0 +1,135 @@
+[
+  {
+    "name": "controller starts with hud and tool state",
+    "modeId": "hidden_object_demo",
+    "steps": [],
+    "expectedViewModel": {
+      "hud": {
+        "status": "playing",
+        "foundCount": 0,
+        "totalCount": 4,
+        "score": 0
+      }
+    },
+    "expectedToolState": {
+      "hint": {
+        "usesRemaining": 3,
+        "cooldownRemainingSeconds": 0
+      }
+    }
+  },
+  {
+    "name": "tap updates round and view model",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        },
+        "expectedRoundEvents": ["correctHit"],
+        "expectedViewModel": {
+          "hud": {
+            "score": 110,
+            "foundCount": 1,
+            "progress01": 0.25
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "hint emits tool event and tick cools down",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "hint",
+        "expectedToolEvents": ["hintReveal"],
+        "expectedToolState": {
+          "hint": {
+            "usesRemaining": 2,
+            "cooldownRemainingSeconds": 10
+          }
+        }
+      },
+      {
+        "type": "tick",
+        "deltaSeconds": 4,
+        "expectedToolState": {
+          "hint": {
+            "cooldownRemainingSeconds": 6
+          }
+        },
+        "expectedViewModel": {
+          "hud": {
+            "timer": {
+              "label": "0:56"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "completion creates save result",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1670,
+          "y": 1160
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 720,
+          "y": 1340
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1880,
+          "y": 1380
+        },
+        "expectedRoundEvents": ["correctHit", "roundCompleted"]
+      }
+    ],
+    "resultAtUnixMs": 1783492000000,
+    "expectedResult": {
+      "modeId": "hidden_object_demo",
+      "status": "completed",
+      "score": 850,
+      "starRating": 3,
+      "completedAtUnixMs": 1783492000000
+    }
+  },
+  {
+    "name": "expired controller creates expired result",
+    "modeId": "crime_hunt_demo",
+    "steps": [
+      {
+        "type": "tick",
+        "deltaSeconds": 61,
+        "expectedRoundEvents": ["roundExpired"]
+      }
+    ],
+    "resultAtUnixMs": 1783492100000,
+    "expectedResult": {
+      "modeId": "crime_hunt_demo",
+      "status": "expired",
+      "score": 0,
+      "starRating": 0
+    }
+  }
+]

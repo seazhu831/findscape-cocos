@@ -43,6 +43,7 @@ Read these documents first:
 - `docs/15-local-save.md`
 - `docs/16-storage-port.md`
 - `docs/17-tool-runtime.md`
+- `docs/18-round-controller.md`
 
 The original PRD is preserved at:
 
