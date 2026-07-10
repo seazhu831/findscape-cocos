@@ -4,7 +4,7 @@
   "private": true,
   "description": "Cocos Creator client workspace for the findscape hidden-object gameplay foundation.",
   "scripts": {
-    "check:all": "npm run validate:config && npm run preview:modes && npm run check:assets && npm run check:modes && npm run check:hit-test && npm run check:viewport && npm run check:round && npm run check:view-model && npm run check:save && npm run check:storage && npm run check:tools && npm run check:controller && npm run check:session && npm run check:web-preview",
+    "check:all": "npm run validate:config && npm run preview:modes && npm run check:assets && npm run check:modes && npm run check:hit-test && npm run check:viewport && npm run check:round && npm run check:view-model && npm run check:save && npm run check:storage && npm run check:tools && npm run check:controller && npm run check:session && npm run check:web-preview && npm run check:web-preview-model",
     "check:assets": "node ../tools/content/check-design-asset-manifest.mjs",
     "check:controller": "node ../tools/content/check-round-controller-fixtures.mjs",
     "check:hit-test": "node ../tools/content/check-hit-test-fixtures.mjs",
@@ -17,6 +17,7 @@
     "check:view-model": "node ../tools/content/check-round-view-model-fixtures.mjs",
     "check:viewport": "node ../tools/content/check-viewport-fixtures.mjs",
     "check:web-preview": "node ../tools/content/check-web-preview.mjs",
+    "check:web-preview-model": "node ../tools/content/check-web-preview-model-fixtures.mjs",
     "preview:modes": "node ../tools/content/preview-gameplay-modes.mjs assets/resources/config/demo-gameplay.json",
     "preview:web": "python3 -m http.server 4173 --bind 127.0.0.1 --directory ..",
     "validate:config": "node ../tools/content/validate-gameplay-config.mjs assets/resources/config/demo-gameplay.json"

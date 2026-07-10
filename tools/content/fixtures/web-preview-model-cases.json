@@ -1,0 +1,101 @@
+[
+  {
+    "name": "hidden object starts with mixed target counts and active assets",
+    "modeId": "hidden_object_demo",
+    "expectedInitial": {
+      "selectedTargetCount": 4,
+      "targetCounts": {
+        "pineapple": 2,
+        "puppy": 1,
+        "gem": 1
+      },
+      "assetStateCounts": {
+        "brief": 19
+      },
+      "activeAssetPaths": [
+        "art/maps/demo_cozy_town_placeholder",
+        "art/icons/icon_pineapple",
+        "art/icons/icon_puppy",
+        "art/icons/icon_gem",
+        "art/targets/target_pineapple",
+        "art/targets/target_puppy",
+        "art/targets/target_gem",
+        "art/icons/tool_hint",
+        "art/icons/tool_magnifier"
+      ],
+      "isComplete": false
+    }
+  },
+  {
+    "name": "balloon mode completes and ignores post-complete taps",
+    "modeId": "balloon_blast_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 980,
+          "y": 360
+        },
+        "expected": {
+          "foundCount": 1,
+          "score": 100,
+          "isComplete": false
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 2040,
+          "y": 520
+        },
+        "expected": {
+          "foundCount": 2,
+          "score": 200,
+          "isComplete": true
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 980,
+          "y": 360
+        },
+        "expected": {
+          "foundCount": 2,
+          "score": 200,
+          "isComplete": true
+        }
+      }
+    ]
+  },
+  {
+    "name": "wrong tap applies preview penalty without going below zero",
+    "modeId": "crime_hunt_demo",
+    "steps": [
+      {
+        "type": "tap",
+        "point": {
+          "x": 10,
+          "y": 10
+        },
+        "expected": {
+          "foundCount": 0,
+          "score": 0,
+          "isComplete": false
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1320,
+          "y": 840
+        },
+        "expected": {
+          "foundCount": 1,
+          "score": 150,
+          "isComplete": true
+        }
+      }
+    ]
+  }
+]

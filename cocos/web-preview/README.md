@@ -36,3 +36,13 @@ http://127.0.0.1:4173/cocos/web-preview/
 - It does not load final art assets yet.
 - It does not simulate Cocos camera, tween, audio, or node lifecycle.
 - It is a data and interaction preview only.
+
+## Model Checks
+
+The pure preview state logic lives in `preview-model.mjs`.
+
+From `cocos/`:
+
+```sh
+npm run check:web-preview-model
+```

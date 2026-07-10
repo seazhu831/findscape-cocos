@@ -1,3 +1,13 @@
+import {
+  applyPreviewTap,
+  createAssetStateCounts,
+  createPreviewModel,
+  createTargetCounts,
+  getActiveModeAssets,
+  getTargetType,
+  isPreviewComplete,
+} from "./preview-model.mjs";
+
 const configUrl = "../assets/resources/config/demo-gameplay.json";
 const manifestUrl = "../../design/claude-design/asset-manifest.json";
 const canvas = document.querySelector("#mapCanvas");
@@ -23,10 +33,7 @@ const targetColors = {
 
 let config;
 let manifest;
-let activeMode;
-let selectedTargets = [];
-let foundTargetIds = new Set();
-let score = 0;
+let model;
 
 init();
 
@@ -40,7 +47,7 @@ async function init() {
   }
 
   modeSelect.addEventListener("change", () => startMode(modeSelect.value));
-  resetButton.addEventListener("click", () => startMode(activeMode.modeId));
+  resetButton.addEventListener("click", () => startMode(model.mode.modeId));
   canvas.addEventListener("click", handleCanvasClick);
   startMode(config.gameModes[0].modeId);
 }
@@ -62,72 +69,34 @@ async function loadManifest() {
 }
 
 function startMode(modeId) {
-  activeMode = config.gameModes.find((mode) => mode.modeId === modeId);
-  const mapConfig = config.maps.find((map) => map.mapId === activeMode.mapId);
-  const pointSet = config.targetPointSets.find(
-    (set) => set.targetPointSetId === mapConfig.targetPointSetId,
-  );
-
-  selectedTargets = selectTargetsForMode(activeMode, pointSet.targetPoints);
-  foundTargetIds = new Set();
-  score = 0;
-  modeDescription.textContent = activeMode.description;
+  model = createPreviewModel(config, manifest, modeId);
+  modeDescription.textContent = model.mode.description;
   modeSelect.value = modeId;
   render();
 }
 
-function selectTargetsForMode(mode, targetPoints) {
-  const rule = mode.targetSelectionRule;
-  if (rule.type === "byCategoryCounts") {
-    return Object.entries(rule.countsByType).flatMap(([typeId, count]) =>
-      targetPoints.filter((target) => target.typeId === typeId).slice(0, count),
-    );
-  }
-  if (rule.type === "byTag") {
-    return targetPoints
-      .filter((target) => target.tags.includes(rule.tag))
-      .slice(0, rule.count);
-  }
-  if (rule.type === "allOfType") {
-    return targetPoints.filter((target) => target.typeId === rule.typeId);
-  }
-  return [];
-}
-
 function handleCanvasClick(event) {
-  if (isRoundComplete()) {
+  if (isPreviewComplete(model)) {
     return;
   }
 
   const point = getWorldPoint(event);
-  const hitTarget = selectedTargets.find((target) =>
-    !foundTargetIds.has(target.targetId) && isPointInTargetHitArea(target, point),
-  );
-
-  if (!hitTarget) {
-    score = Math.max(0, score - getScoringRule().wrongTapPenalty);
-    render(point);
-    return;
-  }
-
-  foundTargetIds.add(hitTarget.targetId);
-  score += hitTarget.reward.score || getScoringRule().correctHitScore;
-  render(hitTarget.position);
+  const previousFoundCount = model.foundTargetIds.size;
+  model = applyPreviewTap(model, point);
+  render(model.foundTargetIds.size > previousFoundCount ? point : undefined);
 }
 
 function getWorldPoint(event) {
   const rect = canvas.getBoundingClientRect();
-  const mapConfig = getMapConfig();
   return {
-    x: ((event.clientX - rect.left) / rect.width) * mapConfig.worldSize.width,
-    y: ((event.clientY - rect.top) / rect.height) * mapConfig.worldSize.height,
+    x: ((event.clientX - rect.left) / rect.width) * model.mapConfig.worldSize.width,
+    y: ((event.clientY - rect.top) / rect.height) * model.mapConfig.worldSize.height,
   };
 }
 
 function render(feedbackPoint) {
-  const mapConfig = getMapConfig();
   resizeCanvas();
-  drawMapBackground(mapConfig);
+  drawMapBackground(model.mapConfig);
   drawTargets();
   if (feedbackPoint) {
     drawFeedback(feedbackPoint);
@@ -171,9 +140,9 @@ function drawMapBackground(mapConfig) {
 }
 
 function drawTargets() {
-  for (const target of selectedTargets) {
+  for (const target of model.selectedTargets) {
     const point = toScreenPoint(target.position);
-    const isFound = foundTargetIds.has(target.targetId);
+    const isFound = model.foundTargetIds.has(target.targetId);
     context.globalAlpha = isFound ? 0.28 : 0.95;
     context.fillStyle = targetColors[target.typeId] ?? "#607d8b";
     context.strokeStyle = isFound ? "#ffffff" : "rgba(38, 50, 56, 0.55)";
@@ -197,20 +166,20 @@ function drawFeedback(point) {
 
 function renderHud() {
   renderRoundStatus();
-  foundLabel.textContent = `${foundTargetIds.size} / ${selectedTargets.length}`;
-  scoreLabel.textContent = String(score);
-  const counts = createTargetCounts();
+  foundLabel.textContent = `${model.foundTargetIds.size} / ${model.selectedTargets.length}`;
+  scoreLabel.textContent = String(model.score);
+  const counts = createTargetCounts(model);
   targetList.innerHTML = "";
 
   for (const [typeId, count] of counts.entries()) {
-    const foundCount = selectedTargets.filter(
-      (target) => target.typeId === typeId && foundTargetIds.has(target.targetId),
+    const foundCount = model.selectedTargets.filter(
+      (target) => target.typeId === typeId && model.foundTargetIds.has(target.targetId),
     ).length;
     const item = document.createElement("div");
     item.className = "target-item";
     item.innerHTML = `
       <span class="target-swatch" style="background: ${targetColors[typeId] ?? "#607d8b"}"></span>
-      <span>${getTargetType(typeId)?.displayName ?? typeId}</span>
+      <span>${getTargetType(model, typeId)?.displayName ?? typeId}</span>
       <strong>${foundCount}/${count}</strong>
     `;
     targetList.append(item);
@@ -220,21 +189,14 @@ function renderHud() {
 }
 
 function renderRoundStatus() {
-  const isComplete = isRoundComplete();
+  const isComplete = isPreviewComplete(model);
   roundStatusLabel.textContent = isComplete ? "Complete" : "Playing";
   roundStatusLabel.classList.toggle("is-complete", isComplete);
 }
 
-function isRoundComplete() {
-  return (
-    selectedTargets.length > 0 &&
-    foundTargetIds.size >= selectedTargets.length
-  );
-}
-
 function renderAssetPanel() {
   assetBatchLabel.textContent = manifest.batchId;
-  const counts = countAssetsByState();
+  const counts = createAssetStateCounts(manifest);
   assetStats.innerHTML = "";
   for (const state of ["brief", "sourceExport", "runtimeAsset"]) {
     const item = document.createElement("div");
@@ -244,7 +206,7 @@ function renderAssetPanel() {
   }
 
   assetList.innerHTML = "";
-  for (const asset of getActiveModeAssets()) {
+  for (const asset of getActiveModeAssets(model)) {
     const item = document.createElement("div");
     item.className = "asset-item";
     item.innerHTML = `
@@ -256,103 +218,10 @@ function renderAssetPanel() {
   }
 }
 
-function countAssetsByState() {
-  return manifest.assets.reduce((counts, asset) => {
-    counts[asset.state] = (counts[asset.state] ?? 0) + 1;
-    return counts;
-  }, {});
-}
-
-function getActiveModeAssets() {
-  const mapConfig = getMapConfig();
-  const toolAssetPaths = activeMode.toolIds
-    .map((toolId) => config.tools.find((tool) => tool.toolId === toolId)?.iconAsset)
-    .filter(Boolean);
-  const targetAssetPaths = [...createTargetCounts().keys()].flatMap((typeId) => {
-    const targetType = getTargetType(typeId);
-    return [targetType?.iconAsset, targetType?.targetAsset].filter(Boolean);
-  });
-  const runtimePaths = [
-    mapConfig.backgroundAsset,
-    ...targetAssetPaths,
-    ...toolAssetPaths,
-  ];
-  const runtimePathSet = new Set(runtimePaths);
-  return manifest.assets.filter((asset) => runtimePathSet.has(asset.runtimePath));
-}
-
-function createTargetCounts() {
-  const counts = new Map();
-  for (const target of selectedTargets) {
-    counts.set(target.typeId, (counts.get(target.typeId) ?? 0) + 1);
-  }
-  return counts;
-}
-
-function isPointInTargetHitArea(target, point) {
-  const localPoint = {
-    x: point.x - target.position.x,
-    y: point.y - target.position.y,
-  };
-  const shape = target.hitShape;
-  if (shape.type === "circle") {
-    return localPoint.x * localPoint.x + localPoint.y * localPoint.y <= shape.radius * shape.radius;
-  }
-  if (shape.type === "rectangle") {
-    return (
-      Math.abs(localPoint.x) <= shape.width / 2 &&
-      Math.abs(localPoint.y) <= shape.height / 2
-    );
-  }
-  if (shape.type === "polygon") {
-    return isPointInPolygon(localPoint, shape.points);
-  }
-  return false;
-}
-
-function isPointInPolygon(point, polygonPoints) {
-  let inside = false;
-  for (
-    let currentIndex = 0, previousIndex = polygonPoints.length - 1;
-    currentIndex < polygonPoints.length;
-    previousIndex = currentIndex++
-  ) {
-    const current = polygonPoints[currentIndex];
-    const previous = polygonPoints[previousIndex];
-    const crossesY = current.y > point.y !== previous.y > point.y;
-    if (!crossesY) {
-      continue;
-    }
-    const intersectionX =
-      ((previous.x - current.x) * (point.y - current.y)) /
-        (previous.y - current.y) +
-      current.x;
-    if (point.x < intersectionX) {
-      inside = !inside;
-    }
-  }
-  return inside;
-}
-
 function toScreenPoint(point) {
   const rect = canvas.getBoundingClientRect();
-  const mapConfig = getMapConfig();
   return {
-    x: (point.x / mapConfig.worldSize.width) * rect.width,
-    y: (point.y / mapConfig.worldSize.height) * rect.height,
+    x: (point.x / model.mapConfig.worldSize.width) * rect.width,
+    y: (point.y / model.mapConfig.worldSize.height) * rect.height,
   };
-}
-
-function getMapConfig() {
-  return config.maps.find((map) => map.mapId === activeMode.mapId);
-}
-
-function getScoringRule() {
-  return config.scoringRules.find(
-    (rule) => rule.scoringRuleId === activeMode.scoringRuleId,
-  );
-}
-
-function getTargetType(typeId) {
-  return config.targetTypes.find((targetType) => targetType.typeId === typeId);
 }

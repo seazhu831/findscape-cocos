@@ -10,6 +10,7 @@ const failures = [];
 const requiredFiles = [
   "web-preview/index.html",
   "web-preview/preview.js",
+  "web-preview/preview-model.mjs",
   "web-preview/styles.css",
   "web-preview/README.md",
   "assets/resources/config/demo-gameplay.json",
@@ -36,6 +37,7 @@ if (!packageJson.scripts?.["check:web-preview"]) {
 
 const html = readText("web-preview/index.html");
 const js = readText("web-preview/preview.js");
+const model = readText("web-preview/preview-model.mjs");
 const css = readText("web-preview/styles.css");
 
 if (!html.includes('<canvas id="mapCanvas"')) {
@@ -66,17 +68,23 @@ if (!js.includes("../assets/resources/config/demo-gameplay.json")) {
 if (!js.includes("../../design/claude-design/asset-manifest.json")) {
   failures.push("preview.js must load asset-manifest.json");
 }
+if (!js.includes("./preview-model.mjs")) {
+  failures.push("preview.js must import preview-model.mjs");
+}
+for (const requiredFunction of ["renderRoundStatus", "renderAssetPanel"]) {
+  if (!js.includes(`function ${requiredFunction}`)) {
+    failures.push(`preview.js must define ${requiredFunction}`);
+  }
+}
 for (const requiredFunction of [
   "selectTargetsForMode",
   "isPointInTargetHitArea",
   "isPointInPolygon",
-  "renderRoundStatus",
-  "isRoundComplete",
-  "renderAssetPanel",
+  "isPreviewComplete",
   "getActiveModeAssets",
 ]) {
-  if (!js.includes(`function ${requiredFunction}`)) {
-    failures.push(`preview.js must define ${requiredFunction}`);
+  if (!model.includes(`function ${requiredFunction}`)) {
+    failures.push(`preview-model.mjs must define ${requiredFunction}`);
   }
 }
 if (!css.includes("@media (max-width: 820px)")) {

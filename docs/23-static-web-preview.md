@@ -9,6 +9,7 @@ This stage adds a small browser preview before Cocos Creator metadata is availab
 - `cocos/web-preview/index.html`
 - `cocos/web-preview/styles.css`
 - `cocos/web-preview/preview.js`
+- `cocos/web-preview/preview-model.mjs`
 - `tools/content/check-web-preview.mjs`
 
 ## Purpose
@@ -47,5 +48,6 @@ From `cocos/`:
 
 ```sh
 npm run check:web-preview
+npm run check:web-preview-model
 npm run check:all
 ```

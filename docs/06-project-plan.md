@@ -173,6 +173,8 @@ Related round runtime issue: https://github.com/seazhu831/findscape-cocos/issues
 
 Related static web preview issue: https://github.com/seazhu831/findscape-cocos/issues/22
 
+Related web preview model issue: https://github.com/seazhu831/findscape-cocos/issues/25
+
 Goal:
 
 - Prove the core feel of exploring a large map.
