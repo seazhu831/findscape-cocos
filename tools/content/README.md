@@ -32,6 +32,7 @@ Individual checks:
 - `npm run check:save`: validate local save fixtures.
 - `npm run check:storage`: validate storage port fixtures.
 - `npm run check:tools`: validate hint/tool runtime fixtures.
+- `npm run check:feedback`: validate feedback plan fixtures for round and tool events.
 - `npm run check:controller`: validate round controller facade fixtures.
 - `npm run check:session`: validate app-level demo session flow fixtures.
 - `npm run check:web-preview`: validate static Web preview scaffold references.

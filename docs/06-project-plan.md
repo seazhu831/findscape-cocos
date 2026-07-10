@@ -278,6 +278,10 @@ Scope:
 Outputs:
 
 - Polished playable demo.
+
+Related asset readiness issue: https://github.com/seazhu831/findscape-cocos/issues/27
+
+Related feedback runtime issue: https://github.com/seazhu831/findscape-cocos/issues/28
 - Asset manifest.
 - Known issue list.
 

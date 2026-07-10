@@ -1,0 +1,167 @@
+[
+  {
+    "name": "hidden object correct hit uses target feedback preset",
+    "modeId": "hidden_object_demo",
+    "roundEvents": [
+      {
+        "type": "correctHit",
+        "targetId": "demo_pineapple_001",
+        "scoreAdded": 110,
+        "isRoundComplete": false
+      }
+    ],
+    "toolEvents": [],
+    "expectedPlans": [
+      {
+        "kind": "preset",
+        "sourceEventType": "correctHit",
+        "feedbackPresetId": "find_success",
+        "visuals": ["ring", "sparkle", "flyToList"],
+        "soundAsset": "audio/sfx_find_success",
+        "durationMs": 700,
+        "targetId": "demo_pineapple_001",
+        "scoreAdded": 110
+      }
+    ]
+  },
+  {
+    "name": "duplicate and wrong tap use wrong tap feedback",
+    "modeId": "hidden_object_demo",
+    "roundEvents": [
+      {
+        "type": "duplicateHit",
+        "targetId": "demo_pineapple_001"
+      },
+      {
+        "type": "wrongTap",
+        "penalty": 0
+      }
+    ],
+    "toolEvents": [],
+    "expectedPlans": [
+      {
+        "kind": "preset",
+        "sourceEventType": "duplicateHit",
+        "feedbackPresetId": "wrong_tap",
+        "visuals": ["shake"],
+        "soundAsset": "audio/sfx_wrong_tap",
+        "durationMs": 300,
+        "targetId": "demo_pineapple_001"
+      },
+      {
+        "kind": "preset",
+        "sourceEventType": "wrongTap",
+        "feedbackPresetId": "wrong_tap",
+        "visuals": ["shake"],
+        "soundAsset": "audio/sfx_wrong_tap",
+        "durationMs": 300
+      }
+    ]
+  },
+  {
+    "name": "settlement events produce settlement plans",
+    "modeId": "hidden_object_demo",
+    "roundEvents": [
+      {
+        "type": "roundCompleted",
+        "finalScore": 520
+      },
+      {
+        "type": "roundExpired",
+        "finalScore": 330
+      }
+    ],
+    "toolEvents": [],
+    "expectedPlans": [
+      {
+        "kind": "settlement",
+        "sourceEventType": "roundCompleted",
+        "durationMs": 0,
+        "visuals": [],
+        "finalScore": 520
+      },
+      {
+        "kind": "settlement",
+        "sourceEventType": "roundExpired",
+        "durationMs": 0,
+        "visuals": [],
+        "finalScore": 330
+      }
+    ]
+  },
+  {
+    "name": "hint reveal uses hint preset and tool duration",
+    "modeId": "hidden_object_demo",
+    "roundEvents": [],
+    "toolEvents": [
+      {
+        "type": "hintReveal",
+        "toolId": "hint",
+        "targetId": "demo_gem_001",
+        "durationSeconds": 3
+      }
+    ],
+    "expectedPlans": [
+      {
+        "kind": "preset",
+        "sourceEventType": "hintReveal",
+        "feedbackPresetId": "hint_reveal",
+        "visuals": ["pulse"],
+        "soundAsset": "audio/sfx_hint_reveal",
+        "durationMs": 3000,
+        "targetId": "demo_gem_001",
+        "toolId": "hint"
+      }
+    ]
+  },
+  {
+    "name": "mode overrides choose pop and catch presets",
+    "modeId": "balloon_blast_demo",
+    "roundEvents": [
+      {
+        "type": "correctHit",
+        "targetId": "demo_balloon_001",
+        "scoreAdded": 110,
+        "isRoundComplete": false
+      }
+    ],
+    "toolEvents": [],
+    "expectedPlans": [
+      {
+        "kind": "preset",
+        "sourceEventType": "correctHit",
+        "feedbackPresetId": "pop_success",
+        "visuals": ["burst", "puff"],
+        "soundAsset": "audio/sfx_pop_success",
+        "durationMs": 500,
+        "targetId": "demo_balloon_001",
+        "scoreAdded": 110
+      }
+    ]
+  },
+  {
+    "name": "crime hunt override chooses catch preset",
+    "modeId": "crime_hunt_demo",
+    "roundEvents": [
+      {
+        "type": "correctHit",
+        "targetId": "demo_thief_001",
+        "scoreAdded": 160,
+        "isRoundComplete": true
+      }
+    ],
+    "toolEvents": [],
+    "expectedPlans": [
+      {
+        "kind": "preset",
+        "sourceEventType": "correctHit",
+        "feedbackPresetId": "catch_success",
+        "visuals": ["stamp", "sparkle"],
+        "soundAsset": "audio/sfx_catch_success",
+        "durationMs": 800,
+        "targetId": "demo_thief_001",
+        "scoreAdded": 160
+      }
+    ]
+  }
+]
