@@ -6,6 +6,12 @@ import {
   getActiveModeAssets,
   getTargetType,
   isPreviewComplete,
+  mapToScreenPoint,
+  panPreviewViewport,
+  resetPreviewViewport,
+  screenToMapPoint,
+  setPreviewViewSize,
+  zoomPreviewViewport,
 } from "./preview-model.mjs";
 
 const configUrl = "../assets/resources/config/demo-gameplay.json";
@@ -19,6 +25,9 @@ const foundLabel = document.querySelector("#foundLabel");
 const scoreLabel = document.querySelector("#scoreLabel");
 const targetList = document.querySelector("#targetList");
 const resetButton = document.querySelector("#resetButton");
+const zoomOutButton = document.querySelector("#zoomOutButton");
+const zoomInButton = document.querySelector("#zoomInButton");
+const resetViewButton = document.querySelector("#resetViewButton");
 const assetBatchLabel = document.querySelector("#assetBatchLabel");
 const assetStats = document.querySelector("#assetStats");
 const assetList = document.querySelector("#assetList");
@@ -34,6 +43,8 @@ const targetColors = {
 let config;
 let manifest;
 let model;
+let pointerStart;
+let hasDragged = false;
 
 init();
 
@@ -48,7 +59,18 @@ async function init() {
 
   modeSelect.addEventListener("change", () => startMode(modeSelect.value));
   resetButton.addEventListener("click", () => startMode(model.mode.modeId));
+  zoomOutButton.addEventListener("click", () => zoomAtCanvasCenter(0.8));
+  zoomInButton.addEventListener("click", () => zoomAtCanvasCenter(1.25));
+  resetViewButton.addEventListener("click", () => {
+    model = resetPreviewViewport(model, getCanvasViewSize());
+    render();
+  });
   canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("pointerdown", handlePointerDown);
+  canvas.addEventListener("pointermove", handlePointerMove);
+  canvas.addEventListener("pointerup", handlePointerEnd);
+  canvas.addEventListener("pointercancel", handlePointerEnd);
+  canvas.addEventListener("wheel", handleCanvasWheel, { passive: false });
   startMode(config.gameModes[0].modeId);
 }
 
@@ -70,12 +92,18 @@ async function loadManifest() {
 
 function startMode(modeId) {
   model = createPreviewModel(config, manifest, modeId);
+  model = resetPreviewViewport(model, getCanvasViewSize());
   modeDescription.textContent = model.mode.description;
   modeSelect.value = modeId;
   render();
 }
 
 function handleCanvasClick(event) {
+  if (hasDragged) {
+    hasDragged = false;
+    return;
+  }
+
   if (isPreviewComplete(model)) {
     return;
   }
@@ -88,10 +116,69 @@ function handleCanvasClick(event) {
 
 function getWorldPoint(event) {
   const rect = canvas.getBoundingClientRect();
-  return {
-    x: ((event.clientX - rect.left) / rect.width) * model.mapConfig.worldSize.width,
-    y: ((event.clientY - rect.top) / rect.height) * model.mapConfig.worldSize.height,
+  return screenToMapPoint(model, {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+  });
+}
+
+function handlePointerDown(event) {
+  pointerStart = {
+    pointerId: event.pointerId,
+    x: event.clientX,
+    y: event.clientY,
   };
+  hasDragged = false;
+  canvas.setPointerCapture(event.pointerId);
+}
+
+function handlePointerMove(event) {
+  if (!pointerStart || pointerStart.pointerId !== event.pointerId) {
+    return;
+  }
+
+  const delta = {
+    x: event.clientX - pointerStart.x,
+    y: event.clientY - pointerStart.y,
+  };
+  if (Math.abs(delta.x) + Math.abs(delta.y) < 2) {
+    return;
+  }
+
+  hasDragged = true;
+  pointerStart = {
+    ...pointerStart,
+    x: event.clientX,
+    y: event.clientY,
+  };
+  model = panPreviewViewport(model, delta);
+  render();
+}
+
+function handlePointerEnd(event) {
+  if (pointerStart?.pointerId === event.pointerId) {
+    pointerStart = undefined;
+  }
+}
+
+function handleCanvasWheel(event) {
+  event.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+  model = zoomPreviewViewport(model, model.viewport.zoom * zoomFactor, {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+  });
+  render();
+}
+
+function zoomAtCanvasCenter(multiplier) {
+  const viewSize = getCanvasViewSize();
+  model = zoomPreviewViewport(model, model.viewport.zoom * multiplier, {
+    x: viewSize.width / 2,
+    y: viewSize.height / 2,
+  });
+  render();
 }
 
 function render(feedbackPoint) {
@@ -110,6 +197,7 @@ function resizeCanvas() {
   canvas.width = Math.max(1, Math.floor(rect.width * devicePixelRatio));
   canvas.height = Math.max(1, Math.floor(rect.height * devicePixelRatio));
   context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  model = setPreviewViewSize(model, getCanvasViewSize());
 }
 
 function drawMapBackground(mapConfig) {
@@ -219,9 +307,13 @@ function renderAssetPanel() {
 }
 
 function toScreenPoint(point) {
+  return mapToScreenPoint(model, point);
+}
+
+function getCanvasViewSize() {
   const rect = canvas.getBoundingClientRect();
   return {
-    x: (point.x / model.mapConfig.worldSize.width) * rect.width,
-    y: (point.y / model.mapConfig.worldSize.height) * rect.height,
+    width: rect.width,
+    height: rect.height,
   };
 }

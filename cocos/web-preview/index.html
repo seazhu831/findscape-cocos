@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Findscape Web Preview</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css?v=viewport-controls">
   </head>
   <body>
     <main class="app-shell">
@@ -32,6 +32,11 @@
             <span>Score</span>
             <strong id="scoreLabel">0</strong>
           </div>
+          <div class="viewport-controls" aria-label="Viewport controls">
+            <button id="zoomOutButton" type="button">-</button>
+            <button id="zoomInButton" type="button">+</button>
+            <button id="resetViewButton" type="button">Reset View</button>
+          </div>
           <div class="target-list" id="targetList"></div>
           <button id="resetButton" type="button">Reset</button>
           <section class="asset-panel" aria-label="Asset readiness">
@@ -45,6 +50,6 @@
         </aside>
       </section>
     </main>
-    <script type="module" src="./preview.js"></script>
+    <script type="module" src="./preview.js?v=viewport-controls"></script>
   </body>
 </html>

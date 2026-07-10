@@ -4,6 +4,13 @@
     "modeId": "hidden_object_demo",
     "expectedInitial": {
       "selectedTargetCount": 4,
+      "viewport": {
+        "center": {
+          "x": 1200,
+          "y": 800
+        },
+        "zoom": 1
+      },
       "targetCounts": {
         "pineapple": 2,
         "puppy": 1,
@@ -25,6 +32,89 @@
       ],
       "isComplete": false
     }
+  },
+  {
+    "name": "viewport pan and zoom preserve target hit semantics",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "setViewSize",
+        "viewSize": {
+          "width": 1200,
+          "height": 800
+        },
+        "expected": {
+          "viewport": {
+            "center": {
+              "x": 1200,
+              "y": 800
+            },
+            "zoom": 1
+          }
+        }
+      },
+      {
+        "type": "pan",
+        "screenDelta": {
+          "x": -120,
+          "y": 80
+        },
+        "expected": {
+          "viewport": {
+            "center": {
+              "x": 1320,
+              "y": 720
+            },
+            "zoom": 1
+          }
+        }
+      },
+      {
+        "type": "zoom",
+        "nextZoom": 1,
+        "anchorScreenPoint": {
+          "x": 600,
+          "y": 400
+        },
+        "expected": {
+          "viewport": {
+            "center": {
+              "x": 1320,
+              "y": 720
+            },
+            "zoom": 1
+          }
+        }
+      },
+      {
+        "type": "resetViewport",
+        "viewSize": {
+          "width": 1200,
+          "height": 800
+        },
+        "expected": {
+          "viewport": {
+            "center": {
+              "x": 1200,
+              "y": 800
+            },
+            "zoom": 0.5
+          }
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        },
+        "expected": {
+          "foundCount": 1,
+          "score": 100,
+          "isComplete": false
+        }
+      }
+    ]
   },
   {
     "name": "balloon mode completes and ignores post-complete taps",

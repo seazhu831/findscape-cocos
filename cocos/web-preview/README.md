@@ -24,6 +24,7 @@ http://127.0.0.1:4173/cocos/web-preview/
 
 - Mode selection from `assets/resources/config/demo-gameplay.json`.
 - A canvas placeholder for the configured map world.
+- Drag pan, wheel zoom, and viewport control buttons.
 - Selected target points for the active mode.
 - Basic click hit testing for circle, rectangle, and polygon targets.
 - Found count and score.

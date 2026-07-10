@@ -45,6 +45,9 @@ if (!html.includes('<canvas id="mapCanvas"')) {
 }
 for (const requiredElement of [
   'id="roundStatusLabel"',
+  'id="zoomOutButton"',
+  'id="zoomInButton"',
+  'id="resetViewButton"',
   'id="assetBatchLabel"',
   'id="assetStats"',
   'id="assetList"',
@@ -53,10 +56,10 @@ for (const requiredElement of [
     failures.push(`web-preview/index.html must include ${requiredElement}`);
   }
 }
-if (!html.includes('src="./preview.js"')) {
+if (!html.includes('src="./preview.js?v=viewport-controls"')) {
   failures.push("web-preview/index.html must load preview.js");
 }
-if (!html.includes('href="./styles.css"')) {
+if (!html.includes('href="./styles.css?v=viewport-controls"')) {
   failures.push("web-preview/index.html must load styles.css");
 }
 if (!html.includes('rel="icon" href="data:,"')) {
@@ -71,6 +74,16 @@ if (!js.includes("../../design/claude-design/asset-manifest.json")) {
 if (!js.includes("./preview-model.mjs")) {
   failures.push("preview.js must import preview-model.mjs");
 }
+for (const requiredHandler of [
+  "handlePointerDown",
+  "handlePointerMove",
+  "handleCanvasWheel",
+  "zoomAtCanvasCenter",
+]) {
+  if (!js.includes(`function ${requiredHandler}`)) {
+    failures.push(`preview.js must define ${requiredHandler}`);
+  }
+}
 for (const requiredFunction of ["renderRoundStatus", "renderAssetPanel"]) {
   if (!js.includes(`function ${requiredFunction}`)) {
     failures.push(`preview.js must define ${requiredFunction}`);
@@ -81,6 +94,10 @@ for (const requiredFunction of [
   "isPointInTargetHitArea",
   "isPointInPolygon",
   "isPreviewComplete",
+  "screenToMapPoint",
+  "mapToScreenPoint",
+  "panPreviewViewport",
+  "zoomPreviewViewport",
   "getActiveModeAssets",
 ]) {
   if (!model.includes(`function ${requiredFunction}`)) {
@@ -90,11 +107,20 @@ for (const requiredFunction of [
 if (!css.includes("@media (max-width: 820px)")) {
   failures.push("styles.css must include a mobile layout breakpoint");
 }
+if (!css.includes("aspect-ratio: 3 / 2")) {
+  failures.push("styles.css must keep the map canvas at a stable 3:2 aspect ratio");
+}
+if (!css.includes("align-self: start")) {
+  failures.push("styles.css must prevent grid stretch from distorting the map canvas");
+}
 if (!css.includes(".asset-panel")) {
   failures.push("styles.css must style the asset panel");
 }
 if (!css.includes(".round-status.is-complete")) {
   failures.push("styles.css must style the complete round status");
+}
+if (!css.includes(".viewport-controls")) {
+  failures.push("styles.css must style viewport controls");
 }
 
 if (failures.length > 0) {

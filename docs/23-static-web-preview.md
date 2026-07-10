@@ -18,6 +18,7 @@ The preview makes the current config visible and clickable:
 
 - Mode selection.
 - Placeholder map world.
+- Drag pan, wheel zoom, and viewport control buttons.
 - Selected target points.
 - Circle, rectangle, and polygon hit testing.
 - Found count.

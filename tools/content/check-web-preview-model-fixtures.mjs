@@ -24,6 +24,10 @@ const {
   createTargetCounts,
   getActiveModeAssets,
   isPreviewComplete,
+  panPreviewViewport,
+  resetPreviewViewport,
+  setPreviewViewSize,
+  zoomPreviewViewport,
 } = await import(pathToFileURL(modelModulePath));
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
@@ -38,11 +42,24 @@ for (const fixture of fixtures) {
   }
 
   for (const step of fixture.steps ?? []) {
-    if (step.type !== "tap") {
+    if (step.type === "tap") {
+      model = applyPreviewTap(model, step.point);
+    } else if (step.type === "setViewSize") {
+      model = setPreviewViewSize(model, step.viewSize);
+    } else if (step.type === "pan") {
+      model = panPreviewViewport(model, step.screenDelta);
+    } else if (step.type === "resetViewport") {
+      model = resetPreviewViewport(model, step.viewSize);
+    } else if (step.type === "zoom") {
+      model = zoomPreviewViewport(
+        model,
+        step.nextZoom,
+        step.anchorScreenPoint,
+      );
+    } else {
       failures.push(`${fixture.name} has unsupported step type: ${step.type}`);
       continue;
     }
-    model = applyPreviewTap(model, step.point);
     assertPreviewState(fixture.name, step.type, model, step.expected);
   }
 }
@@ -65,6 +82,10 @@ function assertPreviewState(name, label, model, expected) {
     targetCounts: Object.fromEntries(createTargetCounts(model)),
     assetStateCounts: createAssetStateCounts(manifest),
     activeAssetPaths: getActiveModeAssets(model).map((asset) => asset.runtimePath),
+    viewport: {
+      center: model.viewport.center,
+      zoom: model.viewport.zoom,
+    },
   };
   assertPartialObject(name, label, actual, expected);
 }
