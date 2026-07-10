@@ -1,0 +1,300 @@
+{
+  "version": 1,
+  "designTool": "Claude Design",
+  "batchId": "demo_asset_batch_01",
+  "visualDirection": "cozy hand-drawn mobile hidden-object game with soft lines, clear silhouettes, friendly colors, and no baked text",
+  "assets": [
+    {
+      "assetId": "map_demo_cozy_town_placeholder",
+      "state": "brief",
+      "sourceBrief": "briefs/demo-map.md",
+      "sourceFile": null,
+      "runtimePath": "art/maps/demo_cozy_town_placeholder",
+      "dimensions": {
+        "width": 2400,
+        "height": 1600
+      },
+      "transparentBackground": false,
+      "intendedUse": "Demo Cozy Town full map background",
+      "configReferences": ["maps.demo_cozy_town.backgroundAsset"],
+      "notes": "First playable map; keep all regions readable at mobile zoom levels."
+    },
+    {
+      "assetId": "icon_pineapple",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/icon_pineapple",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Target list icon for pineapple",
+      "configReferences": ["targetTypes.pineapple.iconAsset"],
+      "notes": "Readable at small list size."
+    },
+    {
+      "assetId": "icon_balloon",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/icon_balloon",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Target list icon for balloon",
+      "configReferences": ["targetTypes.balloon.iconAsset"],
+      "notes": "Should also communicate Balloon Blast mode quickly."
+    },
+    {
+      "assetId": "icon_thief",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/icon_thief",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Target list icon for thief",
+      "configReferences": ["targetTypes.thief.iconAsset"],
+      "notes": "Cute and non-threatening, matching Crime Hunt tone."
+    },
+    {
+      "assetId": "icon_puppy",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/icon_puppy",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Target list icon for puppy",
+      "configReferences": ["targetTypes.puppy.iconAsset"],
+      "notes": "Soft, friendly silhouette."
+    },
+    {
+      "assetId": "icon_gem",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/icon_gem",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Target list icon for gem",
+      "configReferences": ["targetTypes.gem.iconAsset"],
+      "notes": "Must remain recognizable at small size without harsh highlights."
+    },
+    {
+      "assetId": "target_pineapple",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/targets/target_pineapple",
+      "dimensions": {
+        "width": 512,
+        "height": 512
+      },
+      "transparentBackground": true,
+      "intendedUse": "Map target sprite for pineapple",
+      "configReferences": ["targetTypes.pineapple.targetAsset"],
+      "notes": "Can be camouflaged into market or picnic props."
+    },
+    {
+      "assetId": "target_balloon",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/targets/target_balloon",
+      "dimensions": {
+        "width": 512,
+        "height": 512
+      },
+      "transparentBackground": true,
+      "intendedUse": "Map target sprite for balloon",
+      "configReferences": ["targetTypes.balloon.targetAsset"],
+      "notes": "Visible enough for pop mode while still matching map style."
+    },
+    {
+      "assetId": "target_thief",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/targets/target_thief",
+      "dimensions": {
+        "width": 512,
+        "height": 512
+      },
+      "transparentBackground": true,
+      "intendedUse": "Map target sprite for thief",
+      "configReferences": ["targetTypes.thief.targetAsset"],
+      "notes": "Cute sneaky character, not scary."
+    },
+    {
+      "assetId": "target_puppy",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/targets/target_puppy",
+      "dimensions": {
+        "width": 512,
+        "height": 512
+      },
+      "transparentBackground": true,
+      "intendedUse": "Map target sprite for puppy",
+      "configReferences": ["targetTypes.puppy.targetAsset"],
+      "notes": "Should feel hidden but not invisible."
+    },
+    {
+      "assetId": "target_gem",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/targets/target_gem",
+      "dimensions": {
+        "width": 512,
+        "height": 512
+      },
+      "transparentBackground": true,
+      "intendedUse": "Map target sprite for gem",
+      "configReferences": ["targetTypes.gem.targetAsset"],
+      "notes": "Use friendly sparkle, avoid sharp jewel realism."
+    },
+    {
+      "assetId": "tool_hint",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/tool_hint",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Hint tool button icon",
+      "configReferences": ["tools.hint.iconAsset"],
+      "notes": "Readable inside compact circular tool button."
+    },
+    {
+      "assetId": "tool_magnifier",
+      "state": "brief",
+      "sourceBrief": "briefs/target-set.md",
+      "sourceFile": null,
+      "runtimePath": "art/icons/tool_magnifier",
+      "dimensions": {
+        "width": 256,
+        "height": 256
+      },
+      "transparentBackground": true,
+      "intendedUse": "Magnifier tool button icon",
+      "configReferences": ["tools.magnifier.iconAsset"],
+      "notes": "Clear magnifying-glass silhouette."
+    },
+    {
+      "assetId": "ui_hud_reference",
+      "state": "brief",
+      "sourceBrief": "briefs/ui-feedback.md",
+      "sourceFile": null,
+      "runtimePath": "art/ui/ui_hud_reference",
+      "dimensions": {
+        "width": 1080,
+        "height": 1920
+      },
+      "transparentBackground": false,
+      "intendedUse": "HUD layout reference for timer, score, combo, target list, and tools",
+      "configReferences": ["gameModes.hidden_object_demo", "gameModes.balloon_blast_demo", "gameModes.crime_hunt_demo"],
+      "notes": "Reference only; final UI should be Cocos-native components."
+    },
+    {
+      "assetId": "feedback_find_success",
+      "state": "brief",
+      "sourceBrief": "briefs/ui-feedback.md",
+      "sourceFile": null,
+      "runtimePath": "art/feedback/feedback_find_success",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "transparentBackground": true,
+      "intendedUse": "Reference sheet for find success ring, sparkle, and fly-to-list feedback",
+      "configReferences": ["feedbackPresets.find_success"],
+      "notes": "Can be implemented as Cocos sprites, particles, and tweens."
+    },
+    {
+      "assetId": "feedback_pop_success",
+      "state": "brief",
+      "sourceBrief": "briefs/ui-feedback.md",
+      "sourceFile": null,
+      "runtimePath": "art/feedback/feedback_pop_success",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "transparentBackground": true,
+      "intendedUse": "Reference sheet for balloon pop burst and puff feedback",
+      "configReferences": ["feedbackPresets.pop_success"],
+      "notes": "Should read as soft and playful, not explosive."
+    },
+    {
+      "assetId": "feedback_catch_success",
+      "state": "brief",
+      "sourceBrief": "briefs/ui-feedback.md",
+      "sourceFile": null,
+      "runtimePath": "art/feedback/feedback_catch_success",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "transparentBackground": true,
+      "intendedUse": "Reference sheet for cute catch stamp and sparkle feedback",
+      "configReferences": ["feedbackPresets.catch_success"],
+      "notes": "Use friendly visual language for Crime Hunt."
+    },
+    {
+      "assetId": "feedback_hint_reveal",
+      "state": "brief",
+      "sourceBrief": "briefs/ui-feedback.md",
+      "sourceFile": null,
+      "runtimePath": "art/feedback/feedback_hint_reveal",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "transparentBackground": true,
+      "intendedUse": "Reference sheet for hint pulse highlight",
+      "configReferences": ["feedbackPresets.hint_reveal"],
+      "notes": "Must not fully obscure the hidden object."
+    },
+    {
+      "assetId": "feedback_wrong_tap",
+      "state": "brief",
+      "sourceBrief": "briefs/ui-feedback.md",
+      "sourceFile": null,
+      "runtimePath": "art/feedback/feedback_wrong_tap",
+      "dimensions": {
+        "width": 1024,
+        "height": 1024
+      },
+      "transparentBackground": true,
+      "intendedUse": "Reference sheet for wrong tap shake or ripple feedback",
+      "configReferences": ["feedbackPresets.wrong_tap"],
+      "notes": "Low-friction negative feedback; avoid harsh red error styling."
+    }
+  ],
+  "audioHooks": [
+    "audio/sfx_find_success",
+    "audio/sfx_pop_success",
+    "audio/sfx_catch_success",
+    "audio/sfx_hint_reveal",
+    "audio/sfx_wrong_tap"
+  ]
+}

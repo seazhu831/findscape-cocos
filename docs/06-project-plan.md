@@ -275,6 +275,8 @@ Outputs:
 - Asset manifest.
 - Known issue list.
 
+Related asset manifest issue: https://github.com/seazhu831/findscape-cocos/issues/19
+
 Dependencies:
 
 - Accepted Claude Design visual direction.

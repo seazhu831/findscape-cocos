@@ -114,6 +114,16 @@ When a source export is selected for runtime use, record it in a manifest or bri
 - `configReferences`
 - `notes`
 
+The current machine-readable manifest lives at:
+
+- `design/claude-design/asset-manifest.json`
+
+Validate it from `cocos/` with:
+
+```sh
+npm run check:assets
+```
+
 ## First Asset Batch
 
 The first batch should unblock Stage 4:
