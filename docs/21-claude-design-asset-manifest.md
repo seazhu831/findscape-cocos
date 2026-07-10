@@ -41,6 +41,7 @@ The check validates:
 - Manifest version and Claude Design source.
 - Unique asset IDs and runtime paths.
 - Source brief files exist.
+- State-specific source export and runtime file requirements.
 - Runtime paths follow the project naming rules.
 - Map, target, and tool asset paths from gameplay config are covered.
 - Feedback preset and game mode references exist.
@@ -54,3 +55,5 @@ When a Claude Design output is selected:
 2. Normalize the runtime PNG/WebP under `cocos/assets/resources/art/`.
 3. Update the manifest entry from `brief` to `sourceExport` or `runtimeAsset`.
 4. Keep the `runtimePath` stable unless config intentionally changes.
+
+See `docs/22-claude-design-source-intake.md` for the source export naming and promotion rules.

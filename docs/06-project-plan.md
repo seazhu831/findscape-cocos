@@ -279,6 +279,8 @@ Outputs:
 
 Related asset manifest issue: https://github.com/seazhu831/findscape-cocos/issues/19
 
+Related source intake issue: https://github.com/seazhu831/findscape-cocos/issues/21
+
 Dependencies:
 
 - Accepted Claude Design visual direction.
