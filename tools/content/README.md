@@ -23,6 +23,7 @@ Individual checks:
 
 - `npm run validate:config`: validate gameplay config references and basic structure.
 - `npm run preview:modes`: print selected target counts for each demo mode.
+- `npm run check:modes`: validate mode capability summaries for demo variants.
 - `npm run check:hit-test`: validate target hit-test geometry fixtures.
 - `npm run check:viewport`: validate map viewport coordinate fixtures.
 - `npm run check:round`: validate round runtime fixtures.

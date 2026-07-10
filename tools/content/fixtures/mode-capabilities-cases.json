@@ -1,0 +1,95 @@
+[
+  {
+    "modeId": "hidden_object_demo",
+    "expectedSummary": {
+      "name": "Hidden Object Demo",
+      "targetSelectionLabel": "2 pineapple, 1 puppy, 1 gem",
+      "selectedTargetCount": 4,
+      "targetTypeIds": ["pineapple", "puppy", "gem"],
+      "triggerBehaviors": ["tapToFind"],
+      "feedbackPresetIds": ["find_success"],
+      "toolIds": ["hint", "magnifier"],
+      "capabilities": [
+        "targetList",
+        "timer",
+        "score",
+        "settlement",
+        "hint",
+        "magnifier",
+        "tapFind"
+      ],
+      "sharedRuntime": [
+        "targetSelection",
+        "hitTest",
+        "roundState",
+        "scoring",
+        "timer",
+        "tools",
+        "viewModel",
+        "storage"
+      ]
+    }
+  },
+  {
+    "modeId": "balloon_blast_demo",
+    "expectedSummary": {
+      "name": "Balloon Blast Demo",
+      "targetSelectionLabel": "all balloon",
+      "selectedTargetCount": 2,
+      "targetTypeIds": ["balloon"],
+      "triggerBehaviors": ["tapToPop"],
+      "feedbackPresetIds": ["pop_success"],
+      "toolIds": ["hint"],
+      "capabilities": [
+        "targetList",
+        "timer",
+        "score",
+        "settlement",
+        "hint",
+        "tapPop",
+        "feedbackOverrides"
+      ],
+      "sharedRuntime": [
+        "targetSelection",
+        "hitTest",
+        "roundState",
+        "scoring",
+        "timer",
+        "tools",
+        "viewModel",
+        "storage"
+      ]
+    }
+  },
+  {
+    "modeId": "crime_hunt_demo",
+    "expectedSummary": {
+      "name": "Crime Hunt Demo",
+      "targetSelectionLabel": "all thief",
+      "selectedTargetCount": 1,
+      "targetTypeIds": ["thief"],
+      "triggerBehaviors": ["tapToCatch"],
+      "feedbackPresetIds": ["catch_success"],
+      "toolIds": ["hint"],
+      "capabilities": [
+        "targetList",
+        "timer",
+        "score",
+        "settlement",
+        "hint",
+        "tapCatch",
+        "feedbackOverrides"
+      ],
+      "sharedRuntime": [
+        "targetSelection",
+        "hitTest",
+        "roundState",
+        "scoring",
+        "timer",
+        "tools",
+        "viewModel",
+        "storage"
+      ]
+    }
+  }
+]

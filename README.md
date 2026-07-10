@@ -44,6 +44,7 @@ Read these documents first:
 - `docs/16-storage-port.md`
 - `docs/17-tool-runtime.md`
 - `docs/18-round-controller.md`
+- `docs/19-mode-variants.md`
 
 The original PRD is preserved at:
 

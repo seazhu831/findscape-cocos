@@ -246,6 +246,8 @@ Outputs:
 - Mode config examples.
 - Notes on what is truly shared versus mode-specific.
 
+Related mode variant issue: https://github.com/seazhu831/findscape-cocos/issues/17
+
 Dependencies:
 
 - Core round loop.
