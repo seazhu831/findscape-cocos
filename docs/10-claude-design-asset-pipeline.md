@@ -124,6 +124,14 @@ Validate it from `cocos/` with:
 npm run check:assets
 ```
 
+Report config asset readiness from `cocos/` with:
+
+```sh
+npm run report:assets
+```
+
+This report is informational. It should show brief-only entries while Claude Design exports are still pending, and runtime files as they are normalized into `cocos/assets/resources/art/`.
+
 ## First Asset Batch
 
 The first batch should unblock Stage 4:

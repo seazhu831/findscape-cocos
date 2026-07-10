@@ -36,3 +36,4 @@ Individual checks:
 - `npm run check:session`: validate app-level demo session flow fixtures.
 - `npm run check:web-preview`: validate static Web preview scaffold references.
 - `npm run check:web-preview-model`: validate static Web preview model semantics.
+- `npm run report:assets`: print config asset readiness, manifest state, and runtime file presence.

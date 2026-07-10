@@ -20,6 +20,7 @@
     "check:web-preview-model": "node ../tools/content/check-web-preview-model-fixtures.mjs",
     "preview:modes": "node ../tools/content/preview-gameplay-modes.mjs assets/resources/config/demo-gameplay.json",
     "preview:web": "python3 -m http.server 4173 --bind 127.0.0.1 --directory ..",
+    "report:assets": "node ../tools/content/report-asset-readiness.mjs",
     "validate:config": "node ../tools/content/validate-gameplay-config.mjs assets/resources/config/demo-gameplay.json"
   }
 }
