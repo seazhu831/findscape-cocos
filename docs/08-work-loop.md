@@ -24,6 +24,14 @@ Repeat this loop until blocked by a decision, missing access, missing source mat
 10. Close the issue when the done criteria are met, or leave it open with clear next actions.
 11. Move to the next useful task and repeat.
 
+## Stage Boundary Continuation Guard
+
+Completing a stage is not a stopping point.
+
+After a stage issue is updated, pushed, and closed, immediately choose the next unblocked task and start the loop again. A summary can be sent to the user, but the work should continue in the same turn whenever there is a clear next task.
+
+Stop only when one of the user intervention triggers below is true, the user explicitly asks to pause, or all project stages currently have a real blocker recorded in their issue.
+
 ## Default Task Selection
 
 Prefer work in this order:
@@ -110,10 +118,6 @@ During active work:
 - Keep final reports focused on commits, issues, verification, and next step.
 - Do not stop after a report if the next task is clearly unblocked.
 
-## Current Next Step
+## Current Next Step Policy
 
-After this loop is committed, continue to Stage 3:
-
-- Define gameplay data schemas.
-- Add demo config samples.
-- Add lightweight validation or content-check notes.
+Do not store a fixed current next step in this document after the initial loop setup. The current next step should be selected from `docs/06-project-plan.md`, open GitHub issues, and the latest verified repository state.
