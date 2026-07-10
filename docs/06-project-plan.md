@@ -203,6 +203,8 @@ Related tool runtime issue: https://github.com/seazhu831/findscape-cocos/issues/
 
 Related round controller issue: https://github.com/seazhu831/findscape-cocos/issues/16
 
+Related demo session issue: https://github.com/seazhu831/findscape-cocos/issues/18
+
 Goal:
 
 - Turn the prototype into a complete hidden-object round.

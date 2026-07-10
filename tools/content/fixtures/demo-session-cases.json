@@ -1,0 +1,188 @@
+[
+  {
+    "name": "mode select keeps save data and exposes context summaries",
+    "initialSaveData": {
+      "version": 1,
+      "bestByModeId": {
+        "hidden_object_demo": {
+          "modeId": "hidden_object_demo",
+          "bestScore": 700,
+          "bestStarRating": 2,
+          "bestAccuracy01": 0.8,
+          "bestFoundCount": 3,
+          "totalCount": 4,
+          "updatedAtUnixMs": 1783490000000
+        }
+      }
+    },
+    "steps": [
+      {
+        "type": "showModeSelect",
+        "expectedState": {
+          "screen": "modeSelect",
+          "saveData": {
+            "bestByModeId": {
+              "hidden_object_demo": {
+                "bestScore": 700
+              }
+            }
+          }
+        }
+      }
+    ],
+    "expectedContext": {
+      "modeSummaries": [
+        {
+          "modeId": "hidden_object_demo",
+          "selectedTargetCount": 4
+        },
+        {
+          "modeId": "balloon_blast_demo",
+          "capabilities": [
+            "targetList",
+            "timer",
+            "score",
+            "settlement",
+            "hint",
+            "tapPop",
+            "feedbackOverrides"
+          ]
+        },
+        {
+          "modeId": "crime_hunt_demo",
+          "triggerBehaviors": ["tapToCatch"]
+        }
+      ]
+    }
+  },
+  {
+    "name": "start hidden object round and use hint",
+    "steps": [
+      {
+        "type": "showModeSelect"
+      },
+      {
+        "type": "startRound",
+        "modeId": "hidden_object_demo",
+        "expectedState": {
+          "screen": "round",
+          "selectedModeId": "hidden_object_demo",
+          "roundViewModel": {
+            "hud": {
+              "foundCount": 0,
+              "totalCount": 4,
+              "score": 0
+            }
+          }
+        }
+      },
+      {
+        "type": "hint",
+        "expectedToolEvents": ["hintReveal"],
+        "expectedState": {
+          "screen": "round",
+          "roundState": {
+            "tools": {
+              "toolsById": {
+                "hint": {
+                  "usesRemaining": 2,
+                  "cooldownRemainingSeconds": 10
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "complete hidden object round and update best save",
+    "steps": [
+      {
+        "type": "startRound",
+        "modeId": "hidden_object_demo"
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 420,
+          "y": 980
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1670,
+          "y": 1160
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 720,
+          "y": 1340
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1880,
+          "y": 1380
+        },
+        "completedAtUnixMs": 1783493000000,
+        "expectedRoundEvents": ["correctHit", "roundCompleted"],
+        "expectedState": {
+          "screen": "settlement",
+          "lastResult": {
+            "modeId": "hidden_object_demo",
+            "status": "completed",
+            "score": 850,
+            "starRating": 3,
+            "completedAtUnixMs": 1783493000000
+          },
+          "saveData": {
+            "bestByModeId": {
+              "hidden_object_demo": {
+                "bestScore": 850,
+                "bestStarRating": 3
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "expire crime hunt round then return to mode select",
+    "steps": [
+      {
+        "type": "startRound",
+        "modeId": "crime_hunt_demo"
+      },
+      {
+        "type": "tick",
+        "deltaSeconds": 61,
+        "completedAtUnixMs": 1783493100000,
+        "expectedRoundEvents": ["roundExpired"],
+        "expectedState": {
+          "screen": "settlement",
+          "lastResult": {
+            "modeId": "crime_hunt_demo",
+            "status": "expired",
+            "score": 0,
+            "starRating": 0
+          }
+        }
+      },
+      {
+        "type": "returnToModeSelect",
+        "expectedState": {
+          "screen": "modeSelect",
+          "selectedModeId": null,
+          "roundState": null,
+          "roundViewModel": null
+        }
+      }
+    ]
+  }
+]
