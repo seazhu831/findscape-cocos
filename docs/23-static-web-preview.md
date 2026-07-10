@@ -21,6 +21,7 @@ The preview makes the current config visible and clickable:
 - Circle, rectangle, and polygon hit testing.
 - Found count.
 - Score.
+- Playing and complete round status.
 - Target list counts.
 - Claude Design asset readiness for the active mode.
 

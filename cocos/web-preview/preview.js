@@ -4,6 +4,7 @@ const canvas = document.querySelector("#mapCanvas");
 const context = canvas.getContext("2d");
 const modeSelect = document.querySelector("#modeSelect");
 const modeDescription = document.querySelector("#modeDescription");
+const roundStatusLabel = document.querySelector("#roundStatusLabel");
 const foundLabel = document.querySelector("#foundLabel");
 const scoreLabel = document.querySelector("#scoreLabel");
 const targetList = document.querySelector("#targetList");
@@ -94,6 +95,10 @@ function selectTargetsForMode(mode, targetPoints) {
 }
 
 function handleCanvasClick(event) {
+  if (isRoundComplete()) {
+    return;
+  }
+
   const point = getWorldPoint(event);
   const hitTarget = selectedTargets.find((target) =>
     !foundTargetIds.has(target.targetId) && isPointInTargetHitArea(target, point),
@@ -191,6 +196,7 @@ function drawFeedback(point) {
 }
 
 function renderHud() {
+  renderRoundStatus();
   foundLabel.textContent = `${foundTargetIds.size} / ${selectedTargets.length}`;
   scoreLabel.textContent = String(score);
   const counts = createTargetCounts();
@@ -211,6 +217,19 @@ function renderHud() {
   }
 
   renderAssetPanel();
+}
+
+function renderRoundStatus() {
+  const isComplete = isRoundComplete();
+  roundStatusLabel.textContent = isComplete ? "Complete" : "Playing";
+  roundStatusLabel.classList.toggle("is-complete", isComplete);
+}
+
+function isRoundComplete() {
+  return (
+    selectedTargets.length > 0 &&
+    foundTargetIds.size >= selectedTargets.length
+  );
 }
 
 function renderAssetPanel() {

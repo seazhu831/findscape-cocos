@@ -42,6 +42,7 @@ if (!html.includes('<canvas id="mapCanvas"')) {
   failures.push("web-preview/index.html must include #mapCanvas");
 }
 for (const requiredElement of [
+  'id="roundStatusLabel"',
   'id="assetBatchLabel"',
   'id="assetStats"',
   'id="assetList"',
@@ -69,6 +70,8 @@ for (const requiredFunction of [
   "selectTargetsForMode",
   "isPointInTargetHitArea",
   "isPointInPolygon",
+  "renderRoundStatus",
+  "isRoundComplete",
   "renderAssetPanel",
   "getActiveModeAssets",
 ]) {
@@ -81,6 +84,9 @@ if (!css.includes("@media (max-width: 820px)")) {
 }
 if (!css.includes(".asset-panel")) {
   failures.push("styles.css must style the asset panel");
+}
+if (!css.includes(".round-status.is-complete")) {
+  failures.push("styles.css must style the complete round status");
 }
 
 if (failures.length > 0) {

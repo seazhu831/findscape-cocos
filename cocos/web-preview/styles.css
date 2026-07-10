@@ -96,6 +96,7 @@ select {
 .stat,
 .target-list,
 .asset-panel,
+.round-status,
 #resetButton {
   border: 1px solid #d8d0c2;
   border-radius: 8px;
@@ -116,6 +117,20 @@ select {
 
 .stat strong {
   font-size: 22px;
+}
+
+.round-status {
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: #eef7ee;
+  color: #2f6a45;
+}
+
+.round-status.is-complete {
+  background: #fff3cf;
+  color: #7a5212;
 }
 
 .target-list {

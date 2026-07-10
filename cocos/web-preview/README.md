@@ -27,6 +27,7 @@ http://127.0.0.1:4173/cocos/web-preview/
 - Selected target points for the active mode.
 - Basic click hit testing for circle, rectangle, and polygon targets.
 - Found count and score.
+- Playing and complete round status.
 - Target list counts by type.
 - Claude Design asset batch status and active-mode asset readiness.
 
