@@ -121,6 +121,7 @@ function showModeSelect(state) {
 function startDemoRound(context, state, modeId) {
   const modeRuntimeConfig = createModeRuntimeConfig(context.index, modeId);
   const roundContext = {
+    gameplayConfig: context.config,
     modeRuntimeConfig,
     targetTypesById: context.targetTypesById,
   };
@@ -190,6 +191,7 @@ function createDemoSessionUpdate(previousState, controllerUpdate, completedAtUni
     state: nextState,
     roundEvents: controllerUpdate.roundEvents,
     toolEvents: controllerUpdate.toolEvents,
+    feedbackPlans: controllerUpdate.feedbackPlans,
   };
 }
 
@@ -240,6 +242,7 @@ function createEmptyUpdate(state) {
     state,
     roundEvents: [],
     toolEvents: [],
+    feedbackPlans: [],
   };
 }
 
@@ -456,8 +459,130 @@ function createControllerUpdate(context, state, roundEvents, toolEvents) {
     state,
     roundEvents,
     toolEvents,
+    feedbackPlans: createFeedbackPlans({
+      gameplayConfig: context.gameplayConfig,
+      modeRuntimeConfig: context.modeRuntimeConfig,
+      roundEvents,
+      toolEvents,
+    }),
     viewModel: createRoundControllerViewModel(context, state),
   };
+}
+
+function createFeedbackPlans(input) {
+  const presetsById = mapById(input.gameplayConfig.feedbackPresets, "feedbackPresetId");
+  const plans = [];
+
+  for (const event of input.roundEvents) {
+    plans.push(
+      ...createRoundFeedbackPlans(
+        input.modeRuntimeConfig,
+        presetsById,
+        event,
+        plans.length,
+      ),
+    );
+  }
+
+  for (const event of input.toolEvents) {
+    plans.push(...createToolFeedbackPlans(presetsById, event, plans.length));
+  }
+
+  return plans;
+}
+
+function createRoundFeedbackPlans(runtimeConfig, presetsById, event, offset) {
+  if (event.type === "correctHit") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(offset, event.type),
+        sourceEventType: event.type,
+        preset: requirePreset(
+          presetsById,
+          getEffectiveTargetFeedbackPresetId(runtimeConfig, event.target),
+        ),
+        targetId: event.target.targetId,
+        scoreAdded: event.scoreAdded,
+      }),
+    ];
+  }
+
+  if (event.type === "wrongTap" || event.type === "duplicateHit") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(offset, event.type),
+        sourceEventType: event.type,
+        preset: requirePreset(presetsById, "wrong_tap"),
+        targetId: event.type === "duplicateHit" ? event.target.targetId : undefined,
+      }),
+    ];
+  }
+
+  if (event.type === "roundCompleted" || event.type === "roundExpired") {
+    return [
+      {
+        planId: createPlanId(offset, event.type),
+        kind: "settlement",
+        sourceEventType: event.type,
+        visuals: [],
+        durationMs: 0,
+        finalScore: event.finalScore,
+      },
+    ];
+  }
+
+  return [];
+}
+
+function createToolFeedbackPlans(presetsById, event, offset) {
+  if (event.type === "hintReveal") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(offset, event.type),
+        sourceEventType: event.type,
+        preset: requirePreset(presetsById, "hint_reveal"),
+        targetId: event.target.targetId,
+        toolId: event.toolId,
+        durationMs: event.durationSeconds * 1000,
+      }),
+    ];
+  }
+
+  return [];
+}
+
+function createPresetPlan(input) {
+  return {
+    planId: input.planId,
+    kind: "preset",
+    sourceEventType: input.sourceEventType,
+    feedbackPresetId: input.preset.feedbackPresetId,
+    visuals: input.preset.visuals,
+    soundAsset: input.preset.soundAsset,
+    durationMs: input.durationMs ?? input.preset.durationMs,
+    targetId: input.targetId,
+    toolId: input.toolId,
+    scoreAdded: input.scoreAdded,
+  };
+}
+
+function getEffectiveTargetFeedbackPresetId(runtimeConfig, target) {
+  return (
+    runtimeConfig.mode.feedbackOverrides[target.typeId]?.feedbackPresetId ??
+    target.feedbackPresetId
+  );
+}
+
+function requirePreset(presetsById, presetId) {
+  const preset = presetsById.get(presetId);
+  if (!preset) {
+    throw new Error(`Unknown feedback preset: ${presetId}`);
+  }
+  return preset;
+}
+
+function createPlanId(offset, eventType) {
+  return `feedback_${String(offset + 1).padStart(2, "0")}_${eventType}`;
 }
 
 function createRoundState(modeRuntimeConfig) {

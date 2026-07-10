@@ -53,6 +53,23 @@ for (const fixture of fixtures) {
       );
     }
 
+    if (step.expectedFeedbackPlans) {
+      assertArrayLength(
+        fixture.name,
+        `${step.type} feedbackPlans`,
+        update.feedbackPlans,
+        step.expectedFeedbackPlans.length,
+      );
+      for (const [index, expectedPlan] of step.expectedFeedbackPlans.entries()) {
+        assertPartialObject(
+          fixture.name,
+          `${step.type} feedbackPlans[${index}]`,
+          update.feedbackPlans[index],
+          expectedPlan,
+        );
+      }
+    }
+
     if (step.expectedViewModel) {
       assertPartialObject(
         fixture.name,
@@ -111,6 +128,7 @@ console.log(`Validated ${fixtures.length} round controller fixture groups`);
 
 function createRoundControllerContext(gameplayConfig, modeId) {
   return {
+    gameplayConfig,
     modeRuntimeConfig: createModeRuntimeConfig(gameplayConfig, modeId),
     targetTypesById: mapById(gameplayConfig.targetTypes, "typeId"),
   };
@@ -182,8 +200,130 @@ function createControllerUpdate(context, state, roundEvents, toolEvents) {
     state,
     roundEvents,
     toolEvents,
+    feedbackPlans: createFeedbackPlans({
+      gameplayConfig: context.gameplayConfig,
+      modeRuntimeConfig: context.modeRuntimeConfig,
+      roundEvents,
+      toolEvents,
+    }),
     viewModel: createRoundControllerViewModel(context, state),
   };
+}
+
+function createFeedbackPlans(input) {
+  const presetsById = mapById(input.gameplayConfig.feedbackPresets, "feedbackPresetId");
+  const plans = [];
+
+  for (const event of input.roundEvents) {
+    plans.push(
+      ...createRoundFeedbackPlans(
+        input.modeRuntimeConfig,
+        presetsById,
+        event,
+        plans.length,
+      ),
+    );
+  }
+
+  for (const event of input.toolEvents) {
+    plans.push(...createToolFeedbackPlans(presetsById, event, plans.length));
+  }
+
+  return plans;
+}
+
+function createRoundFeedbackPlans(runtimeConfig, presetsById, event, offset) {
+  if (event.type === "correctHit") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(offset, event.type),
+        sourceEventType: event.type,
+        preset: requirePreset(
+          presetsById,
+          getEffectiveTargetFeedbackPresetId(runtimeConfig, event.target),
+        ),
+        targetId: event.target.targetId,
+        scoreAdded: event.scoreAdded,
+      }),
+    ];
+  }
+
+  if (event.type === "wrongTap" || event.type === "duplicateHit") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(offset, event.type),
+        sourceEventType: event.type,
+        preset: requirePreset(presetsById, "wrong_tap"),
+        targetId: event.type === "duplicateHit" ? event.target.targetId : undefined,
+      }),
+    ];
+  }
+
+  if (event.type === "roundCompleted" || event.type === "roundExpired") {
+    return [
+      {
+        planId: createPlanId(offset, event.type),
+        kind: "settlement",
+        sourceEventType: event.type,
+        visuals: [],
+        durationMs: 0,
+        finalScore: event.finalScore,
+      },
+    ];
+  }
+
+  return [];
+}
+
+function createToolFeedbackPlans(presetsById, event, offset) {
+  if (event.type === "hintReveal") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(offset, event.type),
+        sourceEventType: event.type,
+        preset: requirePreset(presetsById, "hint_reveal"),
+        targetId: event.target.targetId,
+        toolId: event.toolId,
+        durationMs: event.durationSeconds * 1000,
+      }),
+    ];
+  }
+
+  return [];
+}
+
+function createPresetPlan(input) {
+  return {
+    planId: input.planId,
+    kind: "preset",
+    sourceEventType: input.sourceEventType,
+    feedbackPresetId: input.preset.feedbackPresetId,
+    visuals: input.preset.visuals,
+    soundAsset: input.preset.soundAsset,
+    durationMs: input.durationMs ?? input.preset.durationMs,
+    targetId: input.targetId,
+    toolId: input.toolId,
+    scoreAdded: input.scoreAdded,
+  };
+}
+
+function getEffectiveTargetFeedbackPresetId(runtimeConfig, target) {
+  return (
+    runtimeConfig.mode.feedbackOverrides[target.typeId]?.feedbackPresetId ??
+    target.feedbackPresetId
+  );
+}
+
+function requirePreset(presetsById, presetId) {
+  const preset = presetsById.get(presetId);
+  if (!preset) {
+    throw new Error(`Unknown feedback preset: ${presetId}`);
+  }
+  return preset;
+}
+
+function createPlanId(offset, eventType) {
+  return `feedback_${String(offset + 1).padStart(2, "0")}_${eventType}`;
 }
 
 function createModeRuntimeConfig(gameplayConfig, modeId) {
@@ -392,6 +532,7 @@ function useHintTool(runtimeConfig, roundState, toolState) {
     events: [
       {
         type: "hintReveal",
+        toolId: "hint",
         target,
         durationSeconds: hintConfig.durationSeconds ?? 2,
       },
@@ -555,6 +696,14 @@ function assertArray(groupName, label, actual, expected) {
   ) {
     failures.push(
       `${groupName} expected ${label} [${expected.join(", ")}] but got [${actual.join(", ")}]`,
+    );
+  }
+}
+
+function assertArrayLength(groupName, label, actual, expectedLength) {
+  if (actual.length !== expectedLength) {
+    failures.push(
+      `${groupName} expected ${label} length ${expectedLength} but got ${actual.length}`,
     );
   }
 }

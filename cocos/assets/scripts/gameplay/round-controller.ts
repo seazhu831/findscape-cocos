@@ -1,5 +1,13 @@
 import type { ModeRuntimeConfig } from "../config/gameplay-config";
-import type { TargetTypeConfig, Vector2Config } from "../config/gameplay-schema";
+import type {
+  GameplayConfig,
+  TargetTypeConfig,
+  Vector2Config,
+} from "../config/gameplay-schema";
+import {
+  createFeedbackPlans,
+  type FeedbackPlan,
+} from "../feedback/feedback-runtime";
 import {
   createRoundResultRecord,
   type RoundResultRecord,
@@ -30,6 +38,7 @@ export interface RoundControllerState {
 }
 
 export interface RoundControllerContext {
+  gameplayConfig: GameplayConfig;
   modeRuntimeConfig: ModeRuntimeConfig;
   targetTypesById: Map<string, TargetTypeConfig>;
 }
@@ -38,6 +47,7 @@ export interface RoundControllerUpdate {
   state: RoundControllerState;
   roundEvents: RoundEvent[];
   toolEvents: ToolEvent[];
+  feedbackPlans: FeedbackPlan[];
   viewModel: RoundViewModel;
 }
 
@@ -138,6 +148,12 @@ function createControllerUpdate(
     state,
     roundEvents,
     toolEvents,
+    feedbackPlans: createFeedbackPlans({
+      gameplayConfig: context.gameplayConfig,
+      modeRuntimeConfig: context.modeRuntimeConfig,
+      roundEvents,
+      toolEvents,
+    }),
     viewModel: createRoundControllerViewModel(context, state),
   };
 }

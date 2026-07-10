@@ -282,6 +282,8 @@ Outputs:
 Related asset readiness issue: https://github.com/seazhu831/findscape-cocos/issues/27
 
 Related feedback runtime issue: https://github.com/seazhu831/findscape-cocos/issues/28
+
+Related controller feedback integration issue: https://github.com/seazhu831/findscape-cocos/issues/29
 - Asset manifest.
 - Known issue list.
 

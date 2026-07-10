@@ -61,6 +61,7 @@ export interface DemoSessionUpdate {
   state: DemoSessionState;
   roundEvents: RoundControllerUpdate["roundEvents"];
   toolEvents: RoundControllerUpdate["toolEvents"];
+  feedbackPlans: RoundControllerUpdate["feedbackPlans"];
 }
 
 export interface DemoSessionActionOptions {
@@ -189,6 +190,7 @@ function createRoundControllerContext(
   modeRuntimeConfig: ModeRuntimeConfig,
 ): RoundControllerContext {
   return {
+    gameplayConfig: context.config,
     modeRuntimeConfig,
     targetTypesById: context.targetTypesById,
   };
@@ -213,6 +215,7 @@ function createDemoSessionUpdate(
     state: nextState,
     roundEvents: controllerUpdate.roundEvents,
     toolEvents: controllerUpdate.toolEvents,
+    feedbackPlans: controllerUpdate.feedbackPlans,
   };
 }
 
@@ -273,5 +276,6 @@ function createEmptyUpdate(state: DemoSessionState): DemoSessionUpdate {
     state,
     roundEvents: [],
     toolEvents: [],
+    feedbackPlans: [],
   };
 }

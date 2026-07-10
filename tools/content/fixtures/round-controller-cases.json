@@ -29,6 +29,14 @@
           "y": 980
         },
         "expectedRoundEvents": ["correctHit"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "preset",
+            "sourceEventType": "correctHit",
+            "feedbackPresetId": "find_success",
+            "targetId": "demo_pineapple_001"
+          }
+        ],
         "expectedViewModel": {
           "hud": {
             "score": 110,
@@ -46,6 +54,14 @@
       {
         "type": "hint",
         "expectedToolEvents": ["hintReveal"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "preset",
+            "sourceEventType": "hintReveal",
+            "feedbackPresetId": "hint_reveal",
+            "toolId": "hint"
+          }
+        ],
         "expectedToolState": {
           "hint": {
             "usesRemaining": 2,
@@ -102,7 +118,20 @@
           "x": 1880,
           "y": 1380
         },
-        "expectedRoundEvents": ["correctHit", "roundCompleted"]
+        "expectedRoundEvents": ["correctHit", "roundCompleted"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "preset",
+            "sourceEventType": "correctHit",
+            "feedbackPresetId": "find_success",
+            "targetId": "demo_gem_001"
+          },
+          {
+            "kind": "settlement",
+            "sourceEventType": "roundCompleted",
+            "finalScore": 850
+          }
+        ]
       }
     ],
     "resultAtUnixMs": 1783492000000,
@@ -121,7 +150,14 @@
       {
         "type": "tick",
         "deltaSeconds": 61,
-        "expectedRoundEvents": ["roundExpired"]
+        "expectedRoundEvents": ["roundExpired"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "settlement",
+            "sourceEventType": "roundExpired",
+            "finalScore": 0
+          }
+        ]
       }
     ],
     "resultAtUnixMs": 1783492100000,

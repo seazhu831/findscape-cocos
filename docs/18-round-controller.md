@@ -21,11 +21,12 @@ The controller handles:
 - Advancing round time and tool cooldowns.
 - Using the hint tool.
 - Producing updated round view models after each operation.
+- Producing feedback plans from round and tool events.
 - Producing a saveable round result once the round reaches settlement.
 
 ## Cocos Scene Usage
 
-Future scene code should be able to keep one `RoundControllerState`, call controller helpers from touch/timer/tool-button events, then render the returned `RoundViewModel` and trigger effects from returned events.
+Future scene code should be able to keep one `RoundControllerState`, call controller helpers from touch/timer/tool-button events, then render the returned `RoundViewModel` and trigger effects from returned `feedbackPlans`.
 
 ## Validate Fixtures
 
