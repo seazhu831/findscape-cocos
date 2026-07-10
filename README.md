@@ -48,6 +48,7 @@ Read these documents first:
 - `docs/20-demo-session-flow.md`
 - `docs/21-claude-design-asset-manifest.md`
 - `docs/22-claude-design-source-intake.md`
+- `docs/23-static-web-preview.md`
 
 The original PRD is preserved at:
 

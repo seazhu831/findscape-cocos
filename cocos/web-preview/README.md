@@ -1,0 +1,36 @@
+# Static Web Preview
+
+Issue: https://github.com/seazhu831/findscape-cocos/issues/22
+
+This folder contains a small static preview for the demo gameplay config.
+
+It is not a Cocos runtime replacement. It exists so the team can inspect mode selection, map coordinates, target hit areas, target counts, and scoring while the Cocos Creator project metadata is still pending.
+
+## Run
+
+From `cocos/`:
+
+```sh
+npm run preview:web
+```
+
+Then open:
+
+```text
+http://127.0.0.1:4173/web-preview/
+```
+
+## What It Shows
+
+- Mode selection from `assets/resources/config/demo-gameplay.json`.
+- A canvas placeholder for the configured map world.
+- Selected target points for the active mode.
+- Basic click hit testing for circle, rectangle, and polygon targets.
+- Found count and score.
+- Target list counts by type.
+
+## Limits
+
+- It does not load final art assets yet.
+- It does not simulate Cocos camera, tween, audio, or node lifecycle.
+- It is a data and interaction preview only.

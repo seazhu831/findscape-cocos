@@ -26,3 +26,15 @@ After Cocos Creator is installed and the target version is chosen:
 2. Let Creator generate required settings and metadata.
 3. Keep generated cache folders such as `library/`, `local/`, `temp/`, and `build/` out of git.
 4. Commit only project settings, scripts, scenes, prefabs, configs, and normalized runtime assets needed by the team.
+
+## Static Web Preview
+
+Before Cocos Creator metadata is available, a lightweight static preview exists under `web-preview/`.
+
+From this folder:
+
+```sh
+npm run preview:web
+```
+
+Then open `http://127.0.0.1:4173/web-preview/`.
