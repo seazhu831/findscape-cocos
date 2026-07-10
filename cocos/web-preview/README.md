@@ -17,7 +17,7 @@ npm run preview:web
 Then open:
 
 ```text
-http://127.0.0.1:4173/web-preview/
+http://127.0.0.1:4173/cocos/web-preview/
 ```
 
 ## What It Shows
@@ -28,6 +28,7 @@ http://127.0.0.1:4173/web-preview/
 - Basic click hit testing for circle, rectangle, and polygon targets.
 - Found count and score.
 - Target list counts by type.
+- Claude Design asset batch status and active-mode asset readiness.
 
 ## Limits
 

@@ -13,10 +13,11 @@ const requiredFiles = [
   "web-preview/styles.css",
   "web-preview/README.md",
   "assets/resources/config/demo-gameplay.json",
+  "../design/claude-design/asset-manifest.json",
 ];
 
 for (const requiredFile of requiredFiles) {
-  if (!fileExists(path.join(cocosRoot, requiredFile))) {
+  if (!fileExists(path.resolve(cocosRoot, requiredFile))) {
     failures.push(`Missing web preview file: ${requiredFile}`);
   }
 }
@@ -24,9 +25,9 @@ for (const requiredFile of requiredFiles) {
 const packageJson = JSON.parse(
   fs.readFileSync(path.join(cocosRoot, "package.json"), "utf8"),
 );
-if (packageJson.scripts?.["preview:web"] !== "python3 -m http.server 4173 --bind 127.0.0.1") {
+if (packageJson.scripts?.["preview:web"] !== "python3 -m http.server 4173 --bind 127.0.0.1 --directory ..") {
   failures.push(
-    "package.json must define preview:web as python3 -m http.server 4173 --bind 127.0.0.1",
+    "package.json must define preview:web as python3 -m http.server 4173 --bind 127.0.0.1 --directory ..",
   );
 }
 if (!packageJson.scripts?.["check:web-preview"]) {
@@ -40,6 +41,15 @@ const css = readText("web-preview/styles.css");
 if (!html.includes('<canvas id="mapCanvas"')) {
   failures.push("web-preview/index.html must include #mapCanvas");
 }
+for (const requiredElement of [
+  'id="assetBatchLabel"',
+  'id="assetStats"',
+  'id="assetList"',
+]) {
+  if (!html.includes(requiredElement)) {
+    failures.push(`web-preview/index.html must include ${requiredElement}`);
+  }
+}
 if (!html.includes('src="./preview.js"')) {
   failures.push("web-preview/index.html must load preview.js");
 }
@@ -52,10 +62,15 @@ if (!html.includes('rel="icon" href="data:,"')) {
 if (!js.includes("../assets/resources/config/demo-gameplay.json")) {
   failures.push("preview.js must load demo-gameplay.json");
 }
+if (!js.includes("../../design/claude-design/asset-manifest.json")) {
+  failures.push("preview.js must load asset-manifest.json");
+}
 for (const requiredFunction of [
   "selectTargetsForMode",
   "isPointInTargetHitArea",
   "isPointInPolygon",
+  "renderAssetPanel",
+  "getActiveModeAssets",
 ]) {
   if (!js.includes(`function ${requiredFunction}`)) {
     failures.push(`preview.js must define ${requiredFunction}`);
@@ -63,6 +78,9 @@ for (const requiredFunction of [
 }
 if (!css.includes("@media (max-width: 820px)")) {
   failures.push("styles.css must include a mobile layout breakpoint");
+}
+if (!css.includes(".asset-panel")) {
+  failures.push("styles.css must style the asset panel");
 }
 
 if (failures.length > 0) {

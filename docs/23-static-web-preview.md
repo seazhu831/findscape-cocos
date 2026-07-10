@@ -22,6 +22,7 @@ The preview makes the current config visible and clickable:
 - Found count.
 - Score.
 - Target list counts.
+- Claude Design asset readiness for the active mode.
 
 It is not a replacement for the Cocos scene. It is a lightweight way to inspect data and interaction assumptions while the editor project is still blocked on the Cocos Creator version.
 
@@ -36,7 +37,7 @@ npm run preview:web
 Open:
 
 ```text
-http://127.0.0.1:4173/web-preview/
+http://127.0.0.1:4173/cocos/web-preview/
 ```
 
 ## Verify

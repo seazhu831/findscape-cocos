@@ -37,4 +37,4 @@ From this folder:
 npm run preview:web
 ```
 
-Then open `http://127.0.0.1:4173/web-preview/`.
+Then open `http://127.0.0.1:4173/cocos/web-preview/`.

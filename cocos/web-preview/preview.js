@@ -1,4 +1,5 @@
 const configUrl = "../assets/resources/config/demo-gameplay.json";
+const manifestUrl = "../../design/claude-design/asset-manifest.json";
 const canvas = document.querySelector("#mapCanvas");
 const context = canvas.getContext("2d");
 const modeSelect = document.querySelector("#modeSelect");
@@ -7,6 +8,9 @@ const foundLabel = document.querySelector("#foundLabel");
 const scoreLabel = document.querySelector("#scoreLabel");
 const targetList = document.querySelector("#targetList");
 const resetButton = document.querySelector("#resetButton");
+const assetBatchLabel = document.querySelector("#assetBatchLabel");
+const assetStats = document.querySelector("#assetStats");
+const assetList = document.querySelector("#assetList");
 
 const targetColors = {
   pineapple: "#f3b23c",
@@ -17,6 +21,7 @@ const targetColors = {
 };
 
 let config;
+let manifest;
 let activeMode;
 let selectedTargets = [];
 let foundTargetIds = new Set();
@@ -25,7 +30,7 @@ let score = 0;
 init();
 
 async function init() {
-  config = await loadConfig();
+  [config, manifest] = await Promise.all([loadConfig(), loadManifest()]);
   for (const mode of config.gameModes) {
     const option = document.createElement("option");
     option.value = mode.modeId;
@@ -43,6 +48,14 @@ async function loadConfig() {
   const response = await fetch(configUrl);
   if (!response.ok) {
     throw new Error(`Failed to load ${configUrl}`);
+  }
+  return response.json();
+}
+
+async function loadManifest() {
+  const response = await fetch(manifestUrl);
+  if (!response.ok) {
+    throw new Error(`Failed to load ${manifestUrl}`);
   }
   return response.json();
 }
@@ -196,6 +209,57 @@ function renderHud() {
     `;
     targetList.append(item);
   }
+
+  renderAssetPanel();
+}
+
+function renderAssetPanel() {
+  assetBatchLabel.textContent = manifest.batchId;
+  const counts = countAssetsByState();
+  assetStats.innerHTML = "";
+  for (const state of ["brief", "sourceExport", "runtimeAsset"]) {
+    const item = document.createElement("div");
+    item.className = "asset-stat";
+    item.innerHTML = `<span>${state}</span><strong>${counts[state] ?? 0}</strong>`;
+    assetStats.append(item);
+  }
+
+  assetList.innerHTML = "";
+  for (const asset of getActiveModeAssets()) {
+    const item = document.createElement("div");
+    item.className = "asset-item";
+    item.innerHTML = `
+      <span>${asset.intendedUse}</span>
+      <strong>${asset.runtimePath}</strong>
+      <em class="asset-state">${asset.state}</em>
+    `;
+    assetList.append(item);
+  }
+}
+
+function countAssetsByState() {
+  return manifest.assets.reduce((counts, asset) => {
+    counts[asset.state] = (counts[asset.state] ?? 0) + 1;
+    return counts;
+  }, {});
+}
+
+function getActiveModeAssets() {
+  const mapConfig = getMapConfig();
+  const toolAssetPaths = activeMode.toolIds
+    .map((toolId) => config.tools.find((tool) => tool.toolId === toolId)?.iconAsset)
+    .filter(Boolean);
+  const targetAssetPaths = [...createTargetCounts().keys()].flatMap((typeId) => {
+    const targetType = getTargetType(typeId);
+    return [targetType?.iconAsset, targetType?.targetAsset].filter(Boolean);
+  });
+  const runtimePaths = [
+    mapConfig.backgroundAsset,
+    ...targetAssetPaths,
+    ...toolAssetPaths,
+  ];
+  const runtimePathSet = new Set(runtimePaths);
+  return manifest.assets.filter((asset) => runtimePathSet.has(asset.runtimePath));
 }
 
 function createTargetCounts() {

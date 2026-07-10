@@ -95,6 +95,7 @@ select {
 
 .stat,
 .target-list,
+.asset-panel,
 #resetButton {
   border: 1px solid #d8d0c2;
   border-radius: 8px;
@@ -143,6 +144,76 @@ select {
   min-height: 42px;
   cursor: pointer;
   color: #263238;
+}
+
+.asset-panel {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.asset-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.asset-panel-header span,
+.asset-stat span,
+.asset-item span {
+  color: #65757c;
+  font-size: 12px;
+}
+
+.asset-panel-header strong {
+  font-size: 13px;
+}
+
+.asset-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.asset-stat {
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f7f1e7;
+}
+
+.asset-stat strong {
+  font-size: 18px;
+}
+
+.asset-list {
+  display: grid;
+  gap: 6px;
+}
+
+.asset-item {
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f7faf7;
+}
+
+.asset-item strong {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.asset-state {
+  justify-self: start;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #eee3cf;
+  color: #5f4d2c;
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 @media (max-width: 820px) {
