@@ -209,6 +209,8 @@ Related storage port issue: https://github.com/seazhu831/findscape-cocos/issues/
 
 Related browser storage adapter issue: https://github.com/seazhu831/findscape-cocos/issues/34
 
+Related WeChat storage adapter issue: https://github.com/seazhu831/findscape-cocos/issues/35
+
 Related tool runtime issue: https://github.com/seazhu831/findscape-cocos/issues/15
 
 Related round controller issue: https://github.com/seazhu831/findscape-cocos/issues/16

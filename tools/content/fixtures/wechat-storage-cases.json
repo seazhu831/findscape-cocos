@@ -1,0 +1,80 @@
+[
+  {
+    "name": "wechat storage reads writes and removes values",
+    "apiAvailable": true,
+    "steps": [
+      {
+        "type": "set",
+        "key": "save",
+        "value": "one"
+      },
+      {
+        "type": "get",
+        "key": "save",
+        "expectedValue": "one"
+      },
+      {
+        "type": "remove",
+        "key": "save"
+      },
+      {
+        "type": "get",
+        "key": "save"
+      }
+    ]
+  },
+  {
+    "name": "missing api safely no-ops",
+    "apiAvailable": false,
+    "steps": [
+      {
+        "type": "set",
+        "key": "save",
+        "value": "one"
+      },
+      {
+        "type": "get",
+        "key": "save"
+      },
+      {
+        "type": "remove",
+        "key": "save"
+      }
+    ]
+  },
+  {
+    "name": "failing api resolves safely",
+    "apiAvailable": true,
+    "fails": true,
+    "steps": [
+      {
+        "type": "set",
+        "key": "save",
+        "value": "one"
+      },
+      {
+        "type": "get",
+        "key": "save"
+      },
+      {
+        "type": "remove",
+        "key": "save"
+      }
+    ]
+  },
+  {
+    "name": "non-string read values are ignored",
+    "apiAvailable": true,
+    "initialStorage": {
+      "save": {
+        "nested": true
+      }
+    },
+    "steps": [
+      {
+        "type": "get",
+        "key": "save"
+      }
+    ]
+  }
+]
