@@ -1,5 +1,5 @@
 import {
-  applyPreviewTap,
+  applyPreviewTapUpdate,
   createAssetStateCounts,
   createPreviewModel,
   createTargetCounts,
@@ -24,6 +24,7 @@ const roundStatusLabel = document.querySelector("#roundStatusLabel");
 const foundLabel = document.querySelector("#foundLabel");
 const scoreLabel = document.querySelector("#scoreLabel");
 const targetList = document.querySelector("#targetList");
+const feedbackLabel = document.querySelector("#feedbackLabel");
 const resetButton = document.querySelector("#resetButton");
 const zoomOutButton = document.querySelector("#zoomOutButton");
 const zoomInButton = document.querySelector("#zoomInButton");
@@ -43,6 +44,7 @@ const targetColors = {
 let config;
 let manifest;
 let model;
+let lastFeedbackPlans = [];
 let pointerStart;
 let hasDragged = false;
 
@@ -93,6 +95,7 @@ async function loadManifest() {
 function startMode(modeId) {
   model = createPreviewModel(config, manifest, modeId);
   model = resetPreviewViewport(model, getCanvasViewSize());
+  lastFeedbackPlans = [];
   modeDescription.textContent = model.mode.description;
   modeSelect.value = modeId;
   render();
@@ -109,9 +112,11 @@ function handleCanvasClick(event) {
   }
 
   const point = getWorldPoint(event);
-  const previousFoundCount = model.foundTargetIds.size;
-  model = applyPreviewTap(model, point);
-  render(model.foundTargetIds.size > previousFoundCount ? point : undefined);
+  const update = applyPreviewTapUpdate(model, point);
+  model = update.model;
+  lastFeedbackPlans = update.feedbackPlans;
+  const hasCorrectHit = update.events.some((item) => item.type === "correctHit");
+  render(hasCorrectHit ? point : undefined);
 }
 
 function getWorldPoint(event) {
@@ -256,6 +261,7 @@ function renderHud() {
   renderRoundStatus();
   foundLabel.textContent = `${model.foundTargetIds.size} / ${model.selectedTargets.length}`;
   scoreLabel.textContent = String(model.score);
+  renderFeedbackPanel();
   const counts = createTargetCounts(model);
   targetList.innerHTML = "";
 
@@ -274,6 +280,23 @@ function renderHud() {
   }
 
   renderAssetPanel();
+}
+
+function renderFeedbackPanel() {
+  if (lastFeedbackPlans.length === 0) {
+    feedbackLabel.textContent = "None";
+    return;
+  }
+
+  feedbackLabel.textContent = lastFeedbackPlans
+    .map((plan) => {
+      if (plan.kind === "settlement") {
+        return `${plan.sourceEventType} score ${plan.finalScore}`;
+      }
+      const sound = plan.soundAsset ? `, ${plan.soundAsset}` : "";
+      return `${plan.feedbackPresetId} (${plan.visuals.join("+")}${sound})`;
+    })
+    .join(" | ");
 }
 
 function renderRoundStatus() {

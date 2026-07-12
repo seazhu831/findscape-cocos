@@ -123,6 +123,17 @@ select {
   font-size: 22px;
 }
 
+.feedback-stat {
+  display: grid;
+  gap: 6px;
+}
+
+.feedback-stat strong {
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
 .round-status {
   min-height: 42px;
   display: grid;

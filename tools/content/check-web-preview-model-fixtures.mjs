@@ -18,7 +18,7 @@ const modelModulePath = path.join(
   "cocos/web-preview/preview-model.mjs",
 );
 const {
-  applyPreviewTap,
+  applyPreviewTapUpdate,
   createAssetStateCounts,
   createPreviewModel,
   createTargetCounts,
@@ -36,6 +36,7 @@ const failures = [];
 
 for (const fixture of fixtures) {
   let model = createPreviewModel(config, manifest, fixture.modeId);
+  let lastFeedbackPlans = [];
 
   if (fixture.expectedInitial) {
     assertPreviewState(fixture.name, "initial", model, fixture.expectedInitial);
@@ -43,7 +44,9 @@ for (const fixture of fixtures) {
 
   for (const step of fixture.steps ?? []) {
     if (step.type === "tap") {
-      model = applyPreviewTap(model, step.point);
+      const update = applyPreviewTapUpdate(model, step.point);
+      model = update.model;
+      lastFeedbackPlans = update.feedbackPlans;
     } else if (step.type === "setViewSize") {
       model = setPreviewViewSize(model, step.viewSize);
     } else if (step.type === "pan") {
@@ -60,7 +63,13 @@ for (const fixture of fixtures) {
       failures.push(`${fixture.name} has unsupported step type: ${step.type}`);
       continue;
     }
-    assertPreviewState(fixture.name, step.type, model, step.expected);
+    assertPreviewState(
+      fixture.name,
+      step.type,
+      model,
+      step.expected,
+      lastFeedbackPlans,
+    );
   }
 }
 
@@ -73,7 +82,7 @@ if (failures.length > 0) {
 
 console.log(`Validated ${fixtures.length} web preview model fixture groups`);
 
-function assertPreviewState(name, label, model, expected) {
+function assertPreviewState(name, label, model, expected, lastFeedbackPlans = []) {
   const actual = {
     selectedTargetCount: model.selectedTargets.length,
     foundCount: model.foundTargetIds.size,
@@ -86,6 +95,14 @@ function assertPreviewState(name, label, model, expected) {
       center: model.viewport.center,
       zoom: model.viewport.zoom,
     },
+    lastFeedbackPlans: lastFeedbackPlans.map((plan) => ({
+      kind: plan.kind,
+      sourceEventType: plan.sourceEventType,
+      feedbackPresetId: plan.feedbackPresetId,
+      targetId: plan.targetId,
+      scoreAdded: plan.scoreAdded,
+      finalScore: plan.finalScore,
+    })),
   };
   assertPartialObject(name, label, actual, expected);
 }

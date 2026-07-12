@@ -29,13 +29,14 @@ http://127.0.0.1:4173/cocos/web-preview/
 - Basic click hit testing for circle, rectangle, and polygon targets.
 - Found count and score.
 - Playing and complete round status.
+- Latest feedback plan, including preset, visuals, sound hook, and settlement events.
 - Target list counts by type.
 - Claude Design asset batch status and active-mode asset readiness.
 
 ## Limits
 
 - It does not load final art assets yet.
-- It does not simulate Cocos camera, tween, audio, or node lifecycle.
+- It does not simulate Cocos tween, audio playback, or node lifecycle.
 - It is a data and interaction preview only.
 
 ## Model Checks

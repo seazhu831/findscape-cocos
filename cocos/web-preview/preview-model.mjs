@@ -45,8 +45,16 @@ export function setPreviewViewSize(model, viewSize) {
 }
 
 export function applyPreviewTap(model, point) {
+  return applyPreviewTapUpdate(model, point).model;
+}
+
+export function applyPreviewTapUpdate(model, point) {
   if (isPreviewComplete(model)) {
-    return model;
+    return {
+      model,
+      events: [],
+      feedbackPlans: [],
+    };
   }
 
   const hitTarget = model.selectedTargets.find((target) =>
@@ -55,17 +63,57 @@ export function applyPreviewTap(model, point) {
   );
 
   if (!hitTarget) {
-    return {
+    const nextModel = {
       ...model,
       score: Math.max(0, model.score - getScoringRule(model).wrongTapPenalty),
     };
+    const events = [
+      {
+        type: "wrongTap",
+      },
+    ];
+
+    return {
+      model: nextModel,
+      events,
+      feedbackPlans: createPreviewFeedbackPlans(nextModel, events),
+    };
+  }
+
+  const foundTargetIds = new Set([...model.foundTargetIds, hitTarget.targetId]);
+  const scoreAdded = hitTarget.reward.score || getScoringRule(model).correctHitScore;
+  const nextModel = {
+    ...model,
+    foundTargetIds,
+    score: model.score + scoreAdded,
+  };
+  const events = [
+    {
+      type: "correctHit",
+      target: hitTarget,
+      scoreAdded,
+      isRoundComplete: isPreviewComplete(nextModel),
+    },
+  ];
+
+  if (isPreviewComplete(nextModel)) {
+    events.push({
+      type: "roundCompleted",
+      finalScore: nextModel.score,
+    });
   }
 
   return {
-    ...model,
-    foundTargetIds: new Set([...model.foundTargetIds, hitTarget.targetId]),
-    score: model.score + (hitTarget.reward.score || getScoringRule(model).correctHitScore),
+    model: nextModel,
+    events,
+    feedbackPlans: createPreviewFeedbackPlans(nextModel, events),
   };
+}
+
+export function createPreviewFeedbackPlans(model, events) {
+  return events.flatMap((event, index) =>
+    createPreviewFeedbackPlan(model, event, index),
+  );
 }
 
 export function resetPreviewViewport(model, viewSize = model.viewport.viewSize) {
@@ -255,6 +303,77 @@ export function getScoringRule(model) {
 
 export function getTargetType(model, typeId) {
   return model.config.targetTypes.find((targetType) => targetType.typeId === typeId);
+}
+
+function createPreviewFeedbackPlan(model, event, index) {
+  if (event.type === "correctHit") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(index, event.type),
+        sourceEventType: event.type,
+        preset: getFeedbackPreset(
+          model,
+          getEffectiveTargetFeedbackPresetId(model, event.target),
+        ),
+        targetId: event.target.targetId,
+        scoreAdded: event.scoreAdded,
+      }),
+    ];
+  }
+
+  if (event.type === "wrongTap") {
+    return [
+      createPresetPlan({
+        planId: createPlanId(index, event.type),
+        sourceEventType: event.type,
+        preset: getFeedbackPreset(model, "wrong_tap"),
+      }),
+    ];
+  }
+
+  if (event.type === "roundCompleted") {
+    return [
+      {
+        planId: createPlanId(index, event.type),
+        kind: "settlement",
+        sourceEventType: event.type,
+        visuals: [],
+        durationMs: 0,
+        finalScore: event.finalScore,
+      },
+    ];
+  }
+
+  return [];
+}
+
+function createPresetPlan(input) {
+  return {
+    planId: input.planId,
+    kind: "preset",
+    sourceEventType: input.sourceEventType,
+    feedbackPresetId: input.preset.feedbackPresetId,
+    visuals: input.preset.visuals,
+    soundAsset: input.preset.soundAsset,
+    durationMs: input.preset.durationMs,
+    targetId: input.targetId,
+    scoreAdded: input.scoreAdded,
+  };
+}
+
+function getEffectiveTargetFeedbackPresetId(model, target) {
+  return (
+    model.mode.feedbackOverrides[target.typeId]?.feedbackPresetId ??
+    target.feedbackPresetId
+  );
+}
+
+function getFeedbackPreset(model, presetId) {
+  return findRequired(model.config.feedbackPresets, "feedbackPresetId", presetId);
+}
+
+function createPlanId(index, eventType) {
+  return `preview_feedback_${String(index + 1).padStart(2, "0")}_${eventType}`;
 }
 
 function createPreviewViewport(mapConfig, viewSize) {

@@ -24,6 +24,7 @@ The preview makes the current config visible and clickable:
 - Found count.
 - Score.
 - Playing and complete round status.
+- Latest feedback plan summary.
 - Target list counts.
 - Claude Design asset readiness for the active mode.
 

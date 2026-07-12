@@ -175,6 +175,8 @@ Related static web preview issue: https://github.com/seazhu831/findscape-cocos/i
 
 Related web preview model issue: https://github.com/seazhu831/findscape-cocos/issues/25
 
+Related web preview feedback issue: https://github.com/seazhu831/findscape-cocos/issues/30
+
 Goal:
 
 - Prove the core feel of exploring a large map.

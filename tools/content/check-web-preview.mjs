@@ -48,6 +48,7 @@ for (const requiredElement of [
   'id="zoomOutButton"',
   'id="zoomInButton"',
   'id="resetViewButton"',
+  'id="feedbackLabel"',
   'id="assetBatchLabel"',
   'id="assetStats"',
   'id="assetList"',
@@ -84,7 +85,11 @@ for (const requiredHandler of [
     failures.push(`preview.js must define ${requiredHandler}`);
   }
 }
-for (const requiredFunction of ["renderRoundStatus", "renderAssetPanel"]) {
+for (const requiredFunction of [
+  "renderRoundStatus",
+  "renderAssetPanel",
+  "renderFeedbackPanel",
+]) {
   if (!js.includes(`function ${requiredFunction}`)) {
     failures.push(`preview.js must define ${requiredFunction}`);
   }
@@ -98,6 +103,8 @@ for (const requiredFunction of [
   "mapToScreenPoint",
   "panPreviewViewport",
   "zoomPreviewViewport",
+  "applyPreviewTapUpdate",
+  "createPreviewFeedbackPlans",
   "getActiveModeAssets",
 ]) {
   if (!model.includes(`function ${requiredFunction}`)) {
@@ -121,6 +128,9 @@ if (!css.includes(".round-status.is-complete")) {
 }
 if (!css.includes(".viewport-controls")) {
   failures.push("styles.css must style viewport controls");
+}
+if (!css.includes(".feedback-stat")) {
+  failures.push("styles.css must style the feedback stat");
 }
 
 if (failures.length > 0) {
