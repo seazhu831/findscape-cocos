@@ -79,6 +79,14 @@
       {
         "type": "hint",
         "expectedToolEvents": ["hintReveal"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "preset",
+            "sourceEventType": "hintReveal",
+            "feedbackPresetId": "hint_reveal",
+            "toolId": "hint"
+          }
+        ],
         "expectedState": {
           "screen": "round",
           "roundState": {
@@ -131,6 +139,19 @@
         },
         "completedAtUnixMs": 1783493000000,
         "expectedRoundEvents": ["correctHit", "roundCompleted"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "preset",
+            "sourceEventType": "correctHit",
+            "feedbackPresetId": "find_success",
+            "targetId": "demo_gem_001"
+          },
+          {
+            "kind": "settlement",
+            "sourceEventType": "roundCompleted",
+            "finalScore": 850
+          }
+        ],
         "expectedState": {
           "screen": "settlement",
           "lastResult": {
@@ -164,6 +185,13 @@
         "deltaSeconds": 61,
         "completedAtUnixMs": 1783493100000,
         "expectedRoundEvents": ["roundExpired"],
+        "expectedFeedbackPlans": [
+          {
+            "kind": "settlement",
+            "sourceEventType": "roundExpired",
+            "finalScore": 0
+          }
+        ],
         "expectedState": {
           "screen": "settlement",
           "lastResult": {

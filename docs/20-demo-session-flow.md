@@ -17,6 +17,8 @@ This stage adds a pure app-level flow for the future Cocos scenes. It keeps scen
 - `applyDemoSessionHint`: uses the hint tool.
 - `returnToModeSelect`: exits settlement or round state back to selection.
 
+Session updates expose round events, tool events, and feedback plans so a future Cocos scene can render HUD changes and play effects from one app-level result.
+
 ## State Flow
 
 ```text

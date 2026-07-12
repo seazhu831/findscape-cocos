@@ -213,6 +213,8 @@ Related round controller issue: https://github.com/seazhu831/findscape-cocos/iss
 
 Related demo session issue: https://github.com/seazhu831/findscape-cocos/issues/18
 
+Related demo session feedback assertion issue: https://github.com/seazhu831/findscape-cocos/issues/31
+
 Goal:
 
 - Turn the prototype into a complete hidden-object round.

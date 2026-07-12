@@ -71,6 +71,22 @@ for (const fixture of fixtures) {
       );
     }
 
+    if (step.expectedFeedbackPlans) {
+      const feedbackPlans = update?.feedbackPlans ?? [];
+      assertArrayLength(
+        fixture.name,
+        `${step.type} feedbackPlans`,
+        feedbackPlans,
+        step.expectedFeedbackPlans.length,
+      );
+      assertPartialArray(
+        fixture.name,
+        `${step.type} feedbackPlans`,
+        feedbackPlans,
+        step.expectedFeedbackPlans,
+      );
+    }
+
     if (step.expectedState) {
       assertPartialObject(fixture.name, `${step.type} state`, state, step.expectedState);
     }
@@ -1099,6 +1115,14 @@ function assertArray(name, label, actual, expected) {
       `${name} ${label}: expected ${JSON.stringify(
         expected,
       )}, got ${JSON.stringify(actual)}`,
+    );
+  }
+}
+
+function assertArrayLength(name, label, actual, expectedLength) {
+  if (actual.length !== expectedLength) {
+    failures.push(
+      `${name} ${label}: expected length ${expectedLength}, got ${actual.length}`,
     );
   }
 }
