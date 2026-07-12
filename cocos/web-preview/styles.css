@@ -51,6 +51,11 @@ select {
   line-height: 1.4;
 }
 
+.preview-error {
+  color: #9d2f2f;
+  font-weight: 700;
+}
+
 .mode-picker {
   display: grid;
   gap: 6px;

@@ -27,6 +27,7 @@ The preview makes the current config visible and clickable:
 - Latest feedback plan summary.
 - Target list counts.
 - Claude Design asset readiness for the active mode.
+- Loading and error states for preview data.
 
 It is not a replacement for the Cocos scene. It is a lightweight way to inspect data and interaction assumptions while the editor project is still blocked on the Cocos Creator version.
 

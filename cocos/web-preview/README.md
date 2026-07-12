@@ -32,6 +32,7 @@ http://127.0.0.1:4173/cocos/web-preview/
 - Latest feedback plan, including preset, visuals, sound hook, and settlement events.
 - Target list counts by type.
 - Claude Design asset batch status and active-mode asset readiness.
+- Loading and error states for missing config or manifest data.
 
 ## Limits
 

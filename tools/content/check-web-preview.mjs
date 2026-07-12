@@ -45,6 +45,7 @@ if (!html.includes('<canvas id="mapCanvas"')) {
 }
 for (const requiredElement of [
   'id="roundStatusLabel"',
+  'id="previewError"',
   'id="zoomOutButton"',
   'id="zoomInButton"',
   'id="resetViewButton"',
@@ -86,9 +87,12 @@ for (const requiredHandler of [
   }
 }
 for (const requiredFunction of [
+  "bindControls",
   "renderRoundStatus",
   "renderAssetPanel",
   "renderFeedbackPanel",
+  "showPreviewError",
+  "setControlsEnabled",
 ]) {
   if (!js.includes(`function ${requiredFunction}`)) {
     failures.push(`preview.js must define ${requiredFunction}`);
@@ -131,6 +135,9 @@ if (!css.includes(".viewport-controls")) {
 }
 if (!css.includes(".feedback-stat")) {
   failures.push("styles.css must style the feedback stat");
+}
+if (!css.includes(".preview-error")) {
+  failures.push("styles.css must style preview loading/error states");
 }
 
 if (failures.length > 0) {

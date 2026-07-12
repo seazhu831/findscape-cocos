@@ -20,6 +20,7 @@ const canvas = document.querySelector("#mapCanvas");
 const context = canvas.getContext("2d");
 const modeSelect = document.querySelector("#modeSelect");
 const modeDescription = document.querySelector("#modeDescription");
+const previewError = document.querySelector("#previewError");
 const roundStatusLabel = document.querySelector("#roundStatusLabel");
 const foundLabel = document.querySelector("#foundLabel");
 const scoreLabel = document.querySelector("#scoreLabel");
@@ -51,19 +52,35 @@ let hasDragged = false;
 init();
 
 async function init() {
-  [config, manifest] = await Promise.all([loadConfig(), loadManifest()]);
-  for (const mode of config.gameModes) {
-    const option = document.createElement("option");
-    option.value = mode.modeId;
-    option.textContent = mode.name;
-    modeSelect.append(option);
+  setControlsEnabled(false);
+  try {
+    [config, manifest] = await Promise.all([loadConfig(), loadManifest()]);
+    for (const mode of config.gameModes) {
+      const option = document.createElement("option");
+      option.value = mode.modeId;
+      option.textContent = mode.name;
+      modeSelect.append(option);
+    }
+    bindControls();
+    startMode(config.gameModes[0].modeId);
+  } catch (error) {
+    showPreviewError(error);
   }
+}
 
+function bindControls() {
   modeSelect.addEventListener("change", () => startMode(modeSelect.value));
-  resetButton.addEventListener("click", () => startMode(model.mode.modeId));
+  resetButton.addEventListener("click", () => {
+    if (model) {
+      startMode(model.mode.modeId);
+    }
+  });
   zoomOutButton.addEventListener("click", () => zoomAtCanvasCenter(0.8));
   zoomInButton.addEventListener("click", () => zoomAtCanvasCenter(1.25));
   resetViewButton.addEventListener("click", () => {
+    if (!model) {
+      return;
+    }
     model = resetPreviewViewport(model, getCanvasViewSize());
     render();
   });
@@ -73,7 +90,6 @@ async function init() {
   canvas.addEventListener("pointerup", handlePointerEnd);
   canvas.addEventListener("pointercancel", handlePointerEnd);
   canvas.addEventListener("wheel", handleCanvasWheel, { passive: false });
-  startMode(config.gameModes[0].modeId);
 }
 
 async function loadConfig() {
@@ -97,11 +113,18 @@ function startMode(modeId) {
   model = resetPreviewViewport(model, getCanvasViewSize());
   lastFeedbackPlans = [];
   modeDescription.textContent = model.mode.description;
+  previewError.hidden = true;
+  previewError.textContent = "";
   modeSelect.value = modeId;
+  setControlsEnabled(true);
   render();
 }
 
 function handleCanvasClick(event) {
+  if (!model) {
+    return;
+  }
+
   if (hasDragged) {
     hasDragged = false;
     return;
@@ -128,6 +151,10 @@ function getWorldPoint(event) {
 }
 
 function handlePointerDown(event) {
+  if (!model) {
+    return;
+  }
+
   pointerStart = {
     pointerId: event.pointerId,
     x: event.clientX,
@@ -138,6 +165,10 @@ function handlePointerDown(event) {
 }
 
 function handlePointerMove(event) {
+  if (!model) {
+    return;
+  }
+
   if (!pointerStart || pointerStart.pointerId !== event.pointerId) {
     return;
   }
@@ -167,6 +198,10 @@ function handlePointerEnd(event) {
 }
 
 function handleCanvasWheel(event) {
+  if (!model) {
+    return;
+  }
+
   event.preventDefault();
   const rect = canvas.getBoundingClientRect();
   const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
@@ -178,6 +213,10 @@ function handleCanvasWheel(event) {
 }
 
 function zoomAtCanvasCenter(multiplier) {
+  if (!model) {
+    return;
+  }
+
   const viewSize = getCanvasViewSize();
   model = zoomPreviewViewport(model, model.viewport.zoom * multiplier, {
     x: viewSize.width / 2,
@@ -194,6 +233,32 @@ function render(feedbackPoint) {
     drawFeedback(feedbackPoint);
   }
   renderHud();
+}
+
+function showPreviewError(error) {
+  modeDescription.textContent = "Preview data could not be loaded.";
+  previewError.hidden = false;
+  previewError.textContent = error instanceof Error ? error.message : String(error);
+  roundStatusLabel.textContent = "Unavailable";
+  foundLabel.textContent = "0 / 0";
+  scoreLabel.textContent = "0";
+  feedbackLabel.textContent = "None";
+  targetList.innerHTML = "";
+  assetStats.innerHTML = "";
+  assetList.innerHTML = "";
+  setControlsEnabled(false);
+}
+
+function setControlsEnabled(isEnabled) {
+  for (const control of [
+    modeSelect,
+    resetButton,
+    zoomOutButton,
+    zoomInButton,
+    resetViewButton,
+  ]) {
+    control.disabled = !isEnabled;
+  }
 }
 
 function resizeCanvas() {
