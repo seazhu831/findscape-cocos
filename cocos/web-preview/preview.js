@@ -24,6 +24,7 @@ const previewError = document.querySelector("#previewError");
 const roundStatusLabel = document.querySelector("#roundStatusLabel");
 const foundLabel = document.querySelector("#foundLabel");
 const scoreLabel = document.querySelector("#scoreLabel");
+const bestScoreLabel = document.querySelector("#bestScoreLabel");
 const targetList = document.querySelector("#targetList");
 const feedbackLabel = document.querySelector("#feedbackLabel");
 const resetButton = document.querySelector("#resetButton");
@@ -41,11 +42,13 @@ const targetColors = {
   puppy: "#b9835a",
   gem: "#46a6a1",
 };
+const previewBestScoreStorageKey = "findscape.webPreview.bestScores.v1";
 
 let config;
 let manifest;
 let model;
 let lastFeedbackPlans = [];
+let bestScoresByModeId = loadBestScores();
 let pointerStart;
 let hasDragged = false;
 
@@ -138,6 +141,7 @@ function handleCanvasClick(event) {
   const update = applyPreviewTapUpdate(model, point);
   model = update.model;
   lastFeedbackPlans = update.feedbackPlans;
+  updateBestScore(model.mode.modeId, model.score);
   const hasCorrectHit = update.events.some((item) => item.type === "correctHit");
   render(hasCorrectHit ? point : undefined);
 }
@@ -242,6 +246,7 @@ function showPreviewError(error) {
   roundStatusLabel.textContent = "Unavailable";
   foundLabel.textContent = "0 / 0";
   scoreLabel.textContent = "0";
+  bestScoreLabel.textContent = "0";
   feedbackLabel.textContent = "None";
   targetList.innerHTML = "";
   assetStats.innerHTML = "";
@@ -258,6 +263,44 @@ function setControlsEnabled(isEnabled) {
     resetViewButton,
   ]) {
     control.disabled = !isEnabled;
+  }
+}
+
+function updateBestScore(modeId, score) {
+  if (score <= (bestScoresByModeId[modeId] ?? 0)) {
+    return;
+  }
+
+  bestScoresByModeId = {
+    ...bestScoresByModeId,
+    [modeId]: score,
+  };
+  saveBestScores(bestScoresByModeId);
+}
+
+function loadBestScores() {
+  try {
+    const rawValue = window.localStorage?.getItem(previewBestScoreStorageKey);
+    if (!rawValue) {
+      return {};
+    }
+    const parsed = JSON.parse(rawValue);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? parsed
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveBestScores(bestScores) {
+  try {
+    window.localStorage?.setItem(
+      previewBestScoreStorageKey,
+      JSON.stringify(bestScores),
+    );
+  } catch {
+    // Preview persistence is nice-to-have; gameplay should keep running.
   }
 }
 
@@ -326,6 +369,7 @@ function renderHud() {
   renderRoundStatus();
   foundLabel.textContent = `${model.foundTargetIds.size} / ${model.selectedTargets.length}`;
   scoreLabel.textContent = String(model.score);
+  bestScoreLabel.textContent = String(bestScoresByModeId[model.mode.modeId] ?? 0);
   renderFeedbackPanel();
   const counts = createTargetCounts(model);
   targetList.innerHTML = "";

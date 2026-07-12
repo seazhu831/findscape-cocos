@@ -23,6 +23,7 @@ The preview makes the current config visible and clickable:
 - Circle, rectangle, and polygon hit testing.
 - Found count.
 - Score.
+- Local best score per mode.
 - Playing and complete round status.
 - Latest feedback plan summary.
 - Target list counts.

@@ -46,6 +46,7 @@ if (!html.includes('<canvas id="mapCanvas"')) {
 for (const requiredElement of [
   'id="roundStatusLabel"',
   'id="previewError"',
+  'id="bestScoreLabel"',
   'id="zoomOutButton"',
   'id="zoomInButton"',
   'id="resetViewButton"',
@@ -73,6 +74,9 @@ if (!js.includes("../assets/resources/config/demo-gameplay.json")) {
 if (!js.includes("../../design/claude-design/asset-manifest.json")) {
   failures.push("preview.js must load asset-manifest.json");
 }
+if (!js.includes("findscape.webPreview.bestScores.v1")) {
+  failures.push("preview.js must define a local best-score storage key");
+}
 if (!js.includes("./preview-model.mjs")) {
   failures.push("preview.js must import preview-model.mjs");
 }
@@ -93,6 +97,9 @@ for (const requiredFunction of [
   "renderFeedbackPanel",
   "showPreviewError",
   "setControlsEnabled",
+  "updateBestScore",
+  "loadBestScores",
+  "saveBestScores",
 ]) {
   if (!js.includes(`function ${requiredFunction}`)) {
     failures.push(`preview.js must define ${requiredFunction}`);

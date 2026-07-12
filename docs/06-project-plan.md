@@ -177,6 +177,8 @@ Related web preview model issue: https://github.com/seazhu831/findscape-cocos/is
 
 Related web preview feedback issue: https://github.com/seazhu831/findscape-cocos/issues/30
 
+Related web preview local best score issue: https://github.com/seazhu831/findscape-cocos/issues/36
+
 Goal:
 
 - Prove the core feel of exploring a large map.

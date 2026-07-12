@@ -28,6 +28,7 @@ http://127.0.0.1:4173/cocos/web-preview/
 - Selected target points for the active mode.
 - Basic click hit testing for circle, rectangle, and polygon targets.
 - Found count and score.
+- Local best score per mode.
 - Playing and complete round status.
 - Latest feedback plan, including preset, visuals, sound hook, and settlement events.
 - Target list counts by type.
