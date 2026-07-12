@@ -207,6 +207,8 @@ Related local save issue: https://github.com/seazhu831/findscape-cocos/issues/13
 
 Related storage port issue: https://github.com/seazhu831/findscape-cocos/issues/14
 
+Related browser storage adapter issue: https://github.com/seazhu831/findscape-cocos/issues/34
+
 Related tool runtime issue: https://github.com/seazhu831/findscape-cocos/issues/15
 
 Related round controller issue: https://github.com/seazhu831/findscape-cocos/issues/16

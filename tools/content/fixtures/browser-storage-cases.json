@@ -1,0 +1,65 @@
+[
+  {
+    "name": "available storage reads writes and removes values",
+    "storageAvailable": true,
+    "steps": [
+      {
+        "type": "set",
+        "key": "save",
+        "value": "one"
+      },
+      {
+        "type": "get",
+        "key": "save",
+        "expectedValue": "one"
+      },
+      {
+        "type": "remove",
+        "key": "save"
+      },
+      {
+        "type": "get",
+        "key": "save"
+      }
+    ]
+  },
+  {
+    "name": "unavailable storage safely no-ops",
+    "storageAvailable": false,
+    "steps": [
+      {
+        "type": "set",
+        "key": "save",
+        "value": "one"
+      },
+      {
+        "type": "get",
+        "key": "save"
+      },
+      {
+        "type": "remove",
+        "key": "save"
+      }
+    ]
+  },
+  {
+    "name": "throwing storage safely falls back",
+    "storageAvailable": true,
+    "throws": true,
+    "steps": [
+      {
+        "type": "set",
+        "key": "save",
+        "value": "one"
+      },
+      {
+        "type": "get",
+        "key": "save"
+      },
+      {
+        "type": "remove",
+        "key": "save"
+      }
+    ]
+  }
+]
