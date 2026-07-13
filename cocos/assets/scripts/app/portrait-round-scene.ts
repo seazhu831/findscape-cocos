@@ -5,6 +5,7 @@ import {
   JsonAsset,
   Node,
   resources,
+  sys,
   UIOpacity,
   UITransform,
   Vec3,
@@ -18,6 +19,7 @@ import {
   startDemoRound,
   type DemoSessionContext,
   type DemoSessionState,
+  type DemoSessionUpdate,
 } from "./demo-session";
 import type {
   GameplayConfig,
@@ -26,6 +28,12 @@ import type {
 import { PortraitFeedback } from "../feedback/portrait-feedback";
 import { PortraitHud } from "../ui/portrait-hud";
 import { PortraitSettlement } from "../ui/portrait-settlement";
+import { createBrowserStoragePort } from "../platform/browser-storage";
+import {
+  loadLocalSaveFromStorage,
+  saveLocalSaveToStorage,
+  type KeyValueStoragePort,
+} from "../storage/storage-port";
 
 const { ccclass } = _decorator;
 const DEFAULT_MODE_ID = "hidden_object_demo";
@@ -38,6 +46,7 @@ export class PortraitRoundScene extends Component {
   private feedback: PortraitFeedback | null = null;
   private hud: PortraitHud | null = null;
   private settlement: PortraitSettlement | null = null;
+  private storagePort: KeyValueStoragePort | null = null;
   private targetNodesById = new Map<string, Node>();
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
@@ -56,7 +65,7 @@ export class PortraitRoundScene extends Component {
     const update = applyDemoSessionTick(this.sessionState, deltaTime, {
       completedAtUnixMs: Date.now(),
     });
-    this.sessionState = update.state;
+    this.applySessionUpdate(update);
     this.renderHud();
   }
 
@@ -84,10 +93,12 @@ export class PortraitRoundScene extends Component {
     this.settlement = this.createSettlement();
 
     const config = await this.loadGameplayConfig();
+    this.storagePort = createBrowserStoragePort(sys.localStorage);
+    const saveData = await loadLocalSaveFromStorage(this.storagePort);
     this.sessionContext = createDemoSessionContext(config);
     this.sessionState = startDemoRound(
       this.sessionContext,
-      createInitialDemoSessionState(),
+      createInitialDemoSessionState(saveData),
       DEFAULT_MODE_ID,
     );
 
@@ -138,7 +149,7 @@ export class PortraitRoundScene extends Component {
     const update = applyDemoSessionTap(this.sessionState, targetConfig.position, {
       completedAtUnixMs: Date.now(),
     });
-    this.sessionState = update.state;
+    this.applySessionUpdate(update);
     if (update.roundEvents.some((roundEvent) => roundEvent.type === "correctHit")) {
       this.feedback?.playTarget(targetNode);
     }
@@ -166,7 +177,7 @@ export class PortraitRoundScene extends Component {
       x: mapLocal.x + 800,
       y: 1200 - mapLocal.y,
     });
-    this.sessionState = update.state;
+    this.applySessionUpdate(update);
     if (update.roundEvents.some((roundEvent) => roundEvent.type === "wrongTap")) {
       const feedbackLocal = feedbackTransform.convertToNodeSpaceAR(
         new Vec3(location.x, location.y, 0),
@@ -182,7 +193,7 @@ export class PortraitRoundScene extends Component {
       return;
     }
     const update = applyDemoSessionHint(this.sessionState);
-    this.sessionState = update.state;
+    this.applySessionUpdate(update);
     const hintEvent = update.toolEvents.find(
       (toolEvent) => toolEvent.type === "hintReveal",
     );
@@ -224,6 +235,19 @@ export class PortraitRoundScene extends Component {
     }
     if (magnifierButton) {
       magnifierButton.active = visible;
+    }
+  }
+
+  private applySessionUpdate(update: DemoSessionUpdate): void {
+    const reachedSettlement =
+      this.sessionState?.screen === "round" &&
+      update.state.screen === "settlement";
+    this.sessionState = update.state;
+    if (reachedSettlement && this.storagePort) {
+      void saveLocalSaveToStorage(
+        this.storagePort,
+        update.state.saveData,
+      ).catch(() => undefined);
     }
   }
 

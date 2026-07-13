@@ -117,6 +117,12 @@ for (const requiredRoundSceneContract of [
   "this.settlement?.show(viewModel.settlement)",
   "this.setToolsVisible(!viewModel.settlement)",
   'this.sessionState.screen !== "round"',
+  "createBrowserStoragePort(sys.localStorage)",
+  "loadLocalSaveFromStorage(this.storagePort)",
+  "createInitialDemoSessionState(saveData)",
+  'this.sessionState?.screen === "round"',
+  'update.state.screen === "settlement"',
+  "saveLocalSaveToStorage(",
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
