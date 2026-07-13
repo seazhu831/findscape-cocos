@@ -1,8 +1,8 @@
 {
-  "ver": "0.0.1",
-  "importer": "*",
+  "ver": "1.2.0",
+  "importer": "directory",
   "imported": true,
-  "uuid": "23ad3a80-e6e3-49c0-b8f3-962965726cc1",
+  "uuid": "9373a124-7e3b-4d48-8a38-636ac24ce235",
   "files": [],
   "subMetas": {},
   "userData": {}
