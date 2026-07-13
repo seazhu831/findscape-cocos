@@ -12,6 +12,7 @@ import {
   UITransform,
   Vec3,
 } from "cc";
+import { EDITOR } from "cc/env";
 
 const { ccclass, executeInEditMode } = _decorator;
 const DONT_SAVE_OBJECT_FLAG = 8;
@@ -226,6 +227,10 @@ export class PortraitHud extends Component {
     const sprite = node.addComponent(Sprite);
     sprite.sizeMode = Sprite.SizeMode.CUSTOM;
     sprite.trim = true;
+
+    if (EDITOR) {
+      return;
+    }
 
     resources.load(path, SpriteFrame, (error, spriteFrame) => {
       if (error) {
