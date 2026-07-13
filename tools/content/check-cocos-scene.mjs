@@ -18,6 +18,14 @@ const feedbackSourcePath = path.join(
   cocosRoot,
   "assets/scripts/feedback/portrait-feedback.ts",
 );
+const roundSceneSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/app/portrait-round-scene.ts",
+);
+const roundViewModelSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/ui/round-view-model.ts",
+);
 const failures = [];
 
 const scene = JSON.parse(fs.readFileSync(scenePath, "utf8"));
@@ -26,6 +34,8 @@ const projectSettings = JSON.parse(
 );
 const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
+const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
+const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
 const nodes = scene.filter((entry) => entry?.__type__ === "cc.Node");
 const nodesByName = new Map(nodes.map((node) => [node._name, node]));
 
@@ -39,6 +49,7 @@ const map = requireNode("Map");
 const feedbackRoot = requireNode("FeedbackRoot");
 const hudRoot = requireNode("HUDRoot");
 expectChild(canvas, camera);
+expectCustomComponent(canvas, "dfdb9uPrQtM/LZZJc/8ZKb7");
 expectChild(canvas, mapWorld);
 expectChild(canvas, feedbackRoot);
 expectChild(canvas, hudRoot);
@@ -71,7 +82,8 @@ for (const requiredFeedbackContract of [
   "this.playFindSuccess(target)",
   "this.playBalloonPop(target)",
   "this.playCatchPulse(target)",
-  "this.handleWrongTouch",
+  "public playWrongAt(localPosition: Vec3)",
+  "public playHint(target: Node, durationSeconds = 2)",
   "this.animateEffect(effect, 0.7",
   "this.animateEffect(effect, 0.5",
   "this.animateEffect(effect, 0.8",
@@ -81,6 +93,31 @@ for (const requiredFeedbackContract of [
   if (!feedbackSource.includes(requiredFeedbackContract)) {
     failures.push(`PortraitFeedback is missing contract: ${requiredFeedbackContract}`);
   }
+}
+
+for (const requiredRoundSceneContract of [
+  'const DEFAULT_MODE_ID = "hidden_object_demo"',
+  "applyDemoSessionTap",
+  "applyDemoSessionTick",
+  "applyDemoSessionHint",
+  "targetNode.active = selectedIds.has(targetId)",
+  "event.propagationStopped = true",
+  "x: mapLocal.x + 800",
+  "y: 1200 - mapLocal.y",
+  "this.hud?.render(this.sessionState.roundViewModel.hud)",
+  "this.feedback?.playTarget(targetNode)",
+  "this.feedback?.playWrongAt(feedbackLocal)",
+  "this.feedback?.playHint(targetNode, hintEvent.durationSeconds)",
+]) {
+  if (!roundSceneSource.includes(requiredRoundSceneContract)) {
+    failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
+  }
+}
+
+if (!roundViewModelSource.includes("Array.from(requiredCounts.entries())")) {
+  failures.push(
+    "Round view model must use Array.from for Creator-compatible Map iteration",
+  );
 }
 
 const targets = [

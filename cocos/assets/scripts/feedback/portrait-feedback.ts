@@ -2,7 +2,6 @@ import {
   _decorator,
   Color,
   Component,
-  EventTouch,
   Graphics,
   Layers,
   Node,
@@ -25,39 +24,7 @@ const COLORS = {
 
 @ccclass("PortraitFeedback")
 export class PortraitFeedback extends Component {
-  private mapWorld: Node | null = null;
-  private targetNodes: Node[] = [];
-
-  protected start(): void {
-    this.mapWorld = this.node.parent?.getChildByName("MapWorld") ?? null;
-    if (!this.mapWorld) {
-      console.warn("[PortraitFeedback] MapWorld is missing");
-      return;
-    }
-
-    this.targetNodes = this.mapWorld.children.filter((child) =>
-      child.name.startsWith("demo_"),
-    );
-    for (const target of this.targetNodes) {
-      target.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
-    }
-    this.mapWorld.on(Node.EventType.TOUCH_END, this.handleWrongTouch, this);
-  }
-
-  protected onDestroy(): void {
-    for (const target of this.targetNodes) {
-      target.off(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
-    }
-    this.mapWorld?.off(Node.EventType.TOUCH_END, this.handleWrongTouch, this);
-  }
-
-  private handleTargetTouch(event: EventTouch): void {
-    event.propagationStopped = true;
-    const target = event.currentTarget as Node;
-    if (!target.active) {
-      return;
-    }
-
+  public playTarget(target: Node): void {
     if (target.name.includes("balloon")) {
       this.playBalloonPop(target);
       return;
@@ -69,15 +36,7 @@ export class PortraitFeedback extends Component {
     this.playFindSuccess(target);
   }
 
-  private handleWrongTouch(event: EventTouch): void {
-    const location = event.getUILocation();
-    const transform = this.node.getComponent(UITransform);
-    if (!transform) {
-      return;
-    }
-    const localPosition = transform.convertToNodeSpaceAR(
-      new Vec3(location.x, location.y, 0),
-    );
+  public playWrongAt(localPosition: Vec3): void {
     const ripple = this.createEffectNode("WrongTapRipple", localPosition, 180, 180);
     const graphics = ripple.addComponent(Graphics);
     graphics.lineWidth = 8;
@@ -92,6 +51,34 @@ export class PortraitFeedback extends Component {
       .call(() => ripple.destroy())
       .start();
     tween(opacity).to(0.3, { opacity: 0 }).start();
+  }
+
+  public playHint(target: Node, durationSeconds = 2): void {
+    const effect = this.createEffectNode(
+      "HintReveal",
+      target.position.clone(),
+      280,
+      280,
+    );
+    const graphics = effect.addComponent(Graphics);
+    graphics.lineWidth = 12;
+    graphics.strokeColor = COLORS.yellow;
+    graphics.circle(0, 0, 92);
+    graphics.stroke();
+    effect.setScale(0.6, 0.6, 1);
+    const opacity = effect.addComponent(UIOpacity);
+    tween(effect)
+      .to(
+        durationSeconds,
+        { scale: new Vec3(1.6, 1.6, 1) },
+        { easing: "sineOut" },
+      )
+      .call(() => effect.destroy())
+      .start();
+    tween(opacity)
+      .delay(durationSeconds * 0.55)
+      .to(durationSeconds * 0.45, { opacity: 0 })
+      .start();
   }
 
   private playFindSuccess(target: Node): void {

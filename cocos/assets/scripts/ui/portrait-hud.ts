@@ -10,9 +10,11 @@ import {
   Sprite,
   SpriteFrame,
   UITransform,
+  UIOpacity,
   Vec3,
 } from "cc";
 import { EDITOR } from "cc/env";
+import type { RoundHudViewModel } from "./round-view-model";
 
 const { ccclass, executeInEditMode } = _decorator;
 const DONT_SAVE_OBJECT_FLAG = 8;
@@ -28,16 +30,20 @@ const COLORS = {
 };
 
 const ICON_SLOTS = [
-  { path: "art/icons/icon_pineapple/spriteFrame", count: 2 },
-  { path: "art/icons/icon_balloon/spriteFrame", count: 1 },
-  { path: "art/icons/icon_thief/spriteFrame", count: 1 },
-  { path: "art/icons/icon_puppy/spriteFrame", count: 1 },
-  { path: "art/icons/icon_gem/spriteFrame", count: 1 },
+  { typeId: "pineapple", path: "art/icons/icon_pineapple/spriteFrame", count: 2 },
+  { typeId: "balloon", path: "art/icons/icon_balloon/spriteFrame", count: 1 },
+  { typeId: "thief", path: "art/icons/icon_thief/spriteFrame", count: 1 },
+  { typeId: "puppy", path: "art/icons/icon_puppy/spriteFrame", count: 1 },
+  { typeId: "gem", path: "art/icons/icon_gem/spriteFrame", count: 1 },
 ];
 
 @ccclass("PortraitHud")
 @executeInEditMode(true)
 export class PortraitHud extends Component {
+  private timerLabel: Label | null = null;
+  private scoreLabel: Label | null = null;
+  private comboLabel: Label | null = null;
+
   protected onLoad(): void {
     this.buildHud();
   }
@@ -98,7 +104,15 @@ export class PortraitHud extends Component {
     clockGraphics.lineTo(16, -9);
     clockGraphics.stroke();
 
-    this.createLabel("Timer", parent, "1:00", 58, 190, 80, new Vec3(-285, 0, 0));
+    this.timerLabel = this.createLabel(
+      "Timer",
+      parent,
+      "1:00",
+      58,
+      190,
+      80,
+      new Vec3(-285, 0, 0),
+    ).getComponent(Label);
 
     const star = this.createGraphicsNode(
       "ScoreStar",
@@ -108,7 +122,15 @@ export class PortraitHud extends Component {
       76,
     );
     this.drawStar(star.addComponent(Graphics), 34, 16);
-    this.createLabel("Score", parent, "0", 58, 220, 80, new Vec3(75, 0, 0));
+    this.scoreLabel = this.createLabel(
+      "Score",
+      parent,
+      "0",
+      58,
+      220,
+      80,
+      new Vec3(75, 0, 0),
+    ).getComponent(Label);
 
     const combo = this.createRoundedPanel(
       "ComboPill",
@@ -119,7 +141,16 @@ export class PortraitHud extends Component {
       parent,
       COLORS.coral,
     );
-    this.createLabel("Combo", combo, "x1", 52, 140, 76, Vec3.ZERO, COLORS.white);
+    this.comboLabel = this.createLabel(
+      "Combo",
+      combo,
+      "x0",
+      52,
+      140,
+      76,
+      Vec3.ZERO,
+      COLORS.white,
+    ).getComponent(Label);
   }
 
   private buildTargetList(parent: Node): void {
@@ -127,7 +158,7 @@ export class PortraitHud extends Component {
 
     ICON_SLOTS.forEach((slot, index) => {
       const slotNode = this.createNode(
-        `TargetSlot${index + 1}`,
+        `TargetSlot_${slot.typeId}`,
         parent,
         new Vec3(slotXs[index], 0, 0),
         150,
@@ -160,6 +191,55 @@ export class PortraitHud extends Component {
         COLORS.white,
       );
     });
+  }
+
+  public render(viewModel: RoundHudViewModel): void {
+    if (this.timerLabel) {
+      this.timerLabel.string = viewModel.timer.label;
+    }
+    if (this.scoreLabel) {
+      this.scoreLabel.string = String(viewModel.score);
+    }
+    if (this.comboLabel) {
+      this.comboLabel.string = `x${viewModel.comboStreak}`;
+    }
+
+    const targetPanel = this.node.getChildByName("TargetPanel");
+    if (!targetPanel) {
+      return;
+    }
+    for (const slotNode of targetPanel.children) {
+      slotNode.active = false;
+    }
+
+    const spacing = 190;
+    const startX = -((viewModel.targetList.length - 1) * spacing) / 2;
+    viewModel.targetList.forEach((item, index) => {
+      const slotNode = targetPanel.getChildByName(`TargetSlot_${item.typeId}`);
+      const countLabel = slotNode
+        ?.getChildByName("CountBadge")
+        ?.getChildByName("Count")
+        ?.getComponent(Label);
+      if (!slotNode || !countLabel) {
+        return;
+      }
+      slotNode.active = true;
+      slotNode.setPosition(startX + index * spacing, 0, 0);
+      countLabel.string = String(
+        Math.max(0, item.requiredCount - item.foundCount),
+      );
+      const opacity =
+        slotNode.getComponent(UIOpacity) ?? slotNode.addComponent(UIOpacity);
+      opacity.opacity = item.isComplete ? 120 : 255;
+    });
+  }
+
+  public getHintButton(): Node | null {
+    return this.node.getChildByName("HintButton");
+  }
+
+  public getMagnifierButton(): Node | null {
+    return this.node.getChildByName("MagnifierButton");
   }
 
   private buildToolButton(name: string, position: Vec3, iconPath: string): void {
