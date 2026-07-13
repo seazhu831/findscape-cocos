@@ -6,8 +6,8 @@
       "selectedTargetCount": 4,
       "viewport": {
         "center": {
-          "x": 1200,
-          "y": 800
+          "x": 800,
+          "y": 1200
         },
         "zoom": 1
       },
@@ -46,8 +46,8 @@
         "expected": {
           "viewport": {
             "center": {
-              "x": 1200,
-              "y": 800
+              "x": 800,
+              "y": 1200
             },
             "zoom": 1
           }
@@ -62,8 +62,8 @@
         "expected": {
           "viewport": {
             "center": {
-              "x": 1320,
-              "y": 720
+              "x": 920,
+              "y": 1120
             },
             "zoom": 1
           }
@@ -79,8 +79,8 @@
         "expected": {
           "viewport": {
             "center": {
-              "x": 1320,
-              "y": 720
+              "x": 920,
+              "y": 1120
             },
             "zoom": 1
           }
@@ -95,18 +95,18 @@
         "expected": {
           "viewport": {
             "center": {
-              "x": 1200,
-              "y": 800
+              "x": 800,
+              "y": 1200
             },
-            "zoom": 0.5
+            "zoom": 0.3333333333333333
           }
         }
       },
       {
         "type": "tap",
         "point": {
-          "x": 420,
-          "y": 980
+          "x": 330,
+          "y": 860
         },
         "expected": {
           "foundCount": 1,
@@ -132,7 +132,7 @@
       {
         "type": "tap",
         "point": {
-          "x": 980,
+          "x": 930,
           "y": 360
         },
         "expected": {
@@ -153,8 +153,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 2040,
-          "y": 520
+          "x": 1170,
+          "y": 1620
         },
         "expected": {
           "foundCount": 2,
@@ -179,7 +179,7 @@
       {
         "type": "tap",
         "point": {
-          "x": 980,
+          "x": 930,
           "y": 360
         },
         "expected": {
@@ -217,8 +217,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 1320,
-          "y": 840
+          "x": 1060,
+          "y": 1310
         },
         "expected": {
           "foundCount": 1,

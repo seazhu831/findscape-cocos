@@ -6,8 +6,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 420,
-          "y": 980
+          "x": 330,
+          "y": 860
         },
         "expectedEvents": ["correctHit"],
         "expectedState": {
@@ -21,8 +21,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 1670,
-          "y": 1160
+          "x": 1330,
+          "y": 1040
         },
         "expectedEvents": ["correctHit"],
         "expectedState": {
@@ -36,8 +36,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 720,
-          "y": 1340
+          "x": 480,
+          "y": 1980
         },
         "expectedEvents": ["correctHit"],
         "expectedState": {
@@ -51,8 +51,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 1880,
-          "y": 1380
+          "x": 1200,
+          "y": 2090
         },
         "expectedEvents": ["correctHit", "roundCompleted"],
         "expectedState": {
@@ -72,8 +72,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 420,
-          "y": 980
+          "x": 330,
+          "y": 860
         },
         "expectedEvents": ["correctHit"],
         "expectedState": {
@@ -100,8 +100,8 @@
       {
         "type": "tap",
         "point": {
-          "x": 420,
-          "y": 980
+          "x": 330,
+          "y": 860
         },
         "expectedEvents": ["duplicateHit"],
         "expectedState": {
@@ -121,7 +121,7 @@
       {
         "type": "tap",
         "point": {
-          "x": 980,
+          "x": 930,
           "y": 360
         },
         "expectedEvents": ["correctHit"],

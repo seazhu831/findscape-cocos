@@ -8,13 +8,13 @@
       "assetBundle": "main",
       "backgroundAsset": "art/maps/demo_cozy_town_placeholder",
       "worldSize": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "defaultCamera": {
         "center": {
-          "x": 1200,
-          "y": 800
+          "x": 800,
+          "y": 1200
         },
         "zoom": 0.75
       },
@@ -80,8 +80,8 @@
           "mapId": "demo_cozy_town",
           "typeId": "pineapple",
           "position": {
-            "x": 420,
-            "y": 980
+            "x": 330,
+            "y": 860
           },
           "hitShape": {
             "type": "circle",
@@ -102,8 +102,8 @@
           "mapId": "demo_cozy_town",
           "typeId": "pineapple",
           "position": {
-            "x": 1670,
-            "y": 1160
+            "x": 1330,
+            "y": 1040
           },
           "hitShape": {
             "type": "rectangle",
@@ -125,7 +125,7 @@
           "mapId": "demo_cozy_town",
           "typeId": "balloon",
           "position": {
-            "x": 980,
+            "x": 930,
             "y": 360
           },
           "hitShape": {
@@ -147,8 +147,8 @@
           "mapId": "demo_cozy_town",
           "typeId": "balloon",
           "position": {
-            "x": 2040,
-            "y": 520
+            "x": 1170,
+            "y": 1620
           },
           "hitShape": {
             "type": "circle",
@@ -169,8 +169,8 @@
           "mapId": "demo_cozy_town",
           "typeId": "thief",
           "position": {
-            "x": 1320,
-            "y": 840
+            "x": 1060,
+            "y": 1310
           },
           "hitShape": {
             "type": "rectangle",
@@ -192,8 +192,8 @@
           "mapId": "demo_cozy_town",
           "typeId": "puppy",
           "position": {
-            "x": 720,
-            "y": 1340
+            "x": 480,
+            "y": 1980
           },
           "hitShape": {
             "type": "circle",
@@ -214,8 +214,8 @@
           "mapId": "demo_cozy_town",
           "typeId": "gem",
           "position": {
-            "x": 1880,
-            "y": 1380
+            "x": 1200,
+            "y": 2090
           },
           "hitShape": {
             "type": "polygon",
