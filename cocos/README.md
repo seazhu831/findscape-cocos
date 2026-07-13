@@ -1,8 +1,10 @@
 # Cocos Workspace
 
-This folder is reserved for the Cocos Creator client project.
+This folder is the Cocos Creator client project boundary.
 
-The current repository does not include editor-generated Cocos metadata yet because the local machine does not currently expose a Cocos Creator installation or `cocos` CLI. Keep this folder as a stable project boundary, then open it with the selected Cocos Creator version to let the editor generate compatible project files and `.meta` assets.
+The selected editor version is **Cocos Creator 3.8.8**. The repository does not include editor-generated Cocos metadata yet because the local machine does not currently expose a Cocos Creator installation or CLI. Install 3.8.8 through Cocos Dashboard, then import this existing folder and let that exact editor version generate compatible project files and `.meta` assets.
+
+See `../docs/30-cocos-creator-version-and-initialization.md` for the decision, installation procedure, and first-open verification checklist.
 
 ## Intended Targets
 
@@ -20,7 +22,7 @@ The current repository does not include editor-generated Cocos metadata yet beca
 
 ## Creator Handoff
 
-After Cocos Creator is installed and the target version is chosen:
+After Cocos Creator 3.8.8 is installed:
 
 1. Open this `cocos/` folder as a Cocos Creator project.
 2. Let Creator generate required settings and metadata.

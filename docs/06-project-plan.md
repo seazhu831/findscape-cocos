@@ -131,12 +131,12 @@ Outputs:
 
 Dependencies:
 
-- Chosen Cocos Creator version.
-- Local Cocos Creator installation or agreed generated structure.
+- Cocos Creator 3.8.8, selected in issue #39.
+- Local Cocos Creator installation and first project import.
 
 Current constraint:
 
-- The local machine does not currently expose `cocos` CLI or a visible Cocos Creator app, so the repo scaffold should avoid hand-authoring editor-generated metadata until the selected Creator version can generate it.
+- Cocos Creator 3.8.8 is selected, but the local machine does not currently expose Dashboard, the editor, or a Creator CLI. The repo must avoid hand-authoring editor-generated metadata until 3.8.8 imports the project.
 
 ## Stage 3: Gameplay Data Schemas
 
