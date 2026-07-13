@@ -29,6 +29,12 @@ export type ToolEvent =
       type: "toolUnavailable";
       toolId: string;
       status: Exclude<ToolUseStatus, "used">;
+    }
+  | {
+      type: "magnifierZoom";
+      toolId: string;
+      zoomMultiplier: number;
+      durationSeconds: number;
     };
 
 export interface ToolUseResult {
@@ -118,6 +124,44 @@ export function useHintTool(
         toolId,
         target,
         durationSeconds: toolConfig.durationSeconds ?? 2,
+      },
+    ],
+  };
+}
+
+export function useMagnifierTool(
+  modeRuntimeConfig: ModeRuntimeConfig,
+  toolRuntimeState: ToolRuntimeState,
+  toolId = "magnifier",
+): ToolUseResult {
+  const toolConfig = modeRuntimeConfig.tools.find((tool) => tool.toolId === toolId);
+  const toolState = toolRuntimeState.toolsById[toolId];
+
+  if (!toolConfig || !toolState) {
+    return createUnavailableResult(toolRuntimeState, toolId, "unavailable");
+  }
+  if (toolState.usesRemaining <= 0) {
+    return createUnavailableResult(toolRuntimeState, toolId, "unavailable");
+  }
+  if (toolState.cooldownRemainingSeconds > 0) {
+    return createUnavailableResult(toolRuntimeState, toolId, "coolingDown");
+  }
+
+  const nextState = updateToolState(toolRuntimeState, {
+    ...toolState,
+    usesRemaining: toolState.usesRemaining - 1,
+    cooldownRemainingSeconds: toolConfig.cooldownSeconds,
+  });
+
+  return {
+    status: "used",
+    state: nextState,
+    events: [
+      {
+        type: "magnifierZoom",
+        toolId,
+        zoomMultiplier: toolConfig.value ?? 1,
+        durationSeconds: toolConfig.durationSeconds ?? 0,
       },
     ],
   };

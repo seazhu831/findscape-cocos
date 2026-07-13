@@ -28,6 +28,9 @@ for (const fixture of fixtures) {
     if (step.type === "useHint") {
       result = useHintTool(runtimeConfig, roundState, toolRuntimeState);
       toolRuntimeState = result.state;
+    } else if (step.type === "useMagnifier") {
+      result = useMagnifierTool(runtimeConfig, toolRuntimeState);
+      toolRuntimeState = result.state;
     } else if (step.type === "advanceCooldown") {
       toolRuntimeState = advanceToolCooldowns(
         toolRuntimeState,
@@ -67,11 +70,31 @@ for (const fixture of fixtures) {
       }
     }
 
+    const magnifierEvent = result.events.find(
+      (event) => event.type === "magnifierZoom",
+    );
+    if (
+      step.expectedZoomMultiplier !== undefined &&
+      magnifierEvent?.zoomMultiplier !== step.expectedZoomMultiplier
+    ) {
+      failures.push(
+        `${fixture.name} expected zoomMultiplier ${step.expectedZoomMultiplier} but got ${magnifierEvent?.zoomMultiplier}`,
+      );
+    }
+    if (
+      step.expectedDurationSeconds !== undefined &&
+      magnifierEvent?.durationSeconds !== step.expectedDurationSeconds
+    ) {
+      failures.push(
+        `${fixture.name} expected durationSeconds ${step.expectedDurationSeconds} but got ${magnifierEvent?.durationSeconds}`,
+      );
+    }
+
     if (step.expectedToolState) {
       assertPartialObject(
         fixture.name,
         "toolState",
-        toolRuntimeState.toolsById.hint,
+        toolRuntimeState.toolsById[step.toolId ?? "hint"],
         step.expectedToolState,
       );
     }
@@ -158,6 +181,36 @@ function useHintTool(runtimeConfig, roundState, toolRuntimeState, toolId = "hint
         toolId,
         target,
         durationSeconds: toolConfig.durationSeconds ?? 2,
+      },
+    ],
+  };
+}
+
+function useMagnifierTool(runtimeConfig, toolRuntimeState, toolId = "magnifier") {
+  const toolConfig = runtimeConfig.tools.find((tool) => tool.toolId === toolId);
+  const toolState = toolRuntimeState.toolsById[toolId];
+
+  if (!toolConfig || !toolState || toolState.usesRemaining <= 0) {
+    return createUnavailableResult(toolRuntimeState, toolId, "unavailable");
+  }
+  if (toolState.cooldownRemainingSeconds > 0) {
+    return createUnavailableResult(toolRuntimeState, toolId, "coolingDown");
+  }
+
+  const nextState = updateToolState(toolRuntimeState, {
+    ...toolState,
+    usesRemaining: toolState.usesRemaining - 1,
+    cooldownRemainingSeconds: toolConfig.cooldownSeconds,
+  });
+  return {
+    status: "used",
+    state: nextState,
+    events: [
+      {
+        type: "magnifierZoom",
+        toolId,
+        zoomMultiplier: toolConfig.value ?? 1,
+        durationSeconds: toolConfig.durationSeconds ?? 0,
       },
     ],
   };

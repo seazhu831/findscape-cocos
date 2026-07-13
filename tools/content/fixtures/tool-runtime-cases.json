@@ -105,5 +105,35 @@
         "expectedEvents": ["toolUnavailable"]
       }
     ]
+  },
+  {
+    "name": "magnifier emits configured zoom event",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "useMagnifier",
+        "toolId": "magnifier",
+        "expectedStatus": "used",
+        "expectedEvents": ["magnifierZoom"],
+        "expectedZoomMultiplier": 1.5,
+        "expectedDurationSeconds": 4,
+        "expectedToolState": {
+          "usesRemaining": 0,
+          "cooldownRemainingSeconds": 15
+        }
+      }
+    ]
+  },
+  {
+    "name": "magnifier unavailable outside configured mode",
+    "modeId": "balloon_blast_demo",
+    "steps": [
+      {
+        "type": "useMagnifier",
+        "toolId": "magnifier",
+        "expectedStatus": "unavailable",
+        "expectedEvents": ["toolUnavailable"]
+      }
+    ]
   }
 ]
