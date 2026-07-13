@@ -85,11 +85,11 @@ for (const requiredFeedbackContract of [
 
 const targets = [
   ["demo_pineapple_001", -470, 340, "3f49362c-1baf-4c1a-9811-d452db44fdd8@f9941"],
-  ["demo_puppy", -320, -780, "9361326b-50ac-477e-b7e2-e631b04b44a2@f9941"],
+  ["demo_puppy_001", -320, -780, "9361326b-50ac-477e-b7e2-e631b04b44a2@f9941"],
   ["demo_balloon_001", 130, 840, "2c49839c-1bd2-4074-bbad-09a12ad19c04@f9941"],
-  ["demo_thief", 260, -110, "60c6743f-c87f-4184-8bf5-788e7f381ea9@f9941"],
+  ["demo_thief_001", 260, -110, "60c6743f-c87f-4184-8bf5-788e7f381ea9@f9941"],
   ["demo_pineapple_002", 530, 160, "3f49362c-1baf-4c1a-9811-d452db44fdd8@f9941"],
-  ["demo_gem", 400, -890, "ada04348-94d2-4f71-a139-e189ee53b468@f9941"],
+  ["demo_gem_001", 400, -890, "ada04348-94d2-4f71-a139-e189ee53b468@f9941"],
   ["demo_balloon_002", 370, -420, "2c49839c-1bd2-4074-bbad-09a12ad19c04@f9941"],
 ];
 

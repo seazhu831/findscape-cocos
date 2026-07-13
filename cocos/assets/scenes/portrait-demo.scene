@@ -498,7 +498,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "demo_puppy",
+    "_name": "demo_puppy_001",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -716,7 +716,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "demo_thief",
+    "_name": "demo_thief_001",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -934,7 +934,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "demo_gem",
+    "_name": "demo_gem_001",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
