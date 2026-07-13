@@ -10,12 +10,17 @@ const projectSettingsPath = path.join(
   cocosRoot,
   "settings/v2/packages/project.json",
 );
+const hudSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/ui/portrait-hud.ts",
+);
 const failures = [];
 
 const scene = JSON.parse(fs.readFileSync(scenePath, "utf8"));
 const projectSettings = JSON.parse(
   fs.readFileSync(projectSettingsPath, "utf8"),
 );
+const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const nodes = scene.filter((entry) => entry?.__type__ === "cc.Node");
 const nodesByName = new Map(nodes.map((node) => [node._name, node]));
 
@@ -26,12 +31,31 @@ const canvas = requireNode("Canvas");
 const camera = requireNode("Camera");
 const mapWorld = requireNode("MapWorld");
 const map = requireNode("Map");
+const hudRoot = requireNode("HUDRoot");
 expectChild(canvas, camera);
 expectChild(canvas, mapWorld);
+expectChild(canvas, hudRoot);
 expectChild(mapWorld, map);
 expectVector(mapWorld?._lscale, 1, 1, "MapWorld scale");
 expectContentSize(map, 1600, 2400);
 expectSpriteFrame(map, "adf71751-5e84-4cd7-9d68-3165f4a4c543@f9941");
+expectContentSize(hudRoot, 1080, 1920);
+expectCustomComponent(hudRoot, "9d6986zY6tFNYfqeaJhWbx/");
+for (const requiredHudContract of [
+  '"TopBar"',
+  '"TargetPanel"',
+  '"HintButton"',
+  '"MagnifierButton"',
+  "new Vec3(0, 800, 0)",
+  "new Vec3(0, -766, 0)",
+  "new Vec3(-400, -540, 0)",
+  "new Vec3(400, -540, 0)",
+  "const slotXs = [-380, -190, 0, 190, 380]",
+]) {
+  if (!hudSource.includes(requiredHudContract)) {
+    failures.push(`PortraitHud is missing contract: ${requiredHudContract}`);
+  }
+}
 
 const targets = [
   ["demo_pineapple_001", -470, 340, "3f49362c-1baf-4c1a-9811-d452db44fdd8@f9941"],
@@ -108,6 +132,13 @@ function findComponent(node, type) {
   return node._components
     ?.map((reference) => scene[reference.__id__])
     .find((component) => component?.__type__ === type);
+}
+
+function expectCustomComponent(node, type) {
+  const component = findComponent(node, type);
+  if (!component) {
+    failures.push(`${node?._name} must include component ${type}`);
+  }
 }
 
 function expectEqual(actual, expected, label) {
