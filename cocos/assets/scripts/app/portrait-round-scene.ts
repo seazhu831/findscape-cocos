@@ -6,12 +6,15 @@ import {
   Node,
   resources,
   sys,
+  tween,
+  Tween,
   UIOpacity,
   UITransform,
   Vec3,
 } from "cc";
 import {
   applyDemoSessionHint,
+  applyDemoSessionMagnifier,
   applyDemoSessionTap,
   applyDemoSessionTick,
   createDemoSessionContext,
@@ -83,6 +86,11 @@ export class PortraitRoundScene extends Component {
       this.handleHintTouch,
       this,
     );
+    this.hud?.getMagnifierButton()?.off(
+      Node.EventType.TOUCH_END,
+      this.handleMagnifierTouch,
+      this,
+    );
     this.settlement?.getRetryButton().off(
       Node.EventType.TOUCH_END,
       this.handleRetryTouch,
@@ -96,6 +104,7 @@ export class PortraitRoundScene extends Component {
     for (const button of this.modeSelect?.getModeButtons().values() ?? []) {
       button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
     }
+    this.stopMagnifierZoom();
   }
 
   private async initialize(): Promise<void> {
@@ -144,6 +153,11 @@ export class PortraitRoundScene extends Component {
     this.hud.getHintButton()?.on(
       Node.EventType.TOUCH_END,
       this.handleHintTouch,
+      this,
+    );
+    this.hud.getMagnifierButton()?.on(
+      Node.EventType.TOUCH_END,
+      this.handleMagnifierTouch,
       this,
     );
     this.ready = true;
@@ -221,6 +235,26 @@ export class PortraitRoundScene extends Component {
     this.renderHud();
   }
 
+  private handleMagnifierTouch(event: EventTouch): void {
+    event.propagationStopped = true;
+    if (!this.sessionState || this.sessionState.screen !== "round") {
+      return;
+    }
+
+    const update = applyDemoSessionMagnifier(this.sessionState);
+    this.applySessionUpdate(update);
+    const magnifierEvent = update.toolEvents.find(
+      (toolEvent) => toolEvent.type === "magnifierZoom",
+    );
+    if (magnifierEvent?.type === "magnifierZoom") {
+      this.playMagnifierZoom(
+        magnifierEvent.zoomMultiplier,
+        magnifierEvent.durationSeconds,
+      );
+    }
+    this.renderHud();
+  }
+
   private handleRetryTouch(event: EventTouch): void {
     event.propagationStopped = true;
     if (
@@ -236,6 +270,7 @@ export class PortraitRoundScene extends Component {
       this.sessionState,
       this.sessionState.selectedModeId ?? DEFAULT_MODE_ID,
     );
+    this.stopMagnifierZoom();
     this.resetTargetVisuals();
     this.renderHud();
   }
@@ -273,6 +308,7 @@ export class PortraitRoundScene extends Component {
       this.sessionState,
       modeId,
     );
+    this.stopMagnifierZoom();
     this.configureRoundTargets();
     this.modeSelect?.hide();
     this.renderHud();
@@ -283,6 +319,7 @@ export class PortraitRoundScene extends Component {
       const viewModel = this.sessionState.roundViewModel;
       this.hud?.render(viewModel.hud);
       this.setToolsVisible(!viewModel.settlement);
+      this.renderMagnifierState();
       if (viewModel.settlement) {
         this.settlement?.show(viewModel.settlement);
       } else {
@@ -354,11 +391,56 @@ export class PortraitRoundScene extends Component {
     }
   }
 
+  private playMagnifierZoom(
+    zoomMultiplier: number,
+    durationSeconds: number,
+  ): void {
+    if (!this.mapWorld) {
+      return;
+    }
+
+    this.stopMagnifierZoom();
+    tween(this.mapWorld)
+      .to(
+        0.25,
+        { scale: new Vec3(zoomMultiplier, zoomMultiplier, 1) },
+        { easing: "quadOut" },
+      )
+      .delay(durationSeconds)
+      .to(0.25, { scale: new Vec3(1, 1, 1) }, { easing: "quadInOut" })
+      .start();
+  }
+
+  private stopMagnifierZoom(): void {
+    if (!this.mapWorld) {
+      return;
+    }
+    Tween.stopAllByTarget(this.mapWorld);
+    this.mapWorld.setScale(1, 1, 1);
+  }
+
+  private renderMagnifierState(): void {
+    const magnifierButton = this.hud?.getMagnifierButton();
+    if (!magnifierButton) {
+      return;
+    }
+    const opacity =
+      magnifierButton.getComponent(UIOpacity) ??
+      magnifierButton.addComponent(UIOpacity);
+    const magnifierState =
+      this.sessionState?.roundState?.tools.toolsById.magnifier;
+    opacity.opacity =
+      magnifierState && magnifierState.usesRemaining <= 0 ? 110 : 255;
+  }
+
   private applySessionUpdate(update: DemoSessionUpdate): void {
     const reachedSettlement =
       this.sessionState?.screen === "round" &&
       update.state.screen === "settlement";
     this.sessionState = update.state;
+    if (reachedSettlement) {
+      this.stopMagnifierZoom();
+    }
     if (reachedSettlement && this.storagePort) {
       void saveLocalSaveToStorage(
         this.storagePort,

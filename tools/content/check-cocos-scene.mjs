@@ -110,6 +110,7 @@ for (const requiredRoundSceneContract of [
   "applyDemoSessionTap",
   "applyDemoSessionTick",
   "applyDemoSessionHint",
+  "applyDemoSessionMagnifier",
   "targetNode.active = selectedIds.has(targetId)",
   "event.propagationStopped = true",
   "x: mapLocal.x + 800",
@@ -138,6 +139,12 @@ for (const requiredRoundSceneContract of [
   'name.replace("ModeButton_", "")',
   "this.configureRoundTargets()",
   'toolIds.has("magnifier")',
+  "this.handleMagnifierTouch",
+  'toolEvent.type === "magnifierZoom"',
+  "magnifierEvent.zoomMultiplier",
+  "magnifierEvent.durationSeconds",
+  "Tween.stopAllByTarget(this.mapWorld)",
+  "magnifierState.usesRemaining <= 0 ? 110 : 255",
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
