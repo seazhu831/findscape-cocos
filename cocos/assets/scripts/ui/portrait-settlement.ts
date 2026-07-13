@@ -19,6 +19,7 @@ const COLORS = {
   outline: new Color(107, 87, 68, 255),
   panel: new Color(253, 246, 230, 255),
   coral: new Color(240, 138, 122, 255),
+  sky: new Color(143, 193, 227, 255),
   yellow: new Color(242, 201, 76, 255),
   muted: new Color(188, 176, 160, 255),
   white: new Color(255, 255, 255, 255),
@@ -31,6 +32,7 @@ export class PortraitSettlement extends Component {
   private progressLabel: Label | null = null;
   private accuracyLabel: Label | null = null;
   private retryButton: Node | null = null;
+  private modesButton: Node | null = null;
   private starGraphics: Graphics[] = [];
   private built = false;
 
@@ -68,6 +70,11 @@ export class PortraitSettlement extends Component {
   public getRetryButton(): Node {
     this.ensureBuilt();
     return this.retryButton as Node;
+  }
+
+  public getModesButton(): Node {
+    this.ensureBuilt();
+    return this.modesButton as Node;
   }
 
   private ensureBuilt(): void {
@@ -141,17 +148,32 @@ export class PortraitSettlement extends Component {
     );
 
     this.retryButton = this.createNode(
-      "RetryButton", panel, new Vec3(0, -382, 0), 470, 112,
+      "RetryButton", panel, new Vec3(-180, -382, 0), 320, 112,
     );
     const retryGraphics = this.retryButton.addComponent(Graphics);
     retryGraphics.lineWidth = 6;
     retryGraphics.fillColor = COLORS.coral;
     retryGraphics.strokeColor = COLORS.outline;
-    retryGraphics.roundRect(-235, -56, 470, 112, 44);
+    retryGraphics.roundRect(-160, -56, 320, 112, 44);
     retryGraphics.fill();
     retryGraphics.stroke();
     this.createLabel(
-      "RetryLabel", this.retryButton, "PLAY AGAIN", 46, 410, 78,
+      "RetryLabel", this.retryButton, "REPLAY", 44, 270, 78,
+      Vec3.ZERO, COLORS.white,
+    );
+
+    this.modesButton = this.createNode(
+      "ModesButton", panel, new Vec3(180, -382, 0), 320, 112,
+    );
+    const modesGraphics = this.modesButton.addComponent(Graphics);
+    modesGraphics.lineWidth = 6;
+    modesGraphics.fillColor = COLORS.sky;
+    modesGraphics.strokeColor = COLORS.outline;
+    modesGraphics.roundRect(-160, -56, 320, 112, 44);
+    modesGraphics.fill();
+    modesGraphics.stroke();
+    this.createLabel(
+      "ModesLabel", this.modesButton, "MODES", 44, 270, 78,
       Vec3.ZERO, COLORS.white,
     );
   }
