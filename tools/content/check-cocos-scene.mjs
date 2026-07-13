@@ -14,6 +14,10 @@ const hudSourcePath = path.join(
   cocosRoot,
   "assets/scripts/ui/portrait-hud.ts",
 );
+const feedbackSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/feedback/portrait-feedback.ts",
+);
 const failures = [];
 
 const scene = JSON.parse(fs.readFileSync(scenePath, "utf8"));
@@ -21,6 +25,7 @@ const projectSettings = JSON.parse(
   fs.readFileSync(projectSettingsPath, "utf8"),
 );
 const hudSource = fs.readFileSync(hudSourcePath, "utf8");
+const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
 const nodes = scene.filter((entry) => entry?.__type__ === "cc.Node");
 const nodesByName = new Map(nodes.map((node) => [node._name, node]));
 
@@ -31,16 +36,21 @@ const canvas = requireNode("Canvas");
 const camera = requireNode("Camera");
 const mapWorld = requireNode("MapWorld");
 const map = requireNode("Map");
+const feedbackRoot = requireNode("FeedbackRoot");
 const hudRoot = requireNode("HUDRoot");
 expectChild(canvas, camera);
 expectChild(canvas, mapWorld);
+expectChild(canvas, feedbackRoot);
 expectChild(canvas, hudRoot);
+expectChildOrder(canvas, [mapWorld, feedbackRoot, hudRoot]);
 expectChild(mapWorld, map);
 expectVector(mapWorld?._lscale, 1, 1, "MapWorld scale");
 expectContentSize(map, 1600, 2400);
 expectSpriteFrame(map, "adf71751-5e84-4cd7-9d68-3165f4a4c543@f9941");
 expectContentSize(hudRoot, 1080, 1920);
 expectCustomComponent(hudRoot, "9d6986zY6tFNYfqeaJhWbx/");
+expectContentSize(feedbackRoot, 1080, 1920);
+expectCustomComponent(feedbackRoot, "3685euzn7RPLb3IeRmV1Oxb");
 for (const requiredHudContract of [
   '"TopBar"',
   '"TargetPanel"',
@@ -54,6 +64,22 @@ for (const requiredHudContract of [
 ]) {
   if (!hudSource.includes(requiredHudContract)) {
     failures.push(`PortraitHud is missing contract: ${requiredHudContract}`);
+  }
+}
+
+for (const requiredFeedbackContract of [
+  "this.playFindSuccess(target)",
+  "this.playBalloonPop(target)",
+  "this.playCatchPulse(target)",
+  "this.handleWrongTouch",
+  "this.animateEffect(effect, 0.7",
+  "this.animateEffect(effect, 0.5",
+  "this.animateEffect(effect, 0.8",
+  ".to(0.3, { scale:",
+  ".call(() => effect.destroy())",
+]) {
+  if (!feedbackSource.includes(requiredFeedbackContract)) {
+    failures.push(`PortraitFeedback is missing contract: ${requiredFeedbackContract}`);
   }
 }
 
@@ -99,6 +125,19 @@ function expectChild(parent, child) {
   const childIds = parent._children?.map((entry) => entry.__id__) ?? [];
   if (!childIds.includes(childId)) {
     failures.push(`${child._name} must be a child of ${parent._name}`);
+  }
+}
+
+function expectChildOrder(parent, orderedChildren) {
+  if (!parent || orderedChildren.some((child) => !child)) {
+    return;
+  }
+  const childIds = parent._children?.map((entry) => entry.__id__) ?? [];
+  const indexes = orderedChildren.map((child) => childIds.indexOf(scene.indexOf(child)));
+  if (indexes.some((index) => index < 0) || indexes.some((index, offset) => offset > 0 && index <= indexes[offset - 1])) {
+    failures.push(
+      `${orderedChildren.map((child) => child._name).join(" -> ")} must keep sibling order`,
+    );
   }
 }
 
