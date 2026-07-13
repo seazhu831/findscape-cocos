@@ -4,7 +4,7 @@
   "private": true,
   "description": "Cocos Creator client workspace for the findscape hidden-object gameplay foundation.",
   "scripts": {
-    "check:all": "npm run validate:config && npm run preview:modes && npm run check:assets && npm run check:modes && npm run check:hit-test && npm run check:viewport && npm run check:round && npm run check:view-model && npm run check:save && npm run check:storage && npm run check:browser-storage && npm run check:wechat-storage && npm run check:tools && npm run check:feedback && npm run check:controller && npm run check:session && npm run check:web-preview && npm run check:web-preview-model",
+    "check:all": "npm run validate:config && npm run preview:modes && npm run check:assets && npm run check:scene && npm run check:modes && npm run check:hit-test && npm run check:viewport && npm run check:round && npm run check:view-model && npm run check:save && npm run check:storage && npm run check:browser-storage && npm run check:wechat-storage && npm run check:tools && npm run check:feedback && npm run check:controller && npm run check:session && npm run check:web-preview && npm run check:web-preview-model",
     "check:assets": "node ../tools/content/check-design-asset-manifest.mjs",
     "check:browser-storage": "node ../tools/content/check-browser-storage-fixtures.mjs",
     "check:controller": "node ../tools/content/check-round-controller-fixtures.mjs",
@@ -12,6 +12,7 @@
     "check:hit-test": "node ../tools/content/check-hit-test-fixtures.mjs",
     "check:modes": "node ../tools/content/check-mode-capabilities-fixtures.mjs",
     "check:round": "node ../tools/content/check-round-runtime-fixtures.mjs",
+    "check:scene": "node ../tools/content/check-cocos-scene.mjs",
     "check:save": "node ../tools/content/check-local-save-fixtures.mjs",
     "check:session": "node ../tools/content/check-demo-session-fixtures.mjs",
     "check:storage": "node ../tools/content/check-storage-port-fixtures.mjs",
