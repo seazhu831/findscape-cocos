@@ -245,7 +245,7 @@ function calculateCorrectHitScore(input) {
       )
     : 0;
 
-  return baseScore + comboBonus + timeBonus;
+  return Math.round(baseScore + comboBonus + timeBonus);
 }
 
 function isPointInTargetHitArea(targetPoint, worldPoint) {

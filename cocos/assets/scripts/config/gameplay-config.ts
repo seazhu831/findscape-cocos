@@ -129,7 +129,7 @@ export function calculateCorrectHitScore(
       )
     : 0;
 
-  return baseScore + comboBonus + timeBonus;
+  return Math.round(baseScore + comboBonus + timeBonus);
 }
 
 function mapById<T extends object>(

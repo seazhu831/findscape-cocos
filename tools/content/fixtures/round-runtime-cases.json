@@ -146,5 +146,44 @@
         }
       }
     ]
+  },
+  {
+    "name": "fractional remaining time produces integer completion score",
+    "modeId": "balloon_blast_demo",
+    "steps": [
+      {
+        "type": "advanceTime",
+        "deltaSeconds": 12.345,
+        "expectedState": {
+          "status": "playing",
+          "remainingSeconds": 47.655
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 930,
+          "y": 360
+        },
+        "expectedEvents": ["correctHit"],
+        "expectedState": {
+          "score": 110,
+          "comboStreak": 1
+        }
+      },
+      {
+        "type": "tap",
+        "point": {
+          "x": 1170,
+          "y": 1620
+        },
+        "expectedEvents": ["correctHit", "roundCompleted"],
+        "expectedState": {
+          "status": "completed",
+          "score": 468,
+          "comboStreak": 2
+        }
+      }
+    ]
   }
 ]
