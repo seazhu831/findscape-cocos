@@ -203,6 +203,8 @@ export class PortraitHud extends Component {
     if (this.comboLabel) {
       this.comboLabel.string = `x${viewModel.comboStreak}`;
     }
+    this.renderToolButton(this.getHintButton(), viewModel, "hint");
+    this.renderToolButton(this.getMagnifierButton(), viewModel, "magnifier");
 
     const targetPanel = this.node.getChildByName("TargetPanel");
     if (!targetPanel) {
@@ -242,6 +244,36 @@ export class PortraitHud extends Component {
     return this.node.getChildByName("MagnifierButton");
   }
 
+  private renderToolButton(
+    button: Node | null,
+    viewModel: RoundHudViewModel,
+    toolId: string,
+  ): void {
+    if (!button) {
+      return;
+    }
+    const tool = viewModel.tools.find((item) => item.toolId === toolId);
+    const usesLabel = button
+      .getChildByName("UsesBadge")
+      ?.getChildByName("Uses")
+      ?.getComponent(Label);
+    const cooldownPill = button.getChildByName("CooldownPill");
+    const cooldownLabel = cooldownPill
+      ?.getChildByName("Cooldown")
+      ?.getComponent(Label);
+    if (usesLabel) {
+      usesLabel.string = String(tool?.usesRemaining ?? 0);
+    }
+    if (cooldownPill) {
+      cooldownPill.active = tool?.isCoolingDown ?? false;
+    }
+    if (cooldownLabel) {
+      cooldownLabel.string = `${tool?.cooldownSeconds ?? 0}s`;
+    }
+    const opacity = button.getComponent(UIOpacity) ?? button.addComponent(UIOpacity);
+    opacity.opacity = tool?.isDepleted ? 110 : tool?.isCoolingDown ? 170 : 255;
+  }
+
   private buildToolButton(name: string, position: Vec3, iconPath: string): void {
     const button = this.createGraphicsNode(name, this.node, position, 180, 180);
     const graphics = button.addComponent(Graphics);
@@ -252,6 +284,27 @@ export class PortraitHud extends Component {
     graphics.fill();
     graphics.stroke();
     this.loadSprite(button, iconPath, 122, 122, "Icon");
+    const badge = this.createRoundedPanel(
+      "UsesBadge",
+      62,
+      62,
+      31,
+      new Vec3(56, 56, 0),
+      button,
+      COLORS.berry,
+    );
+    this.createLabel("Uses", badge, "0", 34, 52, 52, Vec3.ZERO, COLORS.white);
+    const cooldown = this.createRoundedPanel(
+      "CooldownPill",
+      112,
+      52,
+      26,
+      new Vec3(0, -60, 0),
+      button,
+      COLORS.outline,
+    );
+    cooldown.active = false;
+    this.createLabel("Cooldown", cooldown, "", 30, 100, 44, Vec3.ZERO, COLORS.white);
   }
 
   private createRoundedPanel(

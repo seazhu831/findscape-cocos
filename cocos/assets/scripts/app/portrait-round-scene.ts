@@ -384,7 +384,6 @@ export class PortraitRoundScene extends Component {
       const viewModel = this.sessionState.roundViewModel;
       this.hud?.render(viewModel.hud);
       this.setToolsVisible(!viewModel.settlement);
-      this.renderMagnifierState();
       if (viewModel.settlement) {
         this.settlement?.show(viewModel.settlement);
       } else {
@@ -498,20 +497,6 @@ export class PortraitRoundScene extends Component {
   private resetMapPosition(): void {
     this.resetMapGesture();
     this.mapWorld?.setPosition(0, 0, 0);
-  }
-
-  private renderMagnifierState(): void {
-    const magnifierButton = this.hud?.getMagnifierButton();
-    if (!magnifierButton) {
-      return;
-    }
-    const opacity =
-      magnifierButton.getComponent(UIOpacity) ??
-      magnifierButton.addComponent(UIOpacity);
-    const magnifierState =
-      this.sessionState?.roundState?.tools.toolsById.magnifier;
-    opacity.opacity =
-      magnifierState && magnifierState.usesRemaining <= 0 ? 110 : 255;
   }
 
   private applySessionUpdate(update: DemoSessionUpdate): void {

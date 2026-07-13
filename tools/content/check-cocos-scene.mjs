@@ -82,6 +82,10 @@ for (const requiredHudContract of [
   "new Vec3(-400, -540, 0)",
   "new Vec3(400, -540, 0)",
   "const slotXs = [-380, -190, 0, 190, 380]",
+  '"UsesBadge"',
+  '"CooldownPill"',
+  "viewModel.tools.find",
+  "tool?.isDepleted ? 110 : tool?.isCoolingDown ? 170 : 255",
 ]) {
   if (!hudSource.includes(requiredHudContract)) {
     failures.push(`PortraitHud is missing contract: ${requiredHudContract}`);
@@ -144,7 +148,6 @@ for (const requiredRoundSceneContract of [
   "magnifierEvent.zoomMultiplier",
   "magnifierEvent.durationSeconds",
   "Tween.stopAllByTarget(this.mapWorld)",
-  "magnifierState.usesRemaining <= 0 ? 110 : 255",
   "Node.EventType.TOUCH_START",
   "Node.EventType.TOUCH_MOVE",
   "Node.EventType.TOUCH_CANCEL",
@@ -202,6 +205,17 @@ if (!roundViewModelSource.includes("Array.from(requiredCounts.entries())")) {
   failures.push(
     "Round view model must use Array.from for Creator-compatible Map iteration",
   );
+}
+for (const requiredToolViewModelContract of [
+  "export interface ToolHudViewModel",
+  "toolRuntimeState?: ToolRuntimeState",
+  "Math.ceil(state?.cooldownRemainingSeconds ?? 0)",
+  "isCoolingDown: cooldownSeconds > 0 && usesRemaining > 0",
+  "isDepleted: usesRemaining <= 0",
+]) {
+  if (!roundViewModelSource.includes(requiredToolViewModelContract)) {
+    failures.push(`Round view model is missing contract: ${requiredToolViewModelContract}`);
+  }
 }
 
 const targets = [
