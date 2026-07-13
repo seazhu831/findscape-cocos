@@ -21,6 +21,7 @@ const COLORS = {
   coral: new Color(240, 138, 122, 255),
   yellow: new Color(242, 201, 76, 255),
   muted: new Color(188, 176, 160, 255),
+  white: new Color(255, 255, 255, 255),
 };
 
 @ccclass("PortraitSettlement")
@@ -29,6 +30,7 @@ export class PortraitSettlement extends Component {
   private scoreLabel: Label | null = null;
   private progressLabel: Label | null = null;
   private accuracyLabel: Label | null = null;
+  private retryButton: Node | null = null;
   private starGraphics: Graphics[] = [];
   private built = false;
 
@@ -61,6 +63,11 @@ export class PortraitSettlement extends Component {
 
   public hide(): void {
     this.node.active = false;
+  }
+
+  public getRetryButton(): Node {
+    this.ensureBuilt();
+    return this.retryButton as Node;
   }
 
   private ensureBuilt(): void {
@@ -131,6 +138,21 @@ export class PortraitSettlement extends Component {
     this.accuracyLabel = this.createLabel(
       "Accuracy", panel, "0%", 58, 280, 72,
       new Vec3(190, -258, 0), COLORS.coral,
+    );
+
+    this.retryButton = this.createNode(
+      "RetryButton", panel, new Vec3(0, -382, 0), 470, 112,
+    );
+    const retryGraphics = this.retryButton.addComponent(Graphics);
+    retryGraphics.lineWidth = 6;
+    retryGraphics.fillColor = COLORS.coral;
+    retryGraphics.strokeColor = COLORS.outline;
+    retryGraphics.roundRect(-235, -56, 470, 112, 44);
+    retryGraphics.fill();
+    retryGraphics.stroke();
+    this.createLabel(
+      "RetryLabel", this.retryButton, "PLAY AGAIN", 46, 410, 78,
+      Vec3.ZERO, COLORS.white,
     );
   }
 
