@@ -79,6 +79,11 @@ export class PortraitRoundScene extends Component {
       this.handleHintTouch,
       this,
     );
+    this.settlement?.getRetryButton().off(
+      Node.EventType.TOUCH_END,
+      this.handleRetryTouch,
+      this,
+    );
   }
 
   private async initialize(): Promise<void> {
@@ -91,6 +96,11 @@ export class PortraitRoundScene extends Component {
       throw new Error("MapWorld, FeedbackRoot, and HUDRoot are required");
     }
     this.settlement = this.createSettlement();
+    this.settlement.getRetryButton().on(
+      Node.EventType.TOUCH_END,
+      this.handleRetryTouch,
+      this,
+    );
 
     const config = await this.loadGameplayConfig();
     this.storagePort = createBrowserStoragePort(sys.localStorage);
@@ -112,17 +122,9 @@ export class PortraitRoundScene extends Component {
       this.targetConfigsById.set(target.targetId, target);
     }
 
-    const selectedIds = new Set(this.targetConfigsById.keys());
-    for (const [targetId, targetNode] of this.targetNodesById) {
-      targetNode.active = selectedIds.has(targetId);
-      targetNode.setScale(1, 1, 1);
-      const opacity = targetNode.getComponent(UIOpacity);
-      if (opacity) {
-        opacity.opacity = 255;
-      }
-      if (targetNode.active) {
-        targetNode.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
-      }
+    this.resetTargetVisuals();
+    for (const targetNode of this.targetNodesById.values()) {
+      targetNode.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
     }
 
     this.mapWorld.on(Node.EventType.TOUCH_END, this.handleMapTouch, this);
@@ -206,6 +208,25 @@ export class PortraitRoundScene extends Component {
     this.renderHud();
   }
 
+  private handleRetryTouch(event: EventTouch): void {
+    event.propagationStopped = true;
+    if (
+      !this.sessionContext ||
+      !this.sessionState ||
+      this.sessionState.screen !== "settlement"
+    ) {
+      return;
+    }
+
+    this.sessionState = startDemoRound(
+      this.sessionContext,
+      this.sessionState,
+      this.sessionState.selectedModeId ?? DEFAULT_MODE_ID,
+    );
+    this.resetTargetVisuals();
+    this.renderHud();
+  }
+
   private renderHud(): void {
     if (this.sessionState?.roundViewModel) {
       const viewModel = this.sessionState.roundViewModel;
@@ -235,6 +256,18 @@ export class PortraitRoundScene extends Component {
     }
     if (magnifierButton) {
       magnifierButton.active = visible;
+    }
+  }
+
+  private resetTargetVisuals(): void {
+    const selectedIds = new Set(this.targetConfigsById.keys());
+    for (const [targetId, targetNode] of this.targetNodesById) {
+      targetNode.active = selectedIds.has(targetId);
+      targetNode.setScale(1, 1, 1);
+      const opacity = targetNode.getComponent(UIOpacity);
+      if (opacity) {
+        opacity.opacity = 255;
+      }
     }
   }
 

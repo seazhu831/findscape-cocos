@@ -123,6 +123,10 @@ for (const requiredRoundSceneContract of [
   'this.sessionState?.screen === "round"',
   'update.state.screen === "settlement"',
   "saveLocalSaveToStorage(",
+  "this.settlement.getRetryButton().on(",
+  'this.sessionState.screen !== "settlement"',
+  "this.sessionState.selectedModeId ?? DEFAULT_MODE_ID",
+  "this.resetTargetVisuals()",
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
@@ -135,6 +139,9 @@ for (const requiredSettlementContract of [
   "viewModel.accuracy01",
   "addComponent(BlockInputEvents)",
   'viewModel.status === "completed"',
+  '"RetryButton"',
+  '"PLAY AGAIN"',
+  "public getRetryButton(): Node",
 ]) {
   if (!settlementSource.includes(requiredSettlementContract)) {
     failures.push(
