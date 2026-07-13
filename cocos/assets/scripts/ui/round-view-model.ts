@@ -141,7 +141,7 @@ function createTargetListViewModels(
     }
   }
 
-  return [...requiredCounts.entries()].map(([typeId, requiredCount]) => {
+  return Array.from(requiredCounts.entries()).map(([typeId, requiredCount]) => {
     const targetType = targetTypesById.get(typeId);
     const foundCount = foundCounts.get(typeId) ?? 0;
 
