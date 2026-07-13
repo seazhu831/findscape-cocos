@@ -76,7 +76,7 @@ These paths match the current demo config in `cocos/assets/resources/config/demo
 
 Initial dimensions are intentionally practical placeholders. Adjust after Cocos preview and memory checks.
 
-- Demo map background: `2400x1600` PNG or WebP, 2x-ready source preferred.
+- Demo map background: `1600x2400` portrait PNG or WebP. Keep the accepted `2400x1600` export as a non-runtime alternate only.
 - Target sprite source: square `512x512` transparent PNG.
 - Target icon: square `256x256` transparent PNG.
 - Tool icon: square `256x256` transparent PNG.

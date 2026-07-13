@@ -98,7 +98,7 @@ Actual WeChat device preview can remain a later validation step if WeChat DevToo
 Once 3.8.8 is installed and the first-open verification passes:
 
 1. [x] Commit editor-generated project metadata as its own granular stage.
-2. Migrate gameplay config from the landscape placeholder contract to the accepted 1600x2400 portrait map.
+2. [x] Migrate gameplay config from the landscape placeholder contract to the accepted 1600x2400 portrait map.
 3. Create the map scene, camera/viewport binding, and seven target sprite nodes.
 4. Rebuild the HUD from the accepted 1080x1920 reference and design tokens.
 5. Slice or reconstruct feedback sheets and bind tweens/particles to feedback plans.

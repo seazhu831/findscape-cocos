@@ -32,7 +32,6 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current safe work sequence is:
 
-- Migrate the gameplay contract to the accepted 1600x2400 portrait map and anchors.
 - Create and verify the first Cocos scene.
 - Integrate HUD and feedback assets.
 - Build Web Mobile before validating WeChat Mini Game.
