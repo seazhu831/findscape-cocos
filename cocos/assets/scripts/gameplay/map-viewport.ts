@@ -49,19 +49,18 @@ export function clampViewportCenter(
   viewport: Pick<ViewportState, "viewSize" | "mapSize" | "zoom">,
   center: Vector2Config,
 ): Vector2Config {
-  const halfVisibleWidth = viewport.viewSize.width / viewport.zoom / 2;
-  const halfVisibleHeight = viewport.viewSize.height / viewport.zoom / 2;
-
   return {
-    x: clamp(
+    x: clampViewportAxis(
       center.x,
-      halfVisibleWidth,
-      Math.max(halfVisibleWidth, viewport.mapSize.width - halfVisibleWidth),
+      viewport.viewSize.width,
+      viewport.mapSize.width,
+      viewport.zoom,
     ),
-    y: clamp(
+    y: clampViewportAxis(
       center.y,
-      halfVisibleHeight,
-      Math.max(halfVisibleHeight, viewport.mapSize.height - halfVisibleHeight),
+      viewport.viewSize.height,
+      viewport.mapSize.height,
+      viewport.zoom,
     ),
   };
 }
@@ -114,4 +113,18 @@ export function zoomViewportAtScreenPoint(
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
+}
+
+function clampViewportAxis(
+  center: number,
+  viewSize: number,
+  mapSize: number,
+  zoom: number,
+): number {
+  const halfVisibleSize = viewSize / zoom / 2;
+  if (halfVisibleSize * 2 >= mapSize) {
+    return mapSize / 2;
+  }
+
+  return clamp(center, halfVisibleSize, mapSize - halfVisibleSize);
 }

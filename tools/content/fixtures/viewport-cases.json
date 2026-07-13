@@ -7,12 +7,12 @@
         "height": 600
       },
       "mapSize": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "center": {
-        "x": 1200,
-        "y": 800
+        "x": 800,
+        "y": 1200
       },
       "zoom": 1,
       "minZoom": 0.5,
@@ -25,8 +25,8 @@
           "y": 300
         },
         "expected": {
-          "x": 1200,
-          "y": 800
+          "x": 800,
+          "y": 1200
         }
       },
       {
@@ -35,16 +35,16 @@
           "y": 250
         },
         "expected": {
-          "x": 1300,
-          "y": 750
+          "x": 900,
+          "y": 1150
         }
       }
     ],
     "mapToScreen": [
       {
         "mapPoint": {
-          "x": 1300,
-          "y": 750
+          "x": 900,
+          "y": 1150
         },
         "expected": {
           "x": 500,
@@ -61,12 +61,12 @@
         "height": 600
       },
       "mapSize": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "center": {
-        "x": 1200,
-        "y": 800
+        "x": 800,
+        "y": 1200
       },
       "zoom": 2,
       "minZoom": 0.5,
@@ -79,8 +79,8 @@
           "y": 300
         },
         "expected": {
-          "x": 1250,
-          "y": 800
+          "x": 850,
+          "y": 1200
         }
       }
     ]
@@ -93,12 +93,12 @@
         "height": 600
       },
       "mapSize": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "center": {
-        "x": 1200,
-        "y": 800
+        "x": 800,
+        "y": 1200
       },
       "zoom": 1,
       "minZoom": 0.5,
@@ -110,8 +110,8 @@
         "y": -40
       },
       "expectedCenter": {
-        "x": 1120,
-        "y": 840
+        "x": 720,
+        "y": 1240
       }
     }
   },
@@ -123,12 +123,12 @@
         "height": 600
       },
       "mapSize": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "center": {
-        "x": 1200,
-        "y": 800
+        "x": 800,
+        "y": 1200
       },
       "zoom": 1,
       "minZoom": 0.5,
@@ -153,12 +153,12 @@
         "height": 600
       },
       "mapSize": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "center": {
-        "x": 1200,
-        "y": 800
+        "x": 800,
+        "y": 1200
       },
       "zoom": 1,
       "minZoom": 0.5,
@@ -171,8 +171,38 @@
         "y": 300
       },
       "expectedCenter": {
-        "x": 1250,
-        "y": 800
+        "x": 850,
+        "y": 1200
+      }
+    }
+  },
+  {
+    "name": "oversized visible axis stays centered on portrait map",
+    "viewport": {
+      "viewSize": {
+        "width": 1200,
+        "height": 800
+      },
+      "mapSize": {
+        "width": 1600,
+        "height": 2400
+      },
+      "center": {
+        "x": 50,
+        "y": 50
+      },
+      "zoom": 0.3333333333333333,
+      "minZoom": 0.3333333333333333,
+      "maxZoom": 2
+    },
+    "clampCenter": {
+      "center": {
+        "x": 50,
+        "y": 50
+      },
+      "expectedCenter": {
+        "x": 800,
+        "y": 1200
       }
     }
   }

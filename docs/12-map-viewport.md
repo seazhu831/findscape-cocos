@@ -27,6 +27,9 @@ This stage adds the pure viewport math needed before Cocos pan/zoom input is wir
 - Panning by a screen delta moves the camera center in the opposite direction.
 - Zooming at an anchor preserves the map point under that anchor when possible.
 - Camera center is clamped so the viewport stays within map bounds.
+- If the visible area is larger than the map on one axis, that axis remains
+  centered and uses letterbox space instead of moving the camera outside the
+  map.
 
 ## Validate Fixtures
 
@@ -44,5 +47,5 @@ npm run check:viewport
 
 Current limitation:
 
-- Full gesture feel still requires Cocos Creator preview or a Web preview harness.
-- TypeScript compilation is not run yet because the local TypeScript/Cocos toolchain is not initialized.
+- Full gesture feel still requires Cocos Creator preview and device-sized scene
+  screenshots.
