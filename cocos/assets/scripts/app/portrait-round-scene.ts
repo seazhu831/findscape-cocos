@@ -11,6 +11,7 @@ import {
   UIOpacity,
   UITransform,
   Vec3,
+  view,
 } from "cc";
 import {
   applyDemoSessionHint,
@@ -45,8 +46,6 @@ const DEFAULT_MODE_ID = "hidden_object_demo";
 const DRAG_THRESHOLD = 12;
 const MAP_WIDTH = 1600;
 const MAP_HEIGHT = 2400;
-const VIEW_WIDTH = 1080;
-const VIEW_HEIGHT = 1920;
 
 @ccclass("PortraitRoundScene")
 export class PortraitRoundScene extends Component {
@@ -230,8 +229,9 @@ export class PortraitRoundScene extends Component {
     this.mapGestureDragged = true;
     const position = this.mapWorld.position;
     const scale = this.mapWorld.scale.x;
-    const maxX = Math.max(0, (MAP_WIDTH * scale - VIEW_WIDTH) / 2);
-    const maxY = Math.max(0, (MAP_HEIGHT * scale - VIEW_HEIGHT) / 2);
+    const visibleSize = view.getVisibleSize();
+    const maxX = Math.max(0, (MAP_WIDTH * scale - visibleSize.width) / 2);
+    const maxY = Math.max(0, (MAP_HEIGHT * scale - visibleSize.height) / 2);
     this.mapWorld.setPosition(
       Math.min(maxX, Math.max(-maxX, position.x + delta.x)),
       Math.min(maxY, Math.max(-maxY, position.y + delta.y)),
