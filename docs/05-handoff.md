@@ -41,11 +41,36 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 
 ## Suggested Next Step
 
-Continue from the initialized Cocos Creator 3.8.8 project and build the first portrait scene from the migrated gameplay contract.
+The portrait Cocos demo is playable and verified. Select the next stage from
+the remaining external-dependency work:
+
+1. Import accepted SFX files for the five configured feedback hooks, then bind
+   Cocos audio playback to feedback plans.
+2. Open the project in WeChat DevTools with a usable AppID, build the Mini Game,
+   bind the WeChat storage adapter, and validate on device.
 
 Recommended prompt:
 
-> We are in `/Users/sea/WorkSpace/byxy/github/findscape-cocos`. Read `docs/05-handoff.md`, `docs/30-cocos-creator-version-and-initialization.md`, `docs/31-portrait-gameplay-contract.md`, and the design handoff. Create the first 1600x2400 portrait Cocos scene, bind the map and seven target sprites, and verify placement with screenshots before implementing HUD and feedback. Use granular issue-backed commits.
+> We are in `/Users/sea/WorkSpace/byxy/github/findscape-cocos`. Read
+> `docs/05-handoff.md`, `docs/25-known-issues.md`, and `docs/08-work-loop.md`.
+> Continue from the verified portrait Cocos demo. Use one issue per stage,
+> granular commits, Web Mobile regression checks, and keep working until a real
+> owner-input or external-tool blocker is reached.
+
+## Current Verified State
+
+- Cocos Creator is pinned to `3.8.8`; normalized Claude Design assets and typed
+  metadata are committed.
+- The `1600x2400` portrait map contains seven independent target nodes and
+  supports bounded single-touch dragging.
+- Hidden Object, Balloon Blast, and Crime Hunt share the round controller and
+  can be selected from the native mode panel.
+- Timer, score, combo, target list, tools, cooldowns, visual feedback,
+  settlement, replay, browser persistence, loading, and startup error fallback
+  are connected to the Cocos scene.
+- The strongest deterministic check is `cd cocos && npm run check:all`.
+- Web Mobile has been repeatedly built and exercised at `390x844`; Creator CLI
+  success currently returns the known non-zero exit code 36.
 
 ## Files To Read First
 
@@ -55,17 +80,19 @@ Recommended prompt:
 - `docs/04-demo-scope.md`
 - `docs/30-cocos-creator-version-and-initialization.md`
 - `docs/31-portrait-gameplay-contract.md`
+- `docs/25-known-issues.md`
+- `docs/08-work-loop.md`
 - `design/claude-design/source/README.md`
 - `references/original-prd.docx`
 
 ## Open Questions
 
 - What is the final product/IP name?
-- Is the first demo required to publish to WeChat immediately, or is Web preview enough for initial validation?
-- How many mode variants should appear in the first demo?
+- When should the verified Web Mobile demo move to WeChat device validation?
 - Is the Demo app package actually required, or only WeChat scan-to-play?
+- Who will provide or approve the five short feedback SFX files?
 
-## Suggested Initial Repo Structure
+## Repository Shape
 
 ```text
 findscape-cocos/
@@ -86,4 +113,9 @@ findscape-cocos/
   README.md
 ```
 
-The `cocos/` directory is initialized and pinned to Cocos Creator 3.8.8. The first Claude Design asset batch is imported with stable runtime paths and typed `.meta` files. The gameplay contract now uses the accepted 1600x2400 map and portrait anchors. The next dependency chain is scene creation, HUD binding, feedback implementation, Web Mobile build, then WeChat validation.
+The `cocos/` directory is initialized and pinned to Cocos Creator 3.8.8. The
+first Claude Design asset batch is imported with stable runtime paths and typed
+`.meta` files. Scene creation, HUD binding, visual feedback, the shared round
+loop, three modes, Web Mobile builds, and browser persistence are complete. The
+remaining dependency chain is accepted audio assets and WeChat DevTools/AppID
+validation.
