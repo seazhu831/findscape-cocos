@@ -1,6 +1,7 @@
 import type { ModeRuntimeConfig } from "../config/gameplay-config";
 import type { TargetTypeConfig } from "../config/gameplay-schema";
 import type { RoundState } from "../gameplay/round-runtime";
+import type { ToolRuntimeState } from "../gameplay/tool-runtime";
 
 export interface TargetListItemViewModel {
   typeId: string;
@@ -18,6 +19,14 @@ export interface TimerViewModel {
   progress01: number;
 }
 
+export interface ToolHudViewModel {
+  toolId: string;
+  usesRemaining: number;
+  cooldownSeconds: number;
+  isCoolingDown: boolean;
+  isDepleted: boolean;
+}
+
 export interface RoundHudViewModel {
   modeId: string;
   modeName: string;
@@ -29,6 +38,7 @@ export interface RoundHudViewModel {
   progress01: number;
   timer: TimerViewModel;
   targetList: TargetListItemViewModel[];
+  tools: ToolHudViewModel[];
 }
 
 export interface SettlementViewModel {
@@ -49,6 +59,7 @@ export interface RoundViewModel {
 
 export interface RoundViewModelOptions {
   targetTypesById: Map<string, TargetTypeConfig>;
+  toolRuntimeState?: ToolRuntimeState;
 }
 
 export function createRoundViewModel(
@@ -77,6 +88,7 @@ export function createRoundViewModel(
       state,
       options.targetTypesById,
     ),
+    tools: createToolHudViewModels(modeRuntimeConfig, options.toolRuntimeState),
   };
 
   return {
@@ -86,6 +98,27 @@ export function createRoundViewModel(
         ? undefined
         : createSettlementViewModel(state, totalCount),
   };
+}
+
+export function createToolHudViewModels(
+  modeRuntimeConfig: ModeRuntimeConfig,
+  toolRuntimeState?: ToolRuntimeState,
+): ToolHudViewModel[] {
+  return modeRuntimeConfig.tools.map((tool) => {
+    const state = toolRuntimeState?.toolsById[tool.toolId];
+    const usesRemaining = state?.usesRemaining ?? tool.usesPerRound;
+    const cooldownSeconds = Math.max(
+      0,
+      Math.ceil(state?.cooldownRemainingSeconds ?? 0),
+    );
+    return {
+      toolId: tool.toolId,
+      usesRemaining,
+      cooldownSeconds,
+      isCoolingDown: cooldownSeconds > 0 && usesRemaining > 0,
+      isDepleted: usesRemaining <= 0,
+    };
+  });
 }
 
 export function createTimerViewModel(

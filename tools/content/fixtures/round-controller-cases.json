@@ -8,7 +8,23 @@
         "status": "playing",
         "foundCount": 0,
         "totalCount": 4,
-        "score": 0
+        "score": 0,
+        "tools": [
+          {
+            "toolId": "hint",
+            "usesRemaining": 3,
+            "cooldownSeconds": 0,
+            "isCoolingDown": false,
+            "isDepleted": false
+          },
+          {
+            "toolId": "magnifier",
+            "usesRemaining": 1,
+            "cooldownSeconds": 0,
+            "isCoolingDown": false,
+            "isDepleted": false
+          }
+        ]
       }
     },
     "expectedToolState": {
@@ -67,6 +83,26 @@
             "usesRemaining": 2,
             "cooldownRemainingSeconds": 10
           }
+        },
+        "expectedViewModel": {
+          "hud": {
+            "tools": [
+              {
+                "toolId": "hint",
+                "usesRemaining": 2,
+                "cooldownSeconds": 10,
+                "isCoolingDown": true,
+                "isDepleted": false
+              },
+              {
+                "toolId": "magnifier",
+                "usesRemaining": 1,
+                "cooldownSeconds": 0,
+                "isCoolingDown": false,
+                "isDepleted": false
+              }
+            ]
+          }
         }
       },
       {
@@ -81,7 +117,23 @@
           "hud": {
             "timer": {
               "label": "0:56"
-            }
+            },
+            "tools": [
+              {
+                "toolId": "hint",
+                "usesRemaining": 2,
+                "cooldownSeconds": 6,
+                "isCoolingDown": true,
+                "isDepleted": false
+              },
+              {
+                "toolId": "magnifier",
+                "usesRemaining": 1,
+                "cooldownSeconds": 0,
+                "isCoolingDown": false,
+                "isDepleted": false
+              }
+            ]
           }
         }
       }
@@ -155,6 +207,26 @@
           "magnifier": {
             "usesRemaining": 0,
             "cooldownRemainingSeconds": 15
+          }
+        },
+        "expectedViewModel": {
+          "hud": {
+            "tools": [
+              {
+                "toolId": "hint",
+                "usesRemaining": 3,
+                "cooldownSeconds": 0,
+                "isCoolingDown": false,
+                "isDepleted": false
+              },
+              {
+                "toolId": "magnifier",
+                "usesRemaining": 0,
+                "cooldownSeconds": 15,
+                "isCoolingDown": false,
+                "isDepleted": true
+              }
+            ]
           }
         }
       }

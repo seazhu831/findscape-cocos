@@ -67,6 +67,7 @@ export function createRoundControllerViewModel(
 ): RoundViewModel {
   return createRoundViewModel(context.modeRuntimeConfig, state.round, {
     targetTypesById: context.targetTypesById,
+    toolRuntimeState: state.tools,
   });
 }
 

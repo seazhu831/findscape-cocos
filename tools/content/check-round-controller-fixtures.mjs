@@ -146,6 +146,7 @@ function createRoundControllerState(runtimeConfig) {
 function createRoundControllerViewModel(context, state) {
   return createRoundViewModel(context.modeRuntimeConfig, state.round, {
     targetTypesById: context.targetTypesById,
+    toolRuntimeState: state.tools,
   });
 }
 
@@ -598,12 +599,31 @@ function createRoundViewModel(runtimeConfig, state, options) {
         runtimeConfig.mode.timeLimitSeconds,
       ),
       targetList: [],
+      tools: createToolHudViewModels(runtimeConfig, options.toolRuntimeState),
     },
     settlement:
       state.status === "playing"
         ? undefined
         : createSettlementViewModel(state, totalCount),
   };
+}
+
+function createToolHudViewModels(runtimeConfig, toolRuntimeState) {
+  return runtimeConfig.tools.map((tool) => {
+    const state = toolRuntimeState?.toolsById[tool.toolId];
+    const usesRemaining = state?.usesRemaining ?? tool.usesPerRound;
+    const cooldownSeconds = Math.max(
+      0,
+      Math.ceil(state?.cooldownRemainingSeconds ?? 0),
+    );
+    return {
+      toolId: tool.toolId,
+      usesRemaining,
+      cooldownSeconds,
+      isCoolingDown: cooldownSeconds > 0 && usesRemaining > 0,
+      isDepleted: usesRemaining <= 0,
+    };
+  });
 }
 
 function createTimerViewModel(remainingSeconds, totalSeconds) {
@@ -755,7 +775,28 @@ function assertPartialObject(groupName, label, actual, expected) {
 
   for (const [field, expectedValue] of Object.entries(expected)) {
     const actualValue = actual[field];
-    if (isObject(expectedValue)) {
+    if (Array.isArray(expectedValue)) {
+      if (!Array.isArray(actualValue) || actualValue.length !== expectedValue.length) {
+        failures.push(
+          `${groupName} expected ${label}.${field} length ${expectedValue.length} but got ${actualValue?.length}`,
+        );
+        continue;
+      }
+      expectedValue.forEach((item, index) => {
+        if (isObject(item)) {
+          assertPartialObject(
+            groupName,
+            `${label}.${field}[${index}]`,
+            actualValue[index],
+            item,
+          );
+        } else if (!nearlyEqual(actualValue[index], item)) {
+          failures.push(
+            `${groupName} expected ${label}.${field}[${index}]=${item} but got ${actualValue[index]}`,
+          );
+        }
+      });
+    } else if (isObject(expectedValue)) {
       assertPartialObject(groupName, `${label}.${field}`, actualValue, expectedValue);
     } else if (!nearlyEqual(actualValue, expectedValue)) {
       failures.push(
