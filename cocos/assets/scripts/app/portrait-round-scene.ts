@@ -25,6 +25,7 @@ import type {
 } from "../config/gameplay-schema";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
 import { PortraitHud } from "../ui/portrait-hud";
+import { PortraitSettlement } from "../ui/portrait-settlement";
 
 const { ccclass } = _decorator;
 const DEFAULT_MODE_ID = "hidden_object_demo";
@@ -36,6 +37,7 @@ export class PortraitRoundScene extends Component {
   private mapWorld: Node | null = null;
   private feedback: PortraitFeedback | null = null;
   private hud: PortraitHud | null = null;
+  private settlement: PortraitSettlement | null = null;
   private targetNodesById = new Map<string, Node>();
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
@@ -79,6 +81,7 @@ export class PortraitRoundScene extends Component {
     if (!this.mapWorld || !this.feedback || !this.hud) {
       throw new Error("MapWorld, FeedbackRoot, and HUDRoot are required");
     }
+    this.settlement = this.createSettlement();
 
     const config = await this.loadGameplayConfig();
     this.sessionContext = createDemoSessionContext(config);
@@ -123,7 +126,7 @@ export class PortraitRoundScene extends Component {
 
   private handleTargetTouch(event: EventTouch): void {
     event.propagationStopped = true;
-    if (!this.sessionState) {
+    if (!this.sessionState || this.sessionState.screen !== "round") {
       return;
     }
     const targetNode = event.currentTarget as Node;
@@ -143,7 +146,11 @@ export class PortraitRoundScene extends Component {
   }
 
   private handleMapTouch(event: EventTouch): void {
-    if (!this.sessionState || !this.mapWorld) {
+    if (
+      !this.sessionState ||
+      this.sessionState.screen !== "round" ||
+      !this.mapWorld
+    ) {
       return;
     }
     const location = event.getUILocation();
@@ -171,7 +178,7 @@ export class PortraitRoundScene extends Component {
 
   private handleHintTouch(event: EventTouch): void {
     event.propagationStopped = true;
-    if (!this.sessionState) {
+    if (!this.sessionState || this.sessionState.screen !== "round") {
       return;
     }
     const update = applyDemoSessionHint(this.sessionState);
@@ -190,7 +197,33 @@ export class PortraitRoundScene extends Component {
 
   private renderHud(): void {
     if (this.sessionState?.roundViewModel) {
-      this.hud?.render(this.sessionState.roundViewModel.hud);
+      const viewModel = this.sessionState.roundViewModel;
+      this.hud?.render(viewModel.hud);
+      this.setToolsVisible(!viewModel.settlement);
+      if (viewModel.settlement) {
+        this.settlement?.show(viewModel.settlement);
+      } else {
+        this.settlement?.hide();
+      }
+    }
+  }
+
+  private createSettlement(): PortraitSettlement {
+    const root = new Node("SettlementRoot");
+    root.active = false;
+    this.node.addChild(root);
+    root.setSiblingIndex(this.node.children.length - 1);
+    return root.addComponent(PortraitSettlement);
+  }
+
+  private setToolsVisible(visible: boolean): void {
+    const hintButton = this.hud?.getHintButton();
+    const magnifierButton = this.hud?.getMagnifierButton();
+    if (hintButton) {
+      hintButton.active = visible;
+    }
+    if (magnifierButton) {
+      magnifierButton.active = visible;
     }
   }
 

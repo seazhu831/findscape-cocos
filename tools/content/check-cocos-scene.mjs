@@ -26,6 +26,10 @@ const roundViewModelSourcePath = path.join(
   cocosRoot,
   "assets/scripts/ui/round-view-model.ts",
 );
+const settlementSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/ui/portrait-settlement.ts",
+);
 const failures = [];
 
 const scene = JSON.parse(fs.readFileSync(scenePath, "utf8"));
@@ -36,6 +40,7 @@ const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
 const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
 const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
+const settlementSource = fs.readFileSync(settlementSourcePath, "utf8");
 const nodes = scene.filter((entry) => entry?.__type__ === "cc.Node");
 const nodesByName = new Map(nodes.map((node) => [node._name, node]));
 
@@ -104,13 +109,31 @@ for (const requiredRoundSceneContract of [
   "event.propagationStopped = true",
   "x: mapLocal.x + 800",
   "y: 1200 - mapLocal.y",
-  "this.hud?.render(this.sessionState.roundViewModel.hud)",
+  "this.hud?.render(viewModel.hud)",
   "this.feedback?.playTarget(targetNode)",
   "this.feedback?.playWrongAt(feedbackLocal)",
   "this.feedback?.playHint(targetNode, hintEvent.durationSeconds)",
+  'new Node("SettlementRoot")',
+  "this.settlement?.show(viewModel.settlement)",
+  "this.setToolsVisible(!viewModel.settlement)",
+  'this.sessionState.screen !== "round"',
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
+  }
+}
+
+for (const requiredSettlementContract of [
+  "class PortraitSettlement extends Component",
+  "viewModel.starRating",
+  "viewModel.accuracy01",
+  "addComponent(BlockInputEvents)",
+  'viewModel.status === "completed"',
+]) {
+  if (!settlementSource.includes(requiredSettlementContract)) {
+    failures.push(
+      `PortraitSettlement is missing contract: ${requiredSettlementContract}`,
+    );
   }
 }
 
