@@ -1,8 +1,12 @@
 import {
   _decorator,
+  BlockInputEvents,
+  Color,
   Component,
   EventTouch,
+  Graphics,
   JsonAsset,
+  Label,
   Node,
   resources,
   sys,
@@ -65,11 +69,18 @@ export class PortraitRoundScene extends Component {
   private mapGestureDragged = false;
   private mapGestureDistance = 0;
   private magnifierZoomActive = false;
+  private loadStateRoot: Node | null = null;
 
   protected start(): void {
-    void this.initialize().catch((error) => {
-      console.error("[PortraitRoundScene] Initialization failed", error);
-    });
+    this.showLoadState("loading");
+    void this.initialize()
+      .then(() => {
+        this.hideLoadState();
+      })
+      .catch((error) => {
+        console.error("[PortraitRoundScene] Initialization failed", error);
+        this.showLoadState("error");
+      });
   }
 
   protected update(deltaTime: number): void {
@@ -116,6 +127,7 @@ export class PortraitRoundScene extends Component {
       button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
     }
     this.stopMagnifierZoom();
+    this.hideLoadState();
   }
 
   private async initialize(): Promise<void> {
@@ -406,6 +418,59 @@ export class PortraitRoundScene extends Component {
     this.node.addChild(root);
     root.setSiblingIndex(this.node.children.length - 1);
     return root.addComponent(PortraitModeSelect);
+  }
+
+  private showLoadState(state: "loading" | "error"): void {
+    this.hideLoadState();
+    const root = new Node("LoadStateRoot");
+    root.layer = this.node.layer;
+    root.addComponent(UITransform).setContentSize(1080, 1920);
+    root.addComponent(BlockInputEvents);
+    const backdrop = root.addComponent(Graphics);
+    backdrop.fillColor = new Color(38, 48, 43, 185);
+    backdrop.rect(-540, -960, 1080, 1920);
+    backdrop.fill();
+
+    const panel = new Node("LoadStatePanel");
+    panel.layer = this.node.layer;
+    panel.addComponent(UITransform).setContentSize(760, 260);
+    root.addChild(panel);
+    const panelGraphics = panel.addComponent(Graphics);
+    panelGraphics.lineWidth = 6;
+    panelGraphics.fillColor = new Color(253, 246, 230, 255);
+    panelGraphics.strokeColor =
+      state === "error"
+        ? new Color(240, 138, 122, 255)
+        : new Color(107, 87, 68, 255);
+    panelGraphics.roundRect(-380, -130, 760, 260, 36);
+    panelGraphics.fill();
+    panelGraphics.stroke();
+
+    const labelNode = new Node("LoadStateLabel");
+    labelNode.layer = this.node.layer;
+    labelNode.addComponent(UITransform).setContentSize(680, 100);
+    panel.addChild(labelNode);
+    const label = labelNode.addComponent(Label);
+    label.string = state === "error" ? "UNABLE TO START" : "LOADING";
+    label.fontSize = 54;
+    label.lineHeight = 64;
+    label.color =
+      state === "error"
+        ? new Color(192, 82, 107, 255)
+        : new Color(107, 87, 68, 255);
+    label.horizontalAlign = Label.HorizontalAlign.CENTER;
+    label.verticalAlign = Label.VerticalAlign.CENTER;
+
+    this.node.addChild(root);
+    root.setSiblingIndex(this.node.children.length - 1);
+    this.loadStateRoot = root;
+  }
+
+  private hideLoadState(): void {
+    if (this.loadStateRoot?.isValid) {
+      this.loadStateRoot.destroy();
+    }
+    this.loadStateRoot = null;
   }
 
   private setToolsVisible(visible: boolean): void {

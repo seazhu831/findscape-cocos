@@ -163,6 +163,12 @@ for (const requiredRoundSceneContract of [
   "if (this.mapGestureDragged)",
   "this.resetMapPosition()",
   "this.magnifierZoomActive",
+  'this.showLoadState("loading")',
+  'this.showLoadState("error")',
+  'new Node("LoadStateRoot")',
+  "root.addComponent(BlockInputEvents)",
+  'label.string = state === "error" ? "UNABLE TO START" : "LOADING"',
+  "this.hideLoadState()",
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
