@@ -145,6 +145,16 @@ for (const requiredRoundSceneContract of [
   "magnifierEvent.durationSeconds",
   "Tween.stopAllByTarget(this.mapWorld)",
   "magnifierState.usesRemaining <= 0 ? 110 : 255",
+  "Node.EventType.TOUCH_START",
+  "Node.EventType.TOUCH_MOVE",
+  "Node.EventType.TOUCH_CANCEL",
+  "event.getUIDelta()",
+  "this.mapGestureDistance < DRAG_THRESHOLD",
+  "MAP_WIDTH * scale - VIEW_WIDTH",
+  "MAP_HEIGHT * scale - VIEW_HEIGHT",
+  "if (this.mapGestureDragged)",
+  "this.resetMapPosition()",
+  "this.magnifierZoomActive",
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);

@@ -42,6 +42,11 @@ import {
 
 const { ccclass } = _decorator;
 const DEFAULT_MODE_ID = "hidden_object_demo";
+const DRAG_THRESHOLD = 12;
+const MAP_WIDTH = 1600;
+const MAP_HEIGHT = 2400;
+const VIEW_WIDTH = 1080;
+const VIEW_HEIGHT = 1920;
 
 @ccclass("PortraitRoundScene")
 export class PortraitRoundScene extends Component {
@@ -57,6 +62,10 @@ export class PortraitRoundScene extends Component {
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
   private modeButtonsBound = false;
+  private mapGestureActive = false;
+  private mapGestureDragged = false;
+  private mapGestureDistance = 0;
+  private magnifierZoomActive = false;
 
   protected start(): void {
     void this.initialize().catch((error) => {
@@ -77,7 +86,10 @@ export class PortraitRoundScene extends Component {
   }
 
   protected onDestroy(): void {
+    this.mapWorld?.off(Node.EventType.TOUCH_START, this.handleMapTouchStart, this);
+    this.mapWorld?.off(Node.EventType.TOUCH_MOVE, this.handleMapTouchMove, this);
     this.mapWorld?.off(Node.EventType.TOUCH_END, this.handleMapTouch, this);
+    this.mapWorld?.off(Node.EventType.TOUCH_CANCEL, this.handleMapTouchCancel, this);
     for (const target of this.targetNodesById.values()) {
       target.off(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
     }
@@ -149,7 +161,10 @@ export class PortraitRoundScene extends Component {
       targetNode.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
     }
 
+    this.mapWorld.on(Node.EventType.TOUCH_START, this.handleMapTouchStart, this);
+    this.mapWorld.on(Node.EventType.TOUCH_MOVE, this.handleMapTouchMove, this);
     this.mapWorld.on(Node.EventType.TOUCH_END, this.handleMapTouch, this);
+    this.mapWorld.on(Node.EventType.TOUCH_CANCEL, this.handleMapTouchCancel, this);
     this.hud.getHintButton()?.on(
       Node.EventType.TOUCH_END,
       this.handleHintTouch,
@@ -166,6 +181,11 @@ export class PortraitRoundScene extends Component {
 
   private handleTargetTouch(event: EventTouch): void {
     event.propagationStopped = true;
+    if (this.mapGestureDragged) {
+      this.resetMapGesture();
+      return;
+    }
+    this.resetMapGesture();
     if (!this.sessionState || this.sessionState.screen !== "round") {
       return;
     }
@@ -185,7 +205,46 @@ export class PortraitRoundScene extends Component {
     this.renderHud();
   }
 
+  private handleMapTouchStart(): void {
+    if (
+      !this.sessionState ||
+      this.sessionState.screen !== "round" ||
+      this.magnifierZoomActive
+    ) {
+      return;
+    }
+    this.mapGestureActive = true;
+    this.mapGestureDragged = false;
+    this.mapGestureDistance = 0;
+  }
+
+  private handleMapTouchMove(event: EventTouch): void {
+    if (!this.mapGestureActive || !this.mapWorld) {
+      return;
+    }
+    const delta = event.getUIDelta();
+    this.mapGestureDistance += Math.hypot(delta.x, delta.y);
+    if (this.mapGestureDistance < DRAG_THRESHOLD) {
+      return;
+    }
+    this.mapGestureDragged = true;
+    const position = this.mapWorld.position;
+    const scale = this.mapWorld.scale.x;
+    const maxX = Math.max(0, (MAP_WIDTH * scale - VIEW_WIDTH) / 2);
+    const maxY = Math.max(0, (MAP_HEIGHT * scale - VIEW_HEIGHT) / 2);
+    this.mapWorld.setPosition(
+      Math.min(maxX, Math.max(-maxX, position.x + delta.x)),
+      Math.min(maxY, Math.max(-maxY, position.y + delta.y)),
+      position.z,
+    );
+  }
+
   private handleMapTouch(event: EventTouch): void {
+    if (this.mapGestureDragged) {
+      this.resetMapGesture();
+      return;
+    }
+    this.resetMapGesture();
     if (
       !this.sessionState ||
       this.sessionState.screen !== "round" ||
@@ -214,6 +273,10 @@ export class PortraitRoundScene extends Component {
       this.feedback?.playWrongAt(feedbackLocal);
     }
     this.renderHud();
+  }
+
+  private handleMapTouchCancel(): void {
+    this.resetMapGesture();
   }
 
   private handleHintTouch(event: EventTouch): void {
@@ -271,6 +334,7 @@ export class PortraitRoundScene extends Component {
       this.sessionState.selectedModeId ?? DEFAULT_MODE_ID,
     );
     this.stopMagnifierZoom();
+    this.resetMapPosition();
     this.resetTargetVisuals();
     this.renderHud();
   }
@@ -309,6 +373,7 @@ export class PortraitRoundScene extends Component {
       modeId,
     );
     this.stopMagnifierZoom();
+    this.resetMapPosition();
     this.configureRoundTargets();
     this.modeSelect?.hide();
     this.renderHud();
@@ -400,6 +465,7 @@ export class PortraitRoundScene extends Component {
     }
 
     this.stopMagnifierZoom();
+    this.magnifierZoomActive = true;
     tween(this.mapWorld)
       .to(
         0.25,
@@ -408,6 +474,9 @@ export class PortraitRoundScene extends Component {
       )
       .delay(durationSeconds)
       .to(0.25, { scale: new Vec3(1, 1, 1) }, { easing: "quadInOut" })
+      .call(() => {
+        this.magnifierZoomActive = false;
+      })
       .start();
   }
 
@@ -417,6 +486,18 @@ export class PortraitRoundScene extends Component {
     }
     Tween.stopAllByTarget(this.mapWorld);
     this.mapWorld.setScale(1, 1, 1);
+    this.magnifierZoomActive = false;
+  }
+
+  private resetMapGesture(): void {
+    this.mapGestureActive = false;
+    this.mapGestureDragged = false;
+    this.mapGestureDistance = 0;
+  }
+
+  private resetMapPosition(): void {
+    this.resetMapGesture();
+    this.mapWorld?.setPosition(0, 0, 0);
   }
 
   private renderMagnifierState(): void {
