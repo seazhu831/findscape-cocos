@@ -16,6 +16,7 @@ import {
   applyDemoSessionTick,
   createDemoSessionContext,
   createInitialDemoSessionState,
+  returnToModeSelect,
   startDemoRound,
   type DemoSessionContext,
   type DemoSessionState,
@@ -27,6 +28,7 @@ import type {
 } from "../config/gameplay-schema";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
 import { PortraitHud } from "../ui/portrait-hud";
+import { PortraitModeSelect } from "../ui/portrait-mode-select";
 import { PortraitSettlement } from "../ui/portrait-settlement";
 import { createBrowserStoragePort } from "../platform/browser-storage";
 import {
@@ -46,10 +48,12 @@ export class PortraitRoundScene extends Component {
   private feedback: PortraitFeedback | null = null;
   private hud: PortraitHud | null = null;
   private settlement: PortraitSettlement | null = null;
+  private modeSelect: PortraitModeSelect | null = null;
   private storagePort: KeyValueStoragePort | null = null;
   private targetNodesById = new Map<string, Node>();
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
+  private modeButtonsBound = false;
 
   protected start(): void {
     void this.initialize().catch((error) => {
@@ -84,6 +88,14 @@ export class PortraitRoundScene extends Component {
       this.handleRetryTouch,
       this,
     );
+    this.settlement?.getModesButton().off(
+      Node.EventType.TOUCH_END,
+      this.handleModesTouch,
+      this,
+    );
+    for (const button of this.modeSelect?.getModeButtons().values() ?? []) {
+      button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
+    }
   }
 
   private async initialize(): Promise<void> {
@@ -96,9 +108,15 @@ export class PortraitRoundScene extends Component {
       throw new Error("MapWorld, FeedbackRoot, and HUDRoot are required");
     }
     this.settlement = this.createSettlement();
+    this.modeSelect = this.createModeSelect();
     this.settlement.getRetryButton().on(
       Node.EventType.TOUCH_END,
       this.handleRetryTouch,
+      this,
+    );
+    this.settlement.getModesButton().on(
+      Node.EventType.TOUCH_END,
+      this.handleModesTouch,
       this,
     );
 
@@ -117,12 +135,7 @@ export class PortraitRoundScene extends Component {
         this.targetNodesById.set(child.name, child);
       }
     }
-    for (const target of this.sessionState.roundContext?.modeRuntimeConfig
-      .selectedTargets ?? []) {
-      this.targetConfigsById.set(target.targetId, target);
-    }
-
-    this.resetTargetVisuals();
+    this.configureRoundTargets();
     for (const targetNode of this.targetNodesById.values()) {
       targetNode.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
     }
@@ -227,6 +240,44 @@ export class PortraitRoundScene extends Component {
     this.renderHud();
   }
 
+  private handleModesTouch(event: EventTouch): void {
+    event.propagationStopped = true;
+    if (
+      !this.sessionContext ||
+      !this.sessionState ||
+      this.sessionState.screen !== "settlement" ||
+      !this.modeSelect
+    ) {
+      return;
+    }
+
+    this.sessionState = returnToModeSelect(this.sessionState);
+    this.settlement?.hide();
+    this.modeSelect.show(this.sessionContext.modeSummaries);
+    this.bindModeButtons();
+  }
+
+  private handleModeTouch(event: EventTouch): void {
+    event.propagationStopped = true;
+    if (
+      !this.sessionContext ||
+      !this.sessionState ||
+      this.sessionState.screen !== "modeSelect"
+    ) {
+      return;
+    }
+
+    const modeId = (event.currentTarget as Node).name.replace("ModeButton_", "");
+    this.sessionState = startDemoRound(
+      this.sessionContext,
+      this.sessionState,
+      modeId,
+    );
+    this.configureRoundTargets();
+    this.modeSelect?.hide();
+    this.renderHud();
+  }
+
   private renderHud(): void {
     if (this.sessionState?.roundViewModel) {
       const viewModel = this.sessionState.roundViewModel;
@@ -248,15 +299,47 @@ export class PortraitRoundScene extends Component {
     return root.addComponent(PortraitSettlement);
   }
 
+  private createModeSelect(): PortraitModeSelect {
+    const root = new Node("ModeSelectRoot");
+    root.active = false;
+    this.node.addChild(root);
+    root.setSiblingIndex(this.node.children.length - 1);
+    return root.addComponent(PortraitModeSelect);
+  }
+
   private setToolsVisible(visible: boolean): void {
     const hintButton = this.hud?.getHintButton();
     const magnifierButton = this.hud?.getMagnifierButton();
+    const toolIds = new Set(
+      this.sessionState?.roundContext?.modeRuntimeConfig.tools.map(
+        (tool) => tool.toolId,
+      ) ?? [],
+    );
     if (hintButton) {
-      hintButton.active = visible;
+      hintButton.active = visible && toolIds.has("hint");
     }
     if (magnifierButton) {
-      magnifierButton.active = visible;
+      magnifierButton.active = visible && toolIds.has("magnifier");
     }
+  }
+
+  private bindModeButtons(): void {
+    if (this.modeButtonsBound || !this.modeSelect) {
+      return;
+    }
+    this.modeButtonsBound = true;
+    for (const button of this.modeSelect.getModeButtons().values()) {
+      button.on(Node.EventType.TOUCH_END, this.handleModeTouch, this);
+    }
+  }
+
+  private configureRoundTargets(): void {
+    this.targetConfigsById.clear();
+    for (const target of this.sessionState?.roundContext?.modeRuntimeConfig
+      .selectedTargets ?? []) {
+      this.targetConfigsById.set(target.targetId, target);
+    }
+    this.resetTargetVisuals();
   }
 
   private resetTargetVisuals(): void {

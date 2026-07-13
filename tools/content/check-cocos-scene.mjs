@@ -30,6 +30,10 @@ const settlementSourcePath = path.join(
   cocosRoot,
   "assets/scripts/ui/portrait-settlement.ts",
 );
+const modeSelectSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/ui/portrait-mode-select.ts",
+);
 const failures = [];
 
 const scene = JSON.parse(fs.readFileSync(scenePath, "utf8"));
@@ -41,6 +45,7 @@ const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
 const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
 const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
 const settlementSource = fs.readFileSync(settlementSourcePath, "utf8");
+const modeSelectSource = fs.readFileSync(modeSelectSourcePath, "utf8");
 const nodes = scene.filter((entry) => entry?.__type__ === "cc.Node");
 const nodesByName = new Map(nodes.map((node) => [node._name, node]));
 
@@ -127,6 +132,12 @@ for (const requiredRoundSceneContract of [
   'this.sessionState.screen !== "settlement"',
   "this.sessionState.selectedModeId ?? DEFAULT_MODE_ID",
   "this.resetTargetVisuals()",
+  "returnToModeSelect(this.sessionState)",
+  'new Node("ModeSelectRoot")',
+  "this.modeSelect.show(this.sessionContext.modeSummaries)",
+  'name.replace("ModeButton_", "")',
+  "this.configureRoundTargets()",
+  'toolIds.has("magnifier")',
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
@@ -140,12 +151,31 @@ for (const requiredSettlementContract of [
   "addComponent(BlockInputEvents)",
   'viewModel.status === "completed"',
   '"RetryButton"',
-  '"PLAY AGAIN"',
+  '"REPLAY"',
   "public getRetryButton(): Node",
+  '"ModesButton"',
+  '"MODES"',
+  "public getModesButton(): Node",
 ]) {
   if (!settlementSource.includes(requiredSettlementContract)) {
     failures.push(
       `PortraitSettlement is missing contract: ${requiredSettlementContract}`,
+    );
+  }
+}
+
+
+for (const requiredModeSelectContract of [
+  "class PortraitModeSelect extends Component",
+  '"CHOOSE MODE"',
+  "summary.selectedTargetCount",
+  "summary.targetSelectionLabel",
+  '`ModeButton_${summary.modeId}`',
+  "addComponent(BlockInputEvents)",
+]) {
+  if (!modeSelectSource.includes(requiredModeSelectContract)) {
+    failures.push(
+      `PortraitModeSelect is missing contract: ${requiredModeSelectContract}`,
     );
   }
 }
