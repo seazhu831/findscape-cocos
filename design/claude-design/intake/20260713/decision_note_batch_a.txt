@@ -1,0 +1,48 @@
+FINDSCAPE — BATCH A DECISION NOTE (20260713)
+
+Palette
+  Leafy green #7fb069 · sky blue #8fc1e3 · coral #f08a7a · sunny yellow #f2c94c
+  Berry red #c0526b · lavender #b49fd1 · warm neutrals #f7efdd / #e9d9b6 / #a97e55
+  Outline: warm brown #6b5744 (no hard black)
+
+Line treatment
+  Soft rounded outlines, hand-drawn wobble on organic shapes, gentle paper grain,
+  soft warm shadows. Map linework 4–6 px at 2400×1600; sprites ~9 px at 512.
+
+Deliverables in batch_a_world_targets/
+  source_map_demo_cozy_town_placeholder_20260713_02.png  (1600×2400 portrait, opaque — PRIMARY, mobile)
+  source_map_demo_cozy_town_placeholder_20260713_01.png  (2400×1600 landscape alternative, per original PDF spec)
+  source_target_pineapple_20260713_01.png  (512×512, alpha)
+  source_target_balloon_20260713_01.png    (512×512, alpha)
+  source_target_thief_20260713_01.png      (512×512, alpha)
+  source_target_puppy_20260713_01.png      (512×512, alpha)
+  source_target_gem_20260713_01.png        (512×512, alpha)
+  review_composite_anchor_check_portrait_20260713.png  (review only — portrait anchors)
+  review_composite_anchor_check_20260713.png  (review only — landscape anchors)
+
+Portrait anchor remap (1600×2400, top-left origin) — deviation from PDF landscape coords:
+  Pineapple 1 (330,860) · Puppy (480,1980) · Balloon 1 (930,360) · Thief (1060,1310)
+  Pineapple 2 (1330,1040) · Gem (1200,2090) · Balloon 2 (1170,1620)
+
+Decisions
+  - Clean map contains none of the five targets; all signs are text-free blanks.
+  - 30+ hiding spots: 5 shopfronts + small shop, 4 market stalls/canopies, kiosk,
+    fountain, 8 trees, 5 bushes, 6 benches, 5 crates, 6 baskets, 5 planters,
+    4 flower beds, 3 blankets, 2 barrels, 5 lamps, drain, cafe tables, bunting.
+  - Anchor contexts honored: produce basket at 420,980; bench+planter at 720,1340;
+    awning/bunting gaps at 980,360 and 2040,520 with lamp post; kiosk+crates at
+    1320,840; cafe table + fruit basket at 1670,1160; drain+flower bed+stonework
+    at 1880,1380.
+  - Thief: harmless — beanie, soft eye mask, satchel, smile, no weapon.
+  - Balloon: matte tone patches instead of glossy 3D highlight.
+  - Targets differ by silhouette (crown spikes / teardrop+string / capped figure /
+    eared quadruped / faceted polygon), not color alone.
+
+Deviation
+  Assets are authored as layered digital illustration rendered to PNG (crisp
+  vector-like edges with hand-drawn wobble + grain), not raster brush painting.
+  Flagging per contract; happy to push texture further on request.
+
+Open questions
+  - Map is one connected town scene; want denser prop clutter at 2x zoom?
+  - Thief palette is berry/lavender — reserve berry for balloon instead?

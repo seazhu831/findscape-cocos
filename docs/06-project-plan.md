@@ -303,6 +303,8 @@ Related source intake issue: https://github.com/seazhu831/findscape-cocos/issues
 
 Related Claude Design production handoff issue: https://github.com/seazhu831/findscape-cocos/issues/37
 
+Related Claude Design production asset intake issue: https://github.com/seazhu831/findscape-cocos/issues/38
+
 Related known issues issue: https://github.com/seazhu831/findscape-cocos/issues/33
 
 Dependencies:

@@ -1,0 +1,23 @@
+FINDSCAPE — BATCH B DECISION NOTE (20260713)
+
+Deliverables in batch_b_icons_tools/  (all 256×256, true alpha)
+  source_icon_pineapple_20260713_01.png
+  source_icon_balloon_20260713_01.png
+  source_icon_thief_20260713_01.png
+  source_icon_puppy_20260713_01.png
+  source_icon_gem_20260713_01.png
+  source_tool_hint_20260713_01.png
+  source_tool_magnifier_20260713_01.png
+  review_contact_sheet_icons_20260713.png  (review only — includes 40 px legibility row)
+
+Decisions
+  - Same family as Batch A: warm-brown outlines (#6b5744), soft rounded forms,
+    matte fills; icon linework ~11 px at 256 for 32–48 px legibility.
+  - Thief and puppy icons are portrait crops (head only) — strongest silhouette
+    at small sizes; pineapple/balloon/gem are simplified full silhouettes.
+  - Hint = warm lightbulb with yellow rays; magnifier = berry rim + clear lens
+    with shine. Distinguishable without labels (radial glow vs. circle+handle).
+  - No circular button backgrounds baked in; consistent optical scale and padding.
+
+Open questions
+  - Want a second alternative (_02) for hint as a sparkle beacon instead of bulb?

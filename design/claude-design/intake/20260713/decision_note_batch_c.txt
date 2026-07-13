@@ -1,0 +1,34 @@
+FINDSCAPE — BATCH C DECISION NOTE (20260713)
+
+Deliverables in batch_c_ui_feedback/
+  source_ui_hud_reference_20260713_01.png   (1080×1920, opaque — implementation reference)
+  source_feedback_find_success_20260713_01.png   (1024×1024, alpha · 4 states · ~700 ms)
+  source_feedback_pop_success_20260713_01.png    (1024×1024, alpha · 4 states · ~500 ms)
+  source_feedback_catch_success_20260713_01.png  (1024×1024, alpha · 4 states · ~800 ms)
+  source_feedback_hint_reveal_20260713_01.png    (1024×1024, alpha · 4 states · ~2000 ms)
+  source_feedback_wrong_tap_20260713_01.png      (1024×1024, alpha · 4 states · ~300 ms)
+
+C1 HUD decisions
+  - Portrait 1080×1920; Cozy Town portrait map is the dominant full-bleed surface
+    (cover-crop of the 1600×2400 clean map).
+  - Top safe-area bar (y90–230): time, score, combo pill. Numerals only, per contract.
+  - Bottom target list (y1626–1826): five Batch B icons + remaining-count badges.
+  - Hint / magnifier round buttons above panel corners; every control ≥88 source px
+    (buttons 164 px, icon cells 140 px). Bottom margin ~94 px for gesture bar.
+
+C2–C6 decisions (all sprite/particle/tween-feasible; states read left→right,
+top→bottom; no baked labels)
+  - find_success: ring pulse → sparkle ring → lift with motion arcs → fly-off along
+    dotted path. Ring + sparkles = scale/opacity tweens; flight = position tween.
+  - pop_success: idle → squash (scale 1.16/0.88) → rounded cloud-burst with soft
+    puffs → dissipating puffs + falling string. No sharp star forms.
+  - catch_success: idle → lavender capture ring closing → friendly scalloped stamp
+    (heart center, no text) overlapping thief → stamp settles with sparkles.
+  - hint_reveal: soft spotlight glow grows → pulse ring → double pulse → decay.
+    Rings sit outside the gem silhouette; target never covered.
+  - wrong_tap: soft tap dot → single ripple → double ripple + wobble arcs → fade.
+    Lavender/neutral tones; no harsh red.
+
+Open questions
+  - Combo pill: keep coral, or use yellow to reserve coral for pop/balloon family?
+  - Want _02 alternates for the capture stamp (star or pawprint center)?

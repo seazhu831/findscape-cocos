@@ -6,24 +6,26 @@
   "assets": [
     {
       "assetId": "map_demo_cozy_town_placeholder",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/demo-map.md",
-      "sourceFile": null,
+      "sourceFile": "source/map_demo_cozy_town_placeholder/source_map_demo_cozy_town_placeholder_20260713_02.png",
       "runtimePath": "art/maps/demo_cozy_town_placeholder",
       "dimensions": {
-        "width": 2400,
-        "height": 1600
+        "width": 1600,
+        "height": 2400
       },
       "transparentBackground": false,
       "intendedUse": "Demo Cozy Town full map background",
-      "configReferences": ["maps.demo_cozy_town.backgroundAsset"],
-      "notes": "First playable map; keep all regions readable at mobile zoom levels."
+      "configReferences": [
+        "maps.demo_cozy_town.backgroundAsset"
+      ],
+      "notes": "Primary mobile map is the accepted portrait export. Landscape _01 remains preserved as an intentional source alternative; gameplay config migration is deferred until the Cocos Creator version is selected."
     },
     {
       "assetId": "icon_pineapple",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/icon_pineapple/source_icon_pineapple_20260713_01.png",
       "runtimePath": "art/icons/icon_pineapple",
       "dimensions": {
         "width": 256,
@@ -31,14 +33,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Target list icon for pineapple",
-      "configReferences": ["targetTypes.pineapple.iconAsset"],
+      "configReferences": [
+        "targetTypes.pineapple.iconAsset"
+      ],
       "notes": "Readable at small list size."
     },
     {
       "assetId": "icon_balloon",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/icon_balloon/source_icon_balloon_20260713_01.png",
       "runtimePath": "art/icons/icon_balloon",
       "dimensions": {
         "width": 256,
@@ -46,14 +50,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Target list icon for balloon",
-      "configReferences": ["targetTypes.balloon.iconAsset"],
+      "configReferences": [
+        "targetTypes.balloon.iconAsset"
+      ],
       "notes": "Should also communicate Balloon Blast mode quickly."
     },
     {
       "assetId": "icon_thief",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/icon_thief/source_icon_thief_20260713_01.png",
       "runtimePath": "art/icons/icon_thief",
       "dimensions": {
         "width": 256,
@@ -61,14 +67,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Target list icon for thief",
-      "configReferences": ["targetTypes.thief.iconAsset"],
+      "configReferences": [
+        "targetTypes.thief.iconAsset"
+      ],
       "notes": "Cute and non-threatening, matching Crime Hunt tone."
     },
     {
       "assetId": "icon_puppy",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/icon_puppy/source_icon_puppy_20260713_01.png",
       "runtimePath": "art/icons/icon_puppy",
       "dimensions": {
         "width": 256,
@@ -76,14 +84,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Target list icon for puppy",
-      "configReferences": ["targetTypes.puppy.iconAsset"],
+      "configReferences": [
+        "targetTypes.puppy.iconAsset"
+      ],
       "notes": "Soft, friendly silhouette."
     },
     {
       "assetId": "icon_gem",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/icon_gem/source_icon_gem_20260713_01.png",
       "runtimePath": "art/icons/icon_gem",
       "dimensions": {
         "width": 256,
@@ -91,14 +101,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Target list icon for gem",
-      "configReferences": ["targetTypes.gem.iconAsset"],
+      "configReferences": [
+        "targetTypes.gem.iconAsset"
+      ],
       "notes": "Must remain recognizable at small size without harsh highlights."
     },
     {
       "assetId": "target_pineapple",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/target_pineapple/source_target_pineapple_20260713_01.png",
       "runtimePath": "art/targets/target_pineapple",
       "dimensions": {
         "width": 512,
@@ -106,14 +118,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Map target sprite for pineapple",
-      "configReferences": ["targetTypes.pineapple.targetAsset"],
+      "configReferences": [
+        "targetTypes.pineapple.targetAsset"
+      ],
       "notes": "Can be camouflaged into market or picnic props."
     },
     {
       "assetId": "target_balloon",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/target_balloon/source_target_balloon_20260713_01.png",
       "runtimePath": "art/targets/target_balloon",
       "dimensions": {
         "width": 512,
@@ -121,14 +135,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Map target sprite for balloon",
-      "configReferences": ["targetTypes.balloon.targetAsset"],
+      "configReferences": [
+        "targetTypes.balloon.targetAsset"
+      ],
       "notes": "Visible enough for pop mode while still matching map style."
     },
     {
       "assetId": "target_thief",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/target_thief/source_target_thief_20260713_01.png",
       "runtimePath": "art/targets/target_thief",
       "dimensions": {
         "width": 512,
@@ -136,14 +152,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Map target sprite for thief",
-      "configReferences": ["targetTypes.thief.targetAsset"],
+      "configReferences": [
+        "targetTypes.thief.targetAsset"
+      ],
       "notes": "Cute sneaky character, not scary."
     },
     {
       "assetId": "target_puppy",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/target_puppy/source_target_puppy_20260713_01.png",
       "runtimePath": "art/targets/target_puppy",
       "dimensions": {
         "width": 512,
@@ -151,14 +169,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Map target sprite for puppy",
-      "configReferences": ["targetTypes.puppy.targetAsset"],
+      "configReferences": [
+        "targetTypes.puppy.targetAsset"
+      ],
       "notes": "Should feel hidden but not invisible."
     },
     {
       "assetId": "target_gem",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/target_gem/source_target_gem_20260713_01.png",
       "runtimePath": "art/targets/target_gem",
       "dimensions": {
         "width": 512,
@@ -166,14 +186,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Map target sprite for gem",
-      "configReferences": ["targetTypes.gem.targetAsset"],
+      "configReferences": [
+        "targetTypes.gem.targetAsset"
+      ],
       "notes": "Use friendly sparkle, avoid sharp jewel realism."
     },
     {
       "assetId": "tool_hint",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/tool_hint/source_tool_hint_20260713_01.png",
       "runtimePath": "art/icons/tool_hint",
       "dimensions": {
         "width": 256,
@@ -181,14 +203,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Hint tool button icon",
-      "configReferences": ["tools.hint.iconAsset"],
+      "configReferences": [
+        "tools.hint.iconAsset"
+      ],
       "notes": "Readable inside compact circular tool button."
     },
     {
       "assetId": "tool_magnifier",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/target-set.md",
-      "sourceFile": null,
+      "sourceFile": "source/tool_magnifier/source_tool_magnifier_20260713_01.png",
       "runtimePath": "art/icons/tool_magnifier",
       "dimensions": {
         "width": 256,
@@ -196,14 +220,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Magnifier tool button icon",
-      "configReferences": ["tools.magnifier.iconAsset"],
+      "configReferences": [
+        "tools.magnifier.iconAsset"
+      ],
       "notes": "Clear magnifying-glass silhouette."
     },
     {
       "assetId": "ui_hud_reference",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/ui-feedback.md",
-      "sourceFile": null,
+      "sourceFile": "source/ui_hud_reference/source_ui_hud_reference_20260713_01.png",
       "runtimePath": "art/ui/ui_hud_reference",
       "dimensions": {
         "width": 1080,
@@ -211,14 +237,18 @@
       },
       "transparentBackground": false,
       "intendedUse": "HUD layout reference for timer, score, combo, target list, and tools",
-      "configReferences": ["gameModes.hidden_object_demo", "gameModes.balloon_blast_demo", "gameModes.crime_hunt_demo"],
+      "configReferences": [
+        "gameModes.hidden_object_demo",
+        "gameModes.balloon_blast_demo",
+        "gameModes.crime_hunt_demo"
+      ],
       "notes": "Reference only; final UI should be Cocos-native components."
     },
     {
       "assetId": "feedback_find_success",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/ui-feedback.md",
-      "sourceFile": null,
+      "sourceFile": "source/feedback_find_success/source_feedback_find_success_20260713_01.png",
       "runtimePath": "art/feedback/feedback_find_success",
       "dimensions": {
         "width": 1024,
@@ -226,14 +256,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Reference sheet for find success ring, sparkle, and fly-to-list feedback",
-      "configReferences": ["feedbackPresets.find_success"],
+      "configReferences": [
+        "feedbackPresets.find_success"
+      ],
       "notes": "Can be implemented as Cocos sprites, particles, and tweens."
     },
     {
       "assetId": "feedback_pop_success",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/ui-feedback.md",
-      "sourceFile": null,
+      "sourceFile": "source/feedback_pop_success/source_feedback_pop_success_20260713_01.png",
       "runtimePath": "art/feedback/feedback_pop_success",
       "dimensions": {
         "width": 1024,
@@ -241,14 +273,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Reference sheet for balloon pop burst and puff feedback",
-      "configReferences": ["feedbackPresets.pop_success"],
+      "configReferences": [
+        "feedbackPresets.pop_success"
+      ],
       "notes": "Should read as soft and playful, not explosive."
     },
     {
       "assetId": "feedback_catch_success",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/ui-feedback.md",
-      "sourceFile": null,
+      "sourceFile": "source/feedback_catch_success/source_feedback_catch_success_20260713_01.png",
       "runtimePath": "art/feedback/feedback_catch_success",
       "dimensions": {
         "width": 1024,
@@ -256,14 +290,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Reference sheet for cute catch stamp and sparkle feedback",
-      "configReferences": ["feedbackPresets.catch_success"],
+      "configReferences": [
+        "feedbackPresets.catch_success"
+      ],
       "notes": "Use friendly visual language for Crime Hunt."
     },
     {
       "assetId": "feedback_hint_reveal",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/ui-feedback.md",
-      "sourceFile": null,
+      "sourceFile": "source/feedback_hint_reveal/source_feedback_hint_reveal_20260713_01.png",
       "runtimePath": "art/feedback/feedback_hint_reveal",
       "dimensions": {
         "width": 1024,
@@ -271,14 +307,16 @@
       },
       "transparentBackground": true,
       "intendedUse": "Reference sheet for hint pulse highlight",
-      "configReferences": ["feedbackPresets.hint_reveal"],
+      "configReferences": [
+        "feedbackPresets.hint_reveal"
+      ],
       "notes": "Must not fully obscure the hidden object."
     },
     {
       "assetId": "feedback_wrong_tap",
-      "state": "brief",
+      "state": "runtimeAsset",
       "sourceBrief": "briefs/ui-feedback.md",
-      "sourceFile": null,
+      "sourceFile": "source/feedback_wrong_tap/source_feedback_wrong_tap_20260713_01.png",
       "runtimePath": "art/feedback/feedback_wrong_tap",
       "dimensions": {
         "width": 1024,
@@ -286,7 +324,9 @@
       },
       "transparentBackground": true,
       "intendedUse": "Reference sheet for wrong tap shake or ripple feedback",
-      "configReferences": ["feedbackPresets.wrong_tap"],
+      "configReferences": [
+        "feedbackPresets.wrong_tap"
+      ],
       "notes": "Low-friction negative feedback; avoid harsh red error styling."
     }
   ],

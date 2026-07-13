@@ -13,6 +13,8 @@ The production-ready handoff for the first asset batch is available in two forms
 
 Give the PDF to Claude Design and begin with Batch A. Approve the world map and core target visual family before producing icons, HUD references, or feedback sheets.
 
+The first production package was accepted on 2026-07-13. See `docs/29-claude-design-asset-intake.md` for the preserved sources, runtime promotion, and Creator-version-dependent integration work.
+
 This pipeline converts generated design output into normalized runtime assets that can be referenced by gameplay config.
 
 ## Asset States
