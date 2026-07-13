@@ -144,6 +144,23 @@
     }
   },
   {
+    "name": "magnifier flows through controller without feedback preset",
+    "modeId": "hidden_object_demo",
+    "steps": [
+      {
+        "type": "magnifier",
+        "expectedToolEvents": ["magnifierZoom"],
+        "expectedFeedbackPlans": [],
+        "expectedToolState": {
+          "magnifier": {
+            "usesRemaining": 0,
+            "cooldownRemainingSeconds": 15
+          }
+        }
+      }
+    ]
+  },
+  {
     "name": "expired controller creates expired result",
     "modeId": "crime_hunt_demo",
     "steps": [

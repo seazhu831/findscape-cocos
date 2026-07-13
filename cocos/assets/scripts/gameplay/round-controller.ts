@@ -28,6 +28,7 @@ import {
   advanceToolCooldowns,
   createToolRuntimeState,
   useHintTool,
+  useMagnifierTool,
   type ToolEvent,
   type ToolRuntimeState,
 } from "./tool-runtime";
@@ -110,6 +111,22 @@ export function applyControllerHint(
   const toolResult = useHintTool(
     context.modeRuntimeConfig,
     state.round,
+    state.tools,
+  );
+  const nextState = {
+    ...state,
+    tools: toolResult.state,
+  };
+
+  return createControllerUpdate(context, nextState, [], toolResult.events);
+}
+
+export function applyControllerMagnifier(
+  context: RoundControllerContext,
+  state: RoundControllerState,
+): RoundControllerUpdate {
+  const toolResult = useMagnifierTool(
+    context.modeRuntimeConfig,
     state.tools,
   );
   const nextState = {

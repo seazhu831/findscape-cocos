@@ -16,6 +16,7 @@ import {
 } from "../config/mode-capabilities";
 import {
   applyControllerHint,
+  applyControllerMagnifier,
   applyControllerTap,
   applyControllerTick,
   createControllerRoundResult,
@@ -176,6 +177,18 @@ export function applyDemoSessionHint(
   }
 
   const update = applyControllerHint(activeRound.context, activeRound.state);
+  return createDemoSessionUpdate(state, update);
+}
+
+export function applyDemoSessionMagnifier(
+  state: DemoSessionState,
+): DemoSessionUpdate {
+  const activeRound = requireActiveRound(state);
+  if (!activeRound) {
+    return createEmptyUpdate(state);
+  }
+
+  const update = applyControllerMagnifier(activeRound.context, activeRound.state);
   return createDemoSessionUpdate(state, update);
 }
 

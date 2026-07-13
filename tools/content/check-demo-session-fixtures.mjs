@@ -46,6 +46,9 @@ for (const fixture of fixtures) {
     } else if (step.type === "hint") {
       update = applyDemoSessionHint(state);
       state = update.state;
+    } else if (step.type === "magnifier") {
+      update = applyDemoSessionMagnifier(state);
+      state = update.state;
     } else if (step.type === "returnToModeSelect") {
       state = returnToModeSelect(state);
     } else {
@@ -185,6 +188,18 @@ function applyDemoSessionHint(state) {
   }
 
   const update = applyControllerHint(activeRound.context, activeRound.state);
+  return createDemoSessionUpdate(state, update);
+}
+
+function applyDemoSessionMagnifier(state) {
+  const activeRound = requireActiveRound(state);
+  if (!activeRound) {
+    return createEmptyUpdate(state);
+  }
+  const update = applyControllerMagnifier(
+    activeRound.context,
+    activeRound.state,
+  );
   return createDemoSessionUpdate(state, update);
 }
 
@@ -449,6 +464,15 @@ function applyControllerHint(context, state) {
     state.round,
     state.tools,
   );
+  const nextState = {
+    ...state,
+    tools: toolResult.state,
+  };
+  return createControllerUpdate(context, nextState, [], toolResult.events);
+}
+
+function applyControllerMagnifier(context, state) {
+  const toolResult = useMagnifierTool(context.modeRuntimeConfig, state.tools);
   const nextState = {
     ...state,
     tools: toolResult.state,
@@ -791,6 +815,39 @@ function useHintTool(modeRuntimeConfig, roundState, toolState) {
           },
         ]
       : [],
+  };
+}
+
+function useMagnifierTool(modeRuntimeConfig, toolState) {
+  const magnifier = toolState.toolsById.magnifier;
+  const config = modeRuntimeConfig.tools.find(
+    (tool) => tool.toolId === "magnifier",
+  );
+  if (!magnifier || !config || magnifier.usesRemaining <= 0) {
+    return {
+      state: toolState,
+      events: [{ type: "toolUnavailable", toolId: "magnifier" }],
+    };
+  }
+  return {
+    state: {
+      toolsById: {
+        ...toolState.toolsById,
+        magnifier: {
+          ...magnifier,
+          usesRemaining: magnifier.usesRemaining - 1,
+          cooldownRemainingSeconds: config.cooldownSeconds,
+        },
+      },
+    },
+    events: [
+      {
+        type: "magnifierZoom",
+        toolId: "magnifier",
+        zoomMultiplier: config.value ?? 1,
+        durationSeconds: config.durationSeconds ?? 0,
+      },
+    ],
   };
 }
 

@@ -27,6 +27,8 @@ for (const fixture of fixtures) {
       update = applyControllerTick(context, state, step.deltaSeconds);
     } else if (step.type === "hint") {
       update = applyControllerHint(context, state);
+    } else if (step.type === "magnifier") {
+      update = applyControllerMagnifier(context, state);
     } else {
       failures.push(`${fixture.name} has unsupported step type: ${step.type}`);
       continue;
@@ -178,6 +180,15 @@ function applyControllerHint(context, state) {
     tools: toolResult.state,
   };
 
+  return createControllerUpdate(context, nextState, [], toolResult.events);
+}
+
+function applyControllerMagnifier(context, state) {
+  const toolResult = useMagnifierTool(context.modeRuntimeConfig, state.tools);
+  const nextState = {
+    ...state,
+    tools: toolResult.state,
+  };
   return createControllerUpdate(context, nextState, [], toolResult.events);
 }
 
@@ -535,6 +546,34 @@ function useHintTool(runtimeConfig, roundState, toolState) {
         toolId: "hint",
         target,
         durationSeconds: hintConfig.durationSeconds ?? 2,
+      },
+    ],
+  };
+}
+
+function useMagnifierTool(runtimeConfig, toolState) {
+  const config = runtimeConfig.tools.find((tool) => tool.toolId === "magnifier");
+  const state = toolState.toolsById.magnifier;
+  if (!config || !state || state.usesRemaining <= 0) {
+    return { state: toolState, events: [{ type: "toolUnavailable" }] };
+  }
+  return {
+    state: {
+      toolsById: {
+        ...toolState.toolsById,
+        magnifier: {
+          ...state,
+          usesRemaining: state.usesRemaining - 1,
+          cooldownRemainingSeconds: config.cooldownSeconds,
+        },
+      },
+    },
+    events: [
+      {
+        type: "magnifierZoom",
+        toolId: "magnifier",
+        zoomMultiplier: config.value ?? 1,
+        durationSeconds: config.durationSeconds ?? 0,
       },
     ],
   };
