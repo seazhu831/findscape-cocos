@@ -86,6 +86,10 @@ for (const requiredHudContract of [
   '"CooldownPill"',
   "viewModel.tools.find",
   "tool?.isDepleted ? 110 : tool?.isCoolingDown ? 170 : 255",
+  "viewModel.status === \"playing\" ? viewModel.timer.urgency : \"normal\"",
+  "Tween.stopAllByTarget(this.timerNode)",
+  'urgency === "critical"',
+  ".repeatForever()",
 ]) {
   if (!hudSource.includes(requiredHudContract)) {
     failures.push(`PortraitHud is missing contract: ${requiredHudContract}`);

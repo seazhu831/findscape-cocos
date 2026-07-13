@@ -9,6 +9,8 @@ import {
   resources,
   Sprite,
   SpriteFrame,
+  tween,
+  Tween,
   UITransform,
   UIOpacity,
   Vec3,
@@ -41,11 +43,19 @@ const ICON_SLOTS = [
 @executeInEditMode(true)
 export class PortraitHud extends Component {
   private timerLabel: Label | null = null;
+  private timerNode: Node | null = null;
   private scoreLabel: Label | null = null;
   private comboLabel: Label | null = null;
+  private timerUrgency: RoundHudViewModel["timer"]["urgency"] | null = null;
 
   protected onLoad(): void {
     this.buildHud();
+  }
+
+  protected onDestroy(): void {
+    if (this.timerNode) {
+      Tween.stopAllByTarget(this.timerNode);
+    }
   }
 
   private buildHud(): void {
@@ -104,7 +114,7 @@ export class PortraitHud extends Component {
     clockGraphics.lineTo(16, -9);
     clockGraphics.stroke();
 
-    this.timerLabel = this.createLabel(
+    this.timerNode = this.createLabel(
       "Timer",
       parent,
       "1:00",
@@ -112,7 +122,8 @@ export class PortraitHud extends Component {
       190,
       80,
       new Vec3(-285, 0, 0),
-    ).getComponent(Label);
+    );
+    this.timerLabel = this.timerNode.getComponent(Label);
 
     const star = this.createGraphicsNode(
       "ScoreStar",
@@ -197,6 +208,9 @@ export class PortraitHud extends Component {
     if (this.timerLabel) {
       this.timerLabel.string = viewModel.timer.label;
     }
+    this.renderTimerUrgency(
+      viewModel.status === "playing" ? viewModel.timer.urgency : "normal",
+    );
     if (this.scoreLabel) {
       this.scoreLabel.string = String(viewModel.score);
     }
@@ -242,6 +256,31 @@ export class PortraitHud extends Component {
 
   public getMagnifierButton(): Node | null {
     return this.node.getChildByName("MagnifierButton");
+  }
+
+  private renderTimerUrgency(
+    urgency: RoundHudViewModel["timer"]["urgency"],
+  ): void {
+    if (!this.timerNode || !this.timerLabel || urgency === this.timerUrgency) {
+      return;
+    }
+    this.timerUrgency = urgency;
+    Tween.stopAllByTarget(this.timerNode);
+    this.timerNode.setScale(1, 1, 1);
+    this.timerLabel.color =
+      urgency === "critical"
+        ? COLORS.coral
+        : urgency === "warning"
+          ? COLORS.berry
+          : COLORS.outline;
+    if (urgency === "critical") {
+      tween(this.timerNode)
+        .to(0.35, { scale: new Vec3(1.1, 1.1, 1) }, { easing: "sineOut" })
+        .to(0.35, { scale: new Vec3(1, 1, 1) }, { easing: "sineIn" })
+        .union()
+        .repeatForever()
+        .start();
+    }
   }
 
   private renderToolButton(
