@@ -2,7 +2,9 @@
 
 This folder is the Cocos Creator client project boundary.
 
-The selected editor version is **Cocos Creator 3.8.8**. The repository does not include editor-generated Cocos metadata yet because the local machine does not currently expose a Cocos Creator installation or CLI. Install 3.8.8 through Cocos Dashboard, then import this existing folder and let that exact editor version generate compatible project files and `.meta` assets.
+The selected editor version is **Cocos Creator 3.8.8**. This folder has completed its first import with that exact version and includes the generated project settings and `.meta` assets required for stable team imports.
+
+Creator 3.8.8 showed an AssetDB startup race on this host. Keep `extensions/findscape-asset-db-bootstrap/` enabled while the project remains on 3.8.8; its README records the failure mode, verification, and removal condition.
 
 See `../docs/30-cocos-creator-version-and-initialization.md` for the decision, installation procedure, and first-open verification checklist.
 
@@ -22,12 +24,11 @@ See `../docs/30-cocos-creator-version-and-initialization.md` for the decision, i
 
 ## Creator Handoff
 
-After Cocos Creator 3.8.8 is installed:
-
-1. Open this `cocos/` folder as a Cocos Creator project.
-2. Let Creator generate required settings and metadata.
-3. Keep generated cache folders such as `library/`, `local/`, `temp/`, and `build/` out of git.
-4. Commit only project settings, scripts, scenes, prefabs, configs, and normalized runtime assets needed by the team.
+1. Open this `cocos/` folder with Cocos Creator 3.8.8.
+2. Allow asset refresh to finish before editing scenes or committing metadata.
+3. Confirm the console contains no `[Findscape] Cocos Creator asset handlers were not available` error.
+4. Keep generated cache folders such as `library/`, `local/`, `temp/`, and `build/` out of git.
+5. Commit only project settings, scripts, scenes, prefabs, configs, normalized runtime assets, and their `.meta` files.
 
 ## Static Web Preview
 

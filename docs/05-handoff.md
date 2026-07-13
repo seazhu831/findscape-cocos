@@ -41,11 +41,11 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 
 ## Suggested Next Step
 
-Start a new session in this repository and ask Codex to scaffold the Cocos Creator project.
+Continue from the initialized Cocos Creator 3.8.8 project and integrate the accepted portrait production assets.
 
 Recommended prompt:
 
-> We are in `/Users/sea/WorkSpace/byxy/github/findscape-cocos`. Read the docs in `docs/`, then scaffold a Cocos Creator project structure for the hidden-object gameplay foundation. Start with data schemas, module layout, and a minimal playable Web-preview-friendly prototype plan. Do not overbuild backend or monetization yet.
+> We are in `/Users/sea/WorkSpace/byxy/github/findscape-cocos`. Read `docs/05-handoff.md`, `docs/30-cocos-creator-version-and-initialization.md`, and `design/claude-design/source/README.md`. Continue with the accepted 1600x2400 portrait asset integration: migrate the gameplay contract and anchors first, then create the Cocos scene, target placement, HUD, and feedback in granular issue-backed commits.
 
 ## Files To Read First
 
@@ -53,14 +53,14 @@ Recommended prompt:
 - `docs/02-technical-direction.md`
 - `docs/03-gameplay-foundation.md`
 - `docs/04-demo-scope.md`
+- `docs/30-cocos-creator-version-and-initialization.md`
+- `design/claude-design/source/README.md`
 - `references/original-prd.docx`
 
 ## Open Questions
 
 - What is the final product/IP name?
-- Which Cocos Creator version should be used?
 - Is the first demo required to publish to WeChat immediately, or is Web preview enough for initial validation?
-- Will custom hand-drawn map art be available before implementation, or should placeholders be used first?
 - How many mode variants should appear in the first demo?
 - Is the Demo app package actually required, or only WeChat scan-to-play?
 
@@ -85,4 +85,4 @@ findscape-cocos/
   README.md
 ```
 
-The exact Cocos directory should be created by Cocos Creator or aligned with the chosen version.
+The `cocos/` directory is initialized and pinned to Cocos Creator 3.8.8. The first Claude Design asset batch is imported with stable runtime paths and generated `.meta` files. The next dependency chain is portrait config migration, scene creation, HUD binding, feedback implementation, Web Mobile build, then WeChat validation.

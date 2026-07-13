@@ -4,22 +4,17 @@
 
 Issue: https://github.com/seazhu831/findscape-cocos/issues/4
 
-This stage creates a repository-level Cocos workspace boundary without pretending that the full Cocos Creator project has already been generated.
+This stage created the repository-level Cocos workspace boundary. It was initialized by Cocos Creator 3.8.8 on 2026-07-13.
 
-## Current Constraint
+## Initialization Status
 
-The local machine does not currently expose:
-
-- `cocos` CLI.
-- A visible Cocos Creator application under `/Applications`.
-
-Because of that, the scaffold intentionally avoids hand-authoring editor-generated metadata that can vary by Cocos Creator version.
+- Cocos Dashboard 2.2.1 and Cocos Creator 3.8.8 are installed.
+- Creator opened the existing `cocos/` directory and generated project identity, package settings, and asset metadata.
+- Generated cache and local-state directories remain ignored.
 
 ## Version Stance
 
-Cocos Creator version is still an open decision.
-
-Until confirmed, this repo should treat the `cocos/` folder as a Creator-ready workspace and keep implementation code in stable TypeScript/script and config boundaries. Once the version is chosen, open `cocos/` in Cocos Creator and let the editor generate compatible project metadata.
+The project is pinned to Cocos Creator 3.8.8. Do not open it with another Creator version unless that decision is recorded first.
 
 ## Created Structure
 
@@ -74,7 +69,4 @@ Commit project settings, source, scenes, prefabs, configs, and normalized runtim
 
 ## Next Step
 
-Proceed to Stage 3 after one of these happens:
-
-- Cocos Creator version is confirmed and the editor project is initialized.
-- Or, if implementation must continue before editor setup, define gameplay data schemas and sample config under `cocos/assets/resources/config/` with TypeScript interfaces under `cocos/assets/scripts/config/`.
+Migrate the gameplay config and viewport fixtures to the accepted 1600x2400 portrait map, then create the first 2D scene and bind the imported runtime assets.

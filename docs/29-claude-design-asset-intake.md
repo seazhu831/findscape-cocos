@@ -39,9 +39,9 @@ Review composites and decision notes are not runtime resources.
 - Feedback reference sheets: 1024x1024 with real alpha transparency.
 - Runtime paths match the existing manifest naming contract.
 
-## Deferred Creator Integration
+## Creator Integration Status
 
-No Cocos-generated `.meta`, scene, prefab, atlas, or import-setting files are authored in this intake stage. Those files depend on the selected Cocos Creator version.
+Cocos Creator 3.8.8 has imported the accepted runtime assets and generated their `.meta` files. Scene, prefab, atlas, and asset-specific import tuning remain part of the next integration stage.
 
 The accepted primary map changes the map contract from the current 2400x1600 landscape config to a 1600x2400 portrait world. Creator integration must therefore update these together:
 

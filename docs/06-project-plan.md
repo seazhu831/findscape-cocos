@@ -136,7 +136,7 @@ Dependencies:
 
 Current constraint:
 
-- Cocos Creator 3.8.8 is selected, but the local machine does not currently expose Dashboard, the editor, or a Creator CLI. The repo must avoid hand-authoring editor-generated metadata until 3.8.8 imports the project.
+- Resolved on 2026-07-13. Dashboard 2.2.1 and Creator 3.8.8 are installed, the existing `cocos/` directory has completed its first import, and editor-generated metadata is committed.
 
 ## Stage 3: Gameplay Data Schemas
 
