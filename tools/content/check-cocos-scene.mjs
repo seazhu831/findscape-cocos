@@ -29,7 +29,7 @@ const map = requireNode("Map");
 expectChild(canvas, camera);
 expectChild(canvas, mapWorld);
 expectChild(mapWorld, map);
-expectVector(mapWorld?._lscale, 0.8, 0.8, "MapWorld scale");
+expectVector(mapWorld?._lscale, 1, 1, "MapWorld scale");
 expectContentSize(map, 1600, 2400);
 expectSpriteFrame(map, "adf71751-5e84-4cd7-9d68-3165f4a4c543@f9941");
 
