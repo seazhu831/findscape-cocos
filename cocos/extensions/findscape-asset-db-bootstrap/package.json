@@ -1,0 +1,17 @@
+{
+  "name": "findscape-asset-db-bootstrap",
+  "title": "Findscape AssetDB Bootstrap",
+  "version": "1.0.0",
+  "package_version": 2,
+  "author": "Findscape",
+  "description": "Restores built-in asset handlers before the Cocos Creator 3.8.8 project database starts.",
+  "main": "./dist/main.js",
+  "contributions": {
+    "asset-db": {
+      "script": "./dist/asset-db.js",
+      "global-hook": [
+        "beforePreStart"
+      ]
+    }
+  }
+}
