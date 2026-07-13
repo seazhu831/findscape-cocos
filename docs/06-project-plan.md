@@ -301,6 +301,8 @@ Related asset manifest issue: https://github.com/seazhu831/findscape-cocos/issue
 
 Related source intake issue: https://github.com/seazhu831/findscape-cocos/issues/21
 
+Related Claude Design production handoff issue: https://github.com/seazhu831/findscape-cocos/issues/37
+
 Related known issues issue: https://github.com/seazhu831/findscape-cocos/issues/33
 
 Dependencies:

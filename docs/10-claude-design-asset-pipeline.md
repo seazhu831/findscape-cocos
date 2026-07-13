@@ -6,6 +6,13 @@ Issue: https://github.com/seazhu831/findscape-cocos/issues/7
 
 Claude Design is the preferred source for early design assets. Cocos remains the implementation source of truth.
 
+The production-ready handoff for the first asset batch is available in two forms:
+
+- Editable source: `docs/28-claude-design-asset-handoff.md`
+- Shareable PDF: `output/pdf/claude-design-asset-production-handoff.pdf`
+
+Give the PDF to Claude Design and begin with Batch A. Approve the world map and core target visual family before producing icons, HUD references, or feedback sheets.
+
 This pipeline converts generated design output into normalized runtime assets that can be referenced by gameplay config.
 
 ## Asset States
