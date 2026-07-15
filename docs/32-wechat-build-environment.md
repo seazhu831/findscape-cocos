@@ -45,9 +45,10 @@ Verified generated properties:
 - Output directory: `cocos/build/wechatgame/` (ignored by Git)
 - `project.config.json` uses `compileType: game`
 - `game.json` uses `deviceOrientation: portrait`
-- The generated package contains the scene, scripts, runtime art, and five OGG
-  feedback clips
-- Uncompressed output size is approximately 13 MB
+- `game.json` declares `subpackages/resources/`, which contains runtime art and
+  all five OGG feedback clips
+- The measured main package is `2,603,197` bytes (`2.48 MiB`); the resources
+  subpackage is `4,069,260` bytes (`3.88 MiB`)
 - WeChat DevTools accepts the package and renders the portrait scene in its
   iPhone simulator without a blocking compile error
 
@@ -57,9 +58,10 @@ AppID. The reproducible build options live in
 `packages.wechatgame` as required by Creator 3.8. Creator's stock
 `wx6ac3f5090a6b99c5` remains test-only and must not be used for release.
 
-The current uncompressed output is approximately 13 MB. Cocos documentation
-states that the WeChat Mini Game main package may not exceed 4 MB. Engine feature
-trimming, subpackages, or remote assets are required before upload.
+Issue #60 reduced the build from approximately 13 MB by trimming unused engine
+features, enabling release property mangling, and assigning the `resources`
+Asset Bundle to a WeChat subpackage. `npm run check:wechat-build-output` now
+enforces the 4 MiB main-package limit and verifies the generated subpackage.
 
 As with Web Mobile builds on this host, Creator logs a successful completed
 build and then exits with code 36.
@@ -81,6 +83,9 @@ npm run check:wechat-build-output
   template or random AppID is required.
 - The simulator loads the main scene, portrait HUD, map, target art, and runtime
   diagnostics successfully.
+- The subpackaged release build loads in the iPhone simulator with zero runtime
+  errors; the scene load completed in approximately 176 ms. Three visible
+  warnings are DevTools/base-library notices rather than project failures.
 
-Remaining platform work is package-size reduction, WeChat storage binding,
-preview QR/device validation, and physical-device audio tuning.
+Remaining platform work is WeChat storage binding, preview QR/device
+validation, and physical-device audio tuning.

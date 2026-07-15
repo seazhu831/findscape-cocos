@@ -42,11 +42,11 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 ## Suggested Next Step
 
 The portrait Cocos demo is playable, and both Web Mobile and WeChat Mini Game
-builds complete. The remaining external-dependency stage is:
+builds complete. The next platform stage is:
 
-1. Confirm the pending macOS local-network permission, complete WeChat DevTools
-   login, provide a usable Mini Game AppID, bind the WeChat storage adapter, and
-   validate in the simulator and on device.
+1. Bind the existing WeChat storage adapter to the Mini Game runtime, validate
+   persistence in the simulator, then generate a preview QR code for device
+   validation.
 
 Recommended prompt:
 
@@ -70,6 +70,9 @@ Recommended prompt:
 - The strongest deterministic check is `cd cocos && npm run check:all`.
 - Web Mobile has been repeatedly built and exercised at `390x844`; Creator CLI
   success currently returns the known non-zero exit code 36.
+- The release WeChat build uses the production AppID, a trimmed/mangled engine,
+  and a `resources` subpackage. Its measured main package is `2.48 MiB`, below
+  the `4 MiB` limit, and the DevTools simulator reports zero runtime errors.
 
 ## Files To Read First
 
@@ -90,7 +93,6 @@ Recommended prompt:
 - What is the final product/IP name?
 - When should the verified Web Mobile demo move to WeChat device validation?
 - Is the Demo app package actually required, or only WeChat scan-to-play?
-- Who will provide or approve the five short feedback SFX files?
 
 ## Repository Shape
 
@@ -120,6 +122,7 @@ visual feedback, the shared round loop, three modes, Web Mobile builds, and
 browser persistence are complete. Runtime SFX preload and one-shot playback are
 also bound. WeChat DevTools is installed, production AppID
 `wx04421302f08791bc` is pinned, and the portrait `wechatgame` package builds and
-runs in the DevTools simulator. The remaining dependency chain is main-package
-size reduction, WeChat storage binding, preview QR/device validation, and final
-physical-device audio tuning.
+runs in the DevTools simulator. Engine trimming, release mangling, and the
+`resources` subpackage reduce the measured main package to `2.48 MiB`. The
+remaining dependency chain is WeChat storage binding, preview QR/device
+validation, and final physical-device audio tuning.

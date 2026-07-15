@@ -7,8 +7,7 @@ This document keeps current blockers and non-blocking limitations in one place s
 ## Hard Blockers
 
 No owner-input blocker is currently active. Device preview will require the
-owner's phone when the package is small enough to generate and scan a preview
-QR code.
+owner's phone when the preview QR stage begins.
 
 ## Non-Blocking Limitations
 
@@ -19,10 +18,6 @@ These do not block pure runtime, config, fixture, or static preview work.
 - Browser local storage is bound to the Cocos round flow. The WeChat storage
   adapter has deterministic fixtures but is not yet bound to a built WeChat
   Mini Game runtime.
-- The generated WeChat package is approximately 13 MB, while the main-package
-  limit is 4 MB. The 6.4 MB engine bundle is the largest single artifact;
-  engine feature trimming and resource packaging must be addressed before
-  upload or device preview.
 - The official WeChat DevTools 2.01.2510290 x64 and ARM64 stable archives fail
   strict code-signature verification despite matching the official release and
   Homebrew checksum. The x64 build runs under normal macOS policy without a
@@ -49,6 +44,5 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current dependency sequence is:
 
-- Reduce the WeChat main package below 4 MB and repeat simulator validation.
 - Bind the WeChat storage adapter, then run preview QR/device validation.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.
