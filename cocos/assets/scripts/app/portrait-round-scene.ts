@@ -115,6 +115,11 @@ export class PortraitRoundScene extends Component {
       this.handleMagnifierTouch,
       this,
     );
+    this.hud?.getTargetPanelToggle()?.off(
+      Node.EventType.TOUCH_END,
+      this.handleTargetPanelToggleTouch,
+      this,
+    );
     this.settlement?.getRetryButton().off(
       Node.EventType.TOUCH_END,
       this.handleRetryTouch,
@@ -200,6 +205,11 @@ export class PortraitRoundScene extends Component {
       this.handleMagnifierTouch,
       this,
     );
+    this.hud.getTargetPanelToggle()?.on(
+      Node.EventType.TOUCH_END,
+      this.handleTargetPanelToggleTouch,
+      this,
+    );
     this.ready = true;
     this.renderHud();
   }
@@ -241,6 +251,7 @@ export class PortraitRoundScene extends Component {
     this.mapGestureActive = true;
     this.mapGestureDragged = false;
     this.mapGestureDistance = 0;
+    this.hud?.setMapInteractionActive(true);
   }
 
   private handleMapTouchMove(event: EventTouch): void {
@@ -303,6 +314,11 @@ export class PortraitRoundScene extends Component {
 
   private handleMapTouchCancel(): void {
     this.resetMapGesture();
+  }
+
+  private handleTargetPanelToggleTouch(event: EventTouch): void {
+    event.propagationStopped = true;
+    this.hud?.toggleTargetPanel();
   }
 
   private handleHintTouch(event: EventTouch): void {
@@ -571,6 +587,7 @@ export class PortraitRoundScene extends Component {
     this.mapGestureActive = false;
     this.mapGestureDragged = false;
     this.mapGestureDistance = 0;
+    this.hud?.setMapInteractionActive(false);
   }
 
   private resetMapPosition(): void {

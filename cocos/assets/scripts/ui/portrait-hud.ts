@@ -42,6 +42,10 @@ const ICON_SLOTS = [
 @ccclass("PortraitHud")
 @executeInEditMode(true)
 export class PortraitHud extends Component {
+  private chromeRoot: Node | null = null;
+  private topBar: Node | null = null;
+  private targetPanel: Node | null = null;
+  private targetPanelExpanded = true;
   private timerLabel: Label | null = null;
   private timerNode: Node | null = null;
   private scoreLabel: Label | null = null;
@@ -64,91 +68,103 @@ export class PortraitHud extends Component {
       child.destroy();
     }
 
-    const topBar = this.createRoundedPanel(
-      "TopBar",
-      980,
-      140,
-      42,
-      new Vec3(0, 800, 0),
+    this.chromeRoot = this.createNode(
+      "ChromeRoot",
+      this.node,
+      Vec3.ZERO,
+      1080,
+      1920,
     );
-    this.buildTopBar(topBar);
+    this.chromeRoot.addComponent(UIOpacity);
 
-    const targetPanel = this.createRoundedPanel(
-      "TargetPanel",
-      980,
-      200,
-      46,
-      new Vec3(0, -766, 0),
+    this.topBar = this.createRoundedPanel(
+      "TopBar",
+      640,
+      112,
+      36,
+      new Vec3(0, 830, 0),
+      this.chromeRoot,
     );
-    this.buildTargetList(targetPanel);
+    this.buildTopBar(this.topBar);
+
+    this.targetPanel = this.createRoundedPanel(
+      "TargetPanel",
+      560,
+      150,
+      38,
+      new Vec3(0, -820, 0),
+      this.chromeRoot,
+    );
+    this.buildTargetList(this.targetPanel);
 
     this.buildToolButton(
       "HintButton",
-      new Vec3(-400, -540, 0),
+      new Vec3(-430, -620, 0),
       "art/icons/tool_hint/spriteFrame",
     );
     this.buildToolButton(
       "MagnifierButton",
-      new Vec3(400, -540, 0),
+      new Vec3(430, -620, 0),
       "art/icons/tool_magnifier/spriteFrame",
     );
+    this.buildTargetPanelToggle();
   }
 
   private buildTopBar(parent: Node): void {
     const clock = this.createGraphicsNode(
       "Clock",
       parent,
-      new Vec3(-405, 0, 0),
-      76,
-      76,
+      new Vec3(-260, 0, 0),
+      58,
+      58,
     );
     const clockGraphics = clock.addComponent(Graphics);
-    clockGraphics.lineWidth = 6;
+    clockGraphics.lineWidth = 5;
     clockGraphics.fillColor = COLORS.sky;
     clockGraphics.strokeColor = COLORS.outline;
-    clockGraphics.circle(0, 0, 35);
+    clockGraphics.circle(0, 0, 27);
     clockGraphics.fill();
     clockGraphics.stroke();
-    clockGraphics.moveTo(0, 18);
+    clockGraphics.moveTo(0, 14);
     clockGraphics.lineTo(0, 0);
-    clockGraphics.lineTo(16, -9);
+    clockGraphics.lineTo(12, -7);
     clockGraphics.stroke();
 
     this.timerNode = this.createLabel(
       "Timer",
       parent,
       "1:00",
-      58,
-      190,
-      80,
-      new Vec3(-285, 0, 0),
+      46,
+      130,
+      66,
+      new Vec3(-180, 0, 0),
     );
     this.timerLabel = this.timerNode.getComponent(Label);
 
     const star = this.createGraphicsNode(
       "ScoreStar",
       parent,
-      new Vec3(-82, 0, 0),
-      76,
-      76,
+      new Vec3(-64, 0, 0),
+      58,
+      58,
     );
-    this.drawStar(star.addComponent(Graphics), 34, 16);
+    this.drawStar(star.addComponent(Graphics), 27, 13);
     this.scoreLabel = this.createLabel(
       "Score",
       parent,
       "0",
-      58,
-      220,
-      80,
-      new Vec3(75, 0, 0),
+      46,
+      140,
+      66,
+      new Vec3(36, 0, 0),
     ).getComponent(Label);
 
     const combo = this.createRoundedPanel(
       "ComboPill",
-      166,
-      88,
-      44,
-      new Vec3(365, 0, 0),
+      116,
+      72,
+      32,
+      new Vec3(238, 0, 0),
       parent,
       COLORS.coral,
     );
@@ -156,48 +172,48 @@ export class PortraitHud extends Component {
       "Combo",
       combo,
       "x0",
-      52,
-      140,
-      76,
+      40,
+      96,
+      60,
       Vec3.ZERO,
       COLORS.white,
     ).getComponent(Label);
   }
 
   private buildTargetList(parent: Node): void {
-    const slotXs = [-380, -190, 0, 190, 380];
+    const slotXs = [-300, -150, 0, 150, 300];
 
     ICON_SLOTS.forEach((slot, index) => {
       const slotNode = this.createNode(
         `TargetSlot_${slot.typeId}`,
         parent,
         new Vec3(slotXs[index], 0, 0),
-        150,
-        150,
+        108,
+        108,
       );
-      this.loadSprite(slotNode, slot.path, 118, 118);
+      this.loadSprite(slotNode, slot.path, 88, 88);
 
       const badge = this.createGraphicsNode(
         "CountBadge",
         slotNode,
-        new Vec3(48, 48, 0),
-        64,
-        64,
+        new Vec3(36, 36, 0),
+        48,
+        48,
       );
       const badgeGraphics = badge.addComponent(Graphics);
-      badgeGraphics.lineWidth = 5;
+      badgeGraphics.lineWidth = 4;
       badgeGraphics.fillColor = COLORS.berry;
       badgeGraphics.strokeColor = COLORS.outline;
-      badgeGraphics.circle(0, 0, 30);
+      badgeGraphics.circle(0, 0, 22);
       badgeGraphics.fill();
       badgeGraphics.stroke();
       this.createLabel(
         "Count",
         badge,
         String(slot.count),
-        38,
-        54,
-        54,
+        30,
+        42,
+        42,
         Vec3.ZERO,
         COLORS.white,
       );
@@ -220,7 +236,7 @@ export class PortraitHud extends Component {
     this.renderToolButton(this.getHintButton(), viewModel, "hint");
     this.renderToolButton(this.getMagnifierButton(), viewModel, "magnifier");
 
-    const targetPanel = this.node.getChildByName("TargetPanel");
+    const targetPanel = this.targetPanel;
     if (!targetPanel) {
       return;
     }
@@ -228,7 +244,7 @@ export class PortraitHud extends Component {
       slotNode.active = false;
     }
 
-    const spacing = 190;
+    const spacing = 150;
     const startX = -((viewModel.targetList.length - 1) * spacing) / 2;
     viewModel.targetList.forEach((item, index) => {
       const slotNode = targetPanel.getChildByName(`TargetSlot_${item.typeId}`);
@@ -251,11 +267,30 @@ export class PortraitHud extends Component {
   }
 
   public getHintButton(): Node | null {
-    return this.node.getChildByName("HintButton");
+    return this.chromeRoot?.getChildByName("HintButton") ?? null;
   }
 
   public getMagnifierButton(): Node | null {
-    return this.node.getChildByName("MagnifierButton");
+    return this.chromeRoot?.getChildByName("MagnifierButton") ?? null;
+  }
+
+  public getTargetPanelToggle(): Node | null {
+    return this.node.getChildByName("TargetPanelToggle");
+  }
+
+  public toggleTargetPanel(): void {
+    this.targetPanelExpanded = !this.targetPanelExpanded;
+    if (this.targetPanel) {
+      this.targetPanel.active = this.targetPanelExpanded;
+    }
+    this.drawTargetPanelToggle();
+  }
+
+  public setMapInteractionActive(active: boolean): void {
+    const opacity = this.chromeRoot?.getComponent(UIOpacity);
+    if (opacity) {
+      opacity.opacity = active ? 48 : 255;
+    }
   }
 
   private renderTimerUrgency(
@@ -314,36 +349,76 @@ export class PortraitHud extends Component {
   }
 
   private buildToolButton(name: string, position: Vec3, iconPath: string): void {
-    const button = this.createGraphicsNode(name, this.node, position, 180, 180);
+    if (!this.chromeRoot) {
+      return;
+    }
+    const button = this.createGraphicsNode(
+      name,
+      this.chromeRoot,
+      position,
+      140,
+      140,
+    );
     const graphics = button.addComponent(Graphics);
-    graphics.lineWidth = 6;
+    graphics.lineWidth = 5;
     graphics.fillColor = COLORS.panel;
     graphics.strokeColor = COLORS.outline;
-    graphics.circle(0, 0, 82);
+    graphics.circle(0, 0, 64);
     graphics.fill();
     graphics.stroke();
-    this.loadSprite(button, iconPath, 122, 122, "Icon");
+    this.loadSprite(button, iconPath, 94, 94, "Icon");
     const badge = this.createRoundedPanel(
       "UsesBadge",
-      62,
-      62,
-      31,
-      new Vec3(56, 56, 0),
+      48,
+      48,
+      24,
+      new Vec3(44, 44, 0),
       button,
       COLORS.berry,
     );
-    this.createLabel("Uses", badge, "0", 34, 52, 52, Vec3.ZERO, COLORS.white);
+    this.createLabel("Uses", badge, "0", 28, 40, 40, Vec3.ZERO, COLORS.white);
     const cooldown = this.createRoundedPanel(
       "CooldownPill",
-      112,
-      52,
-      26,
-      new Vec3(0, -60, 0),
+      96,
+      44,
+      22,
+      new Vec3(0, -48, 0),
       button,
       COLORS.outline,
     );
     cooldown.active = false;
-    this.createLabel("Cooldown", cooldown, "", 30, 100, 44, Vec3.ZERO, COLORS.white);
+    this.createLabel("Cooldown", cooldown, "", 26, 84, 38, Vec3.ZERO, COLORS.white);
+  }
+
+  private buildTargetPanelToggle(): void {
+    const button = this.createGraphicsNode(
+      "TargetPanelToggle",
+      this.node,
+      new Vec3(0, -710, 0),
+      120,
+      120,
+    );
+    button.addComponent(Graphics);
+    this.drawTargetPanelToggle();
+  }
+
+  private drawTargetPanelToggle(): void {
+    const graphics = this.getTargetPanelToggle()?.getComponent(Graphics);
+    if (!graphics) {
+      return;
+    }
+    graphics.clear();
+    graphics.lineWidth = 6;
+    graphics.fillColor = COLORS.panel;
+    graphics.strokeColor = COLORS.outline;
+    graphics.circle(0, 0, 36);
+    graphics.fill();
+    graphics.stroke();
+    const direction = this.targetPanelExpanded ? -1 : 1;
+    graphics.moveTo(-14, 7 * direction);
+    graphics.lineTo(0, -7 * direction);
+    graphics.lineTo(14, 7 * direction);
+    graphics.stroke();
   }
 
   private createRoundedPanel(
