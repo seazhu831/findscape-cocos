@@ -8,8 +8,6 @@ This document keeps current blockers and non-blocking limitations in one place s
 
 These require project owner input, tool access, or source material before the next dependent work can be completed safely.
 
-- Audio playback depends on five accepted short SFX files or approval of a
-  source for producing them.
 - WeChat device preview depends on WeChat DevTools and a usable AppID. It does
   not block continued Web Mobile regression work.
 
@@ -17,9 +15,9 @@ These require project owner input, tool access, or source material before the ne
 
 These do not block pure runtime, config, fixture, or static preview work.
 
-- The configured feedback sound paths do not have accepted runtime audio files yet,
-  and the Cocos scene does not play audio. Visual target, hint, wrong-tap,
-  magnifier, timer, and settlement feedback are implemented.
+- Five CC0 feedback clips are imported at the configured runtime paths and pass
+  the audio asset manifest check. The Cocos scene does not play them yet; visual
+  target, hint, wrong-tap, magnifier, timer, and settlement feedback are implemented.
 - Browser local storage is bound to the Cocos round flow. The WeChat storage
   adapter has deterministic fixtures but is not yet bound to a built WeChat
   Mini Game runtime.
@@ -44,7 +42,7 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current dependency sequence is:
 
-- Import accepted SFX files and bind configured feedback audio hooks.
+- Bind the imported SFX files to configured feedback audio hooks.
 - Install/open WeChat DevTools and provide a usable AppID for Mini Game build
   and device validation.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.
