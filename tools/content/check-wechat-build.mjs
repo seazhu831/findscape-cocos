@@ -136,11 +136,24 @@ function validateOutput(outputPath) {
     "game.js",
     "application.js",
     "assets/main/index.js",
+    "subpackages/resources/index.js",
     "subpackages/resources/game.js",
   ]) {
     if (!isFile(path.join(outputPath, relativePath))) {
       failures.push(`generated output is missing ${relativePath}`);
     }
+  }
+
+  const resourcesEntryPath = path.join(
+    outputPath,
+    "subpackages/resources/index.js",
+  );
+  if (
+    isFile(resourcesEntryPath) &&
+    fs.readFileSync(resourcesEntryPath, "utf8").trim() !==
+      'require("./game.js");'
+  ) {
+    failures.push("generated resources subpackage entry must load game.js");
   }
 
   if (fs.existsSync(path.join(outputPath, "assets/resources"))) {
