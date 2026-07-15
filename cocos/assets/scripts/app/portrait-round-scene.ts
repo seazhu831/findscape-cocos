@@ -34,6 +34,7 @@ import type {
   GameplayConfig,
   TargetPointConfig,
 } from "../config/gameplay-schema";
+import { PortraitAudioFeedback } from "../feedback/portrait-audio-feedback";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
 import { PortraitHud } from "../ui/portrait-hud";
 import { PortraitModeSelect } from "../ui/portrait-mode-select";
@@ -57,6 +58,7 @@ export class PortraitRoundScene extends Component {
   private sessionState: DemoSessionState | null = null;
   private mapWorld: Node | null = null;
   private feedback: PortraitFeedback | null = null;
+  private audioFeedback: PortraitAudioFeedback | null = null;
   private hud: PortraitHud | null = null;
   private settlement: PortraitSettlement | null = null;
   private modeSelect: PortraitModeSelect | null = null;
@@ -139,6 +141,9 @@ export class PortraitRoundScene extends Component {
     if (!this.mapWorld || !this.feedback || !this.hud) {
       throw new Error("MapWorld, FeedbackRoot, and HUDRoot are required");
     }
+    this.audioFeedback =
+      this.node.getComponent(PortraitAudioFeedback) ??
+      this.node.addComponent(PortraitAudioFeedback);
     this.settlement = this.createSettlement();
     this.modeSelect = this.createModeSelect();
     this.settlement.getRetryButton().on(
@@ -153,6 +158,11 @@ export class PortraitRoundScene extends Component {
     );
 
     const config = await this.loadGameplayConfig();
+    await this.audioFeedback.preload(
+      config.feedbackPresets.flatMap((preset) =>
+        preset.soundAsset ? [preset.soundAsset] : [],
+      ),
+    );
     this.storagePort = createBrowserStoragePort(sys.localStorage);
     const saveData = await loadLocalSaveFromStorage(this.storagePort);
     this.sessionContext = createDemoSessionContext(config);
@@ -568,6 +578,7 @@ export class PortraitRoundScene extends Component {
     const reachedSettlement =
       this.sessionState?.screen === "round" &&
       update.state.screen === "settlement";
+    this.audioFeedback?.playPlans(update.feedbackPlans);
     this.sessionState = update.state;
     if (reachedSettlement) {
       this.stopMagnifierZoom();
