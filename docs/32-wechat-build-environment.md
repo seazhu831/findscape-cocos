@@ -15,11 +15,12 @@ Audit date: 2026-07-15
   host
 - CLI: `/Applications/wechatwebdevtools.app/Contents/MacOS/cli`
 
-The main executable carries a notarized Tencent Developer ID signature and
-passes Gatekeeper assessment. A deep bundle verification reports a modified
-nested resource, while direct verification of the signed executable succeeds.
-Treat this as an upstream packaging observation and recheck after DevTools
-updates.
+The Homebrew checksum matches the downloaded Tencent release archive, but
+`codesign --verify --strict` currently reports that both the x64 and ARM64
+stable release bundles have been modified after signing. macOS still launches
+the x64 build through its normal application policy. No Gatekeeper bypass,
+ad-hoc signing, or quarantine removal was applied. Treat this as an upstream
+packaging defect and recheck before adopting a future DevTools update.
 
 ## Cocos Build Verification
 
@@ -47,6 +48,8 @@ Verified generated properties:
 - The generated package contains the scene, scripts, runtime art, and five OGG
   feedback clips
 - Uncompressed output size is approximately 13 MB
+- WeChat DevTools accepts the package and renders the portrait scene in its
+  iPhone simulator without a blocking compile error
 
 The project owner confirmed `wx04421302f08791bc` as the Findscape Mini Program
 AppID. The reproducible build options live in
@@ -68,16 +71,16 @@ npm run check:wechat-build
 npm run check:wechat-build-output
 ```
 
-## Owner Action Required
+## DevTools Verification
 
-The first DevTools launch is waiting for two owner-controlled actions:
+- The project owner completed WeChat quick login.
+- The owner confirmed the production AppID as `wx04421302f08791bc`; it is now
+  pinned in the checked-in build configuration and generated project output.
+- The DevTools service port is enabled and CLI login returns `login: true`.
+- `cocos/build/wechatgame/` opens as an existing game project; no new Mini Game
+  template or random AppID is required.
+- The simulator loads the main scene, portrait HUD, map, target art, and runtime
+  diagnostics successfully.
 
-1. Choose whether to allow the macOS local-network permission requested by
-   WeChat DevTools. Device discovery and physical-device debugging normally need
-   this permission.
-2. Complete WeChat quick login and confirm that the logged-in developer has
-   access to AppID `wx04421302f08791bc`.
-
-After those actions, enable the DevTools service port if it is still disabled,
-open `cocos/build/wechatgame/`, and validate compile, simulator, preview QR code,
-storage, audio, and portrait behavior.
+Remaining platform work is package-size reduction, WeChat storage binding,
+preview QR/device validation, and physical-device audio tuning.

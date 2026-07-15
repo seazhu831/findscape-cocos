@@ -6,12 +6,9 @@ This document keeps current blockers and non-blocking limitations in one place s
 
 ## Hard Blockers
 
-These require project owner input, tool access, or source material before the next dependent work can be completed safely.
-
-- WeChat DevTools 2.01.2510290 is installed and the Cocos `wechatgame` build
-  succeeds. Simulator/device preview now depends on owner confirmation of the
-  macOS local-network permission, WeChat quick login, and a usable Mini Game
-  AppID. It does not block continued Web Mobile regression work.
+No owner-input blocker is currently active. Device preview will require the
+owner's phone when the package is small enough to generate and scan a preview
+QR code.
 
 ## Non-Blocking Limitations
 
@@ -22,6 +19,14 @@ These do not block pure runtime, config, fixture, or static preview work.
 - Browser local storage is bound to the Cocos round flow. The WeChat storage
   adapter has deterministic fixtures but is not yet bound to a built WeChat
   Mini Game runtime.
+- The generated WeChat package is approximately 13 MB, while the main-package
+  limit is 4 MB. The 6.4 MB engine bundle is the largest single artifact;
+  engine feature trimming and resource packaging must be addressed before
+  upload or device preview.
+- The official WeChat DevTools 2.01.2510290 x64 and ARM64 stable archives fail
+  strict code-signature verification despite matching the official release and
+  Homebrew checksum. The x64 build runs under normal macOS policy without a
+  security bypass; re-audit when upgrading the tool.
 - Creator 3.8.8 can start the project AssetDB before its built-in `engine-extends` importer contribution is registered on this host. Without mitigation, Creator rewrites valid PNG, TypeScript, JSON, text, and directory metadata to the fallback `*` importer. The project extension at `cocos/extensions/findscape-asset-db-bootstrap/` restores the built-in handlers in `beforePreStart`; two cold starts and a delayed post-start check passed with 55 handlers, 93 resource records, zero fallback importers, and zero invalid resources.
 - Creator 3.8.8 emits repeated editor gizmo/material warnings and an extension-manager `forceUpdate` response error on macOS 26.5.1. These remain non-blocking after the AssetDB bootstrap fix, but must be monitored during scene editing and builds.
 - Creator 3.8.8 Web Mobile CLI builds finish successfully and emit complete
@@ -44,6 +49,6 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current dependency sequence is:
 
-- Complete WeChat DevTools permission/login, replace the stock build AppID with
-  the project AppID, and run simulator/device validation.
+- Reduce the WeChat main package below 4 MB and repeat simulator validation.
+- Bind the WeChat storage adapter, then run preview QR/device validation.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.

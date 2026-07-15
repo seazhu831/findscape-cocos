@@ -118,6 +118,8 @@ first Claude Design asset batch and five Kenney CC0 feedback clips are imported
 with stable runtime paths and typed `.meta` files. Scene creation, HUD binding,
 visual feedback, the shared round loop, three modes, Web Mobile builds, and
 browser persistence are complete. Runtime SFX preload and one-shot playback are
-also bound. WeChat DevTools is installed and a portrait `wechatgame` package
-builds successfully. The remaining dependency chain is owner-approved DevTools
-permission/login, a project AppID, WeChat storage binding, and device validation.
+also bound. WeChat DevTools is installed, production AppID
+`wx04421302f08791bc` is pinned, and the portrait `wechatgame` package builds and
+runs in the DevTools simulator. The remaining dependency chain is main-package
+size reduction, WeChat storage binding, preview QR/device validation, and final
+physical-device audio tuning.
