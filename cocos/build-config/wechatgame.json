@@ -3,7 +3,9 @@
   "name": "findscape-cocos-client",
   "platform": "wechatgame",
   "buildPath": "project://build",
-  "debug": true,
+  "debug": false,
+  "mangleProperties": true,
+  "inlineEnum": true,
   "md5Cache": false,
   "packages": {
     "wechatgame": {

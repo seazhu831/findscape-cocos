@@ -16,10 +16,12 @@ const scenePath = path.join(
   repoRoot,
   "cocos/assets/scenes/portrait-demo.scene",
 );
+const mangleConfigPath = path.join(repoRoot, "cocos/engine-mangle-config.json");
 const failures = [];
 const buildConfig = readJson(buildConfigPath);
 const engineConfig = readJson(engineConfigPath);
 const scene = readJson(scenePath);
+const mangleConfig = readJson(mangleConfigPath);
 const expectedAppId = "wx04421302f08791bc";
 const expectedEngineModules = [
   "2d",
@@ -36,6 +38,9 @@ const expectedEngineModules = [
 expectEqual(buildConfig.taskName, "wechatgame", "taskName");
 expectEqual(buildConfig.platform, "wechatgame", "platform");
 expectEqual(buildConfig.buildPath, "project://build", "buildPath");
+expectEqual(buildConfig.debug, false, "debug");
+expectEqual(buildConfig.mangleProperties, true, "mangleProperties");
+expectEqual(buildConfig.inlineEnum, true, "inlineEnum");
 expectEqual(
   buildConfig.packages?.wechatgame?.appid,
   expectedAppId,
@@ -51,6 +56,10 @@ expectArrayEqual(
   expectedEngineModules,
   "engine includeModules",
 );
+expectEqual(mangleConfig.WECHAT?.extends, "MINIGAME", "WECHAT mangle base");
+if (!mangleConfig.COMMON?.dontMangleList?.includes("Component")) {
+  failures.push("engine mangle config must preserve Component");
+}
 
 const sceneGlobals = scene.find((entry) => entry?.__type__ === "cc.SceneGlobals");
 const skybox = scene[sceneGlobals?._skybox?.__id__];
@@ -119,7 +128,7 @@ function validateOutput(outputPath) {
     (total, filePath) => total + fs.statSync(filePath).size,
     0,
   );
-  const currentRegressionLimitBytes = 9 * 1024 * 1024;
+  const currentRegressionLimitBytes = 7 * 1024 * 1024;
   if (outputBytes > currentRegressionLimitBytes) {
     failures.push(
       `generated output is ${formatMiB(outputBytes)}, above the current ${formatMiB(currentRegressionLimitBytes)} regression limit`,
