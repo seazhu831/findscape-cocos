@@ -41,11 +41,12 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 
 ## Suggested Next Step
 
-The portrait Cocos demo is playable and verified. The remaining
-external-dependency stage is:
+The portrait Cocos demo is playable, and both Web Mobile and WeChat Mini Game
+builds complete. The remaining external-dependency stage is:
 
-1. Open the project in WeChat DevTools with a usable AppID, build the Mini Game,
-   bind the WeChat storage adapter, and validate on device.
+1. Confirm the pending macOS local-network permission, complete WeChat DevTools
+   login, provide a usable Mini Game AppID, bind the WeChat storage adapter, and
+   validate in the simulator and on device.
 
 Recommended prompt:
 
@@ -78,6 +79,7 @@ Recommended prompt:
 - `docs/04-demo-scope.md`
 - `docs/30-cocos-creator-version-and-initialization.md`
 - `docs/31-portrait-gameplay-contract.md`
+- `docs/32-wechat-build-environment.md`
 - `docs/25-known-issues.md`
 - `docs/08-work-loop.md`
 - `design/claude-design/source/README.md`
@@ -116,4 +118,6 @@ first Claude Design asset batch and five Kenney CC0 feedback clips are imported
 with stable runtime paths and typed `.meta` files. Scene creation, HUD binding,
 visual feedback, the shared round loop, three modes, Web Mobile builds, and
 browser persistence are complete. Runtime SFX preload and one-shot playback are
-also bound. The remaining dependency chain is WeChat DevTools/AppID validation.
+also bound. WeChat DevTools is installed and a portrait `wechatgame` package
+builds successfully. The remaining dependency chain is owner-approved DevTools
+permission/login, a project AppID, WeChat storage binding, and device validation.

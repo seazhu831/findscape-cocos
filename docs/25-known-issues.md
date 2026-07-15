@@ -8,8 +8,10 @@ This document keeps current blockers and non-blocking limitations in one place s
 
 These require project owner input, tool access, or source material before the next dependent work can be completed safely.
 
-- WeChat device preview depends on WeChat DevTools and a usable AppID. It does
-  not block continued Web Mobile regression work.
+- WeChat DevTools 2.01.2510290 is installed and the Cocos `wechatgame` build
+  succeeds. Simulator/device preview now depends on owner confirmation of the
+  macOS local-network permission, WeChat quick login, and a usable Mini Game
+  AppID. It does not block continued Web Mobile regression work.
 
 ## Non-Blocking Limitations
 
@@ -32,7 +34,7 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 - `npm run check:all` is the current strongest local deterministic verification.
 - Creator first-open import, target-plugin registration, and repeated Web Mobile
-  builds have been verified locally.
+  and WeChat Mini Game builds have been verified locally.
 - The Cocos Web Mobile build has been exercised at `390x844` through the in-app
   browser, including targets, feedback, tools, mode switching, settlement,
   replay, map dragging, timer urgency, startup fallback states, and SFX loading
@@ -42,6 +44,6 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current dependency sequence is:
 
-- Install/open WeChat DevTools and provide a usable AppID for Mini Game build
-  and device validation.
+- Complete WeChat DevTools permission/login, replace the stock build AppID with
+  the project AppID, and run simulator/device validation.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.
