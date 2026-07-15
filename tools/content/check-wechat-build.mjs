@@ -8,9 +8,30 @@ const buildConfigPath = path.join(
   repoRoot,
   "cocos/build-config/wechatgame.json",
 );
+const engineConfigPath = path.join(
+  repoRoot,
+  "cocos/settings/v2/packages/engine.json",
+);
+const scenePath = path.join(
+  repoRoot,
+  "cocos/assets/scenes/portrait-demo.scene",
+);
 const failures = [];
 const buildConfig = readJson(buildConfigPath);
+const engineConfig = readJson(engineConfigPath);
+const scene = readJson(scenePath);
 const expectedAppId = "wx04421302f08791bc";
+const expectedEngineModules = [
+  "2d",
+  "audio",
+  "base",
+  "custom-pipeline",
+  "gfx-webgl",
+  "graphics",
+  "intersection-2d",
+  "tween",
+  "ui",
+];
 
 expectEqual(buildConfig.taskName, "wechatgame", "taskName");
 expectEqual(buildConfig.platform, "wechatgame", "platform");
@@ -25,6 +46,15 @@ expectEqual(
   "portrait",
   "packages.wechatgame.orientation",
 );
+expectArrayEqual(
+  engineConfig.modules?.configs?.defaultConfig?.includeModules,
+  expectedEngineModules,
+  "engine includeModules",
+);
+
+const sceneGlobals = scene.find((entry) => entry?.__type__ === "cc.SceneGlobals");
+const skybox = scene[sceneGlobals?._skybox?.__id__];
+expectEqual(skybox?._enabled, false, "scene skybox enabled state");
 
 const outputArgIndex = process.argv.indexOf("--output");
 if (outputArgIndex >= 0) {
@@ -72,12 +102,49 @@ function validateOutput(outputPath) {
   if (oggFiles.length !== 5) {
     failures.push(`generated output must contain 5 OGG files, found ${oggFiles.length}`);
   }
+
+  const outputFiles = listFiles(outputPath);
+  const forbiddenEngineArtifacts = outputFiles.filter((filePath) =>
+    /(?:bullet|spine)/i.test(path.basename(filePath)),
+  );
+  if (forbiddenEngineArtifacts.length > 0) {
+    failures.push(
+      `generated output contains unused engine artifacts: ${forbiddenEngineArtifacts
+        .map((filePath) => path.relative(outputPath, filePath))
+        .join(", ")}`,
+    );
+  }
+
+  const outputBytes = outputFiles.reduce(
+    (total, filePath) => total + fs.statSync(filePath).size,
+    0,
+  );
+  const currentRegressionLimitBytes = 9 * 1024 * 1024;
+  if (outputBytes > currentRegressionLimitBytes) {
+    failures.push(
+      `generated output is ${formatMiB(outputBytes)}, above the current ${formatMiB(currentRegressionLimitBytes)} regression limit`,
+    );
+  }
 }
 
 function expectEqual(actual, expected, label) {
   if (actual !== expected) {
     failures.push(`${label}: expected ${expected}, got ${actual}`);
   }
+}
+
+function expectArrayEqual(actual, expected, label) {
+  const normalizedActual = Array.isArray(actual) ? [...actual].sort() : actual;
+  const normalizedExpected = [...expected].sort();
+  if (JSON.stringify(normalizedActual) !== JSON.stringify(normalizedExpected)) {
+    failures.push(
+      `${label}: expected ${JSON.stringify(normalizedExpected)}, got ${JSON.stringify(normalizedActual)}`,
+    );
+  }
+}
+
+function formatMiB(bytes) {
+  return `${(bytes / 1024 / 1024).toFixed(2)} MiB`;
 }
 
 function readJson(filePath) {

@@ -45,7 +45,7 @@
             "_value": true
           },
           "ui-skew": {
-            "_value": true
+            "_value": false
           },
           "affine-transform": {
             "_value": false
@@ -199,8 +199,7 @@
           "graphics",
           "intersection-2d",
           "tween",
-          "ui",
-          "ui-skew"
+          "ui"
         ],
         "noDeprecatedFeatures": {
           "value": false,
