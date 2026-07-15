@@ -15,7 +15,7 @@
       "assetId": "sfx_find_success",
       "feedbackPresetId": "find_success",
       "runtimePath": "audio/sfx_find_success",
-      "runtimeFile": "cocos/assets/resources/audio/sfx_find_success.ogg",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_find_success.mp3",
       "sourceFile": "confirmation_002.ogg",
       "intendedUse": "Positive confirmation after a hidden object is found"
     },
@@ -23,7 +23,7 @@
       "assetId": "sfx_pop_success",
       "feedbackPresetId": "pop_success",
       "runtimePath": "audio/sfx_pop_success",
-      "runtimeFile": "cocos/assets/resources/audio/sfx_pop_success.ogg",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_pop_success.mp3",
       "sourceFile": "pluck_001.ogg",
       "intendedUse": "Short playful pluck after a balloon is popped"
     },
@@ -31,7 +31,7 @@
       "assetId": "sfx_catch_success",
       "feedbackPresetId": "catch_success",
       "runtimePath": "audio/sfx_catch_success",
-      "runtimeFile": "cocos/assets/resources/audio/sfx_catch_success.ogg",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_catch_success.mp3",
       "sourceFile": "confirmation_004.ogg",
       "intendedUse": "Friendly confirmation after a suspect is caught"
     },
@@ -39,7 +39,7 @@
       "assetId": "sfx_hint_reveal",
       "feedbackPresetId": "hint_reveal",
       "runtimePath": "audio/sfx_hint_reveal",
-      "runtimeFile": "cocos/assets/resources/audio/sfx_hint_reveal.ogg",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_hint_reveal.mp3",
       "sourceFile": "question_001.ogg",
       "intendedUse": "Attention cue when a hint reveals a target"
     },
@@ -47,7 +47,7 @@
       "assetId": "sfx_wrong_tap",
       "feedbackPresetId": "wrong_tap",
       "runtimePath": "audio/sfx_wrong_tap",
-      "runtimeFile": "cocos/assets/resources/audio/sfx_wrong_tap.ogg",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_wrong_tap.mp3",
       "sourceFile": "error_003.ogg",
       "intendedUse": "Soft negative cue for an incorrect map tap"
     }

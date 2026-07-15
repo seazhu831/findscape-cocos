@@ -161,10 +161,13 @@ function validateOutput(outputPath) {
   }
 
   const subpackagePath = path.join(outputPath, "subpackages/resources");
-  const oggFiles = listFiles(path.join(subpackagePath, "native"))
-    .filter((filePath) => filePath.endsWith(".ogg"));
-  if (oggFiles.length !== 5) {
-    failures.push(`generated output must contain 5 OGG files, found ${oggFiles.length}`);
+  const nativeAudioFiles = listFiles(path.join(subpackagePath, "native"))
+    .filter((filePath) => /\.(?:mp3|ogg)$/i.test(filePath));
+  const mp3Files = nativeAudioFiles.filter((filePath) => filePath.endsWith(".mp3"));
+  if (mp3Files.length !== 5 || nativeAudioFiles.length !== 5) {
+    failures.push(
+      `generated output must contain exactly 5 MP3 files, found ${mp3Files.length} MP3 and ${nativeAudioFiles.length - mp3Files.length} incompatible audio files`,
+    );
   }
 
   const outputFiles = listFiles(outputPath);

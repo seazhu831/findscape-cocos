@@ -22,6 +22,9 @@ export class PortraitAudioFeedback extends Component {
   public async preload(soundAssets: readonly string[]): Promise<void> {
     const uniquePaths = Array.from(new Set(soundAssets.filter(Boolean)));
     await Promise.all(uniquePaths.map((soundAsset) => this.loadClip(soundAsset)));
+    console.info(
+      `[FindscapeAudio] Loaded ${this.clipsByPath.size}/${uniquePaths.length} clips`,
+    );
   }
 
   public playPlans(plans: readonly FeedbackPlan[]): void {
@@ -32,6 +35,8 @@ export class PortraitAudioFeedback extends Component {
       const clip = this.clipsByPath.get(command.soundAsset);
       if (clip) {
         this.audioSource.playOneShot(clip, command.volume);
+      } else {
+        console.warn(`[FindscapeAudio] Missing clip ${command.soundAsset}`);
       }
     }
   }

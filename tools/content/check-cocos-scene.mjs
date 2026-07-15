@@ -126,6 +126,8 @@ for (const requiredFeedbackContract of [
 for (const requiredAudioFeedbackContract of [
   'resources.load(soundAsset, AudioClip',
   "this.audioSource.playOneShot(clip, command.volume)",
+  "[FindscapeAudio] Loaded ${this.clipsByPath.size}/${uniquePaths.length} clips",
+  "[FindscapeAudio] Missing clip ${command.soundAsset}",
   "console.warn(",
   "resolve();",
 ]) {

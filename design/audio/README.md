@@ -18,12 +18,12 @@ required. Source details are kept here even though attribution is optional.
 
 | Feedback | Runtime resource | Source file | Duration | Format |
 | --- | --- | --- | ---: | --- |
-| Find success | `audio/sfx_find_success` | `confirmation_002.ogg` | 0.539 s | OGG Vorbis, mono, 44.1 kHz |
-| Balloon pop | `audio/sfx_pop_success` | `pluck_001.ogg` | 0.102 s | OGG Vorbis, stereo, 44.1 kHz |
-| Catch success | `audio/sfx_catch_success` | `confirmation_004.ogg` | 0.490 s | OGG Vorbis, mono, 44.1 kHz |
-| Hint reveal | `audio/sfx_hint_reveal` | `question_001.ogg` | 0.491 s | OGG Vorbis, mono, 44.1 kHz |
-| Wrong tap | `audio/sfx_wrong_tap` | `error_003.ogg` | 0.533 s | OGG Vorbis, stereo, 44.1 kHz |
+| Find success | `audio/sfx_find_success` | `confirmation_002.ogg` | 0.539 s | MP3, mono, 44.1 kHz, 128 kbps |
+| Balloon pop | `audio/sfx_pop_success` | `pluck_001.ogg` | 0.102 s | MP3, stereo, 44.1 kHz, 128 kbps |
+| Catch success | `audio/sfx_catch_success` | `confirmation_004.ogg` | 0.490 s | MP3, mono, 44.1 kHz, 128 kbps |
+| Hint reveal | `audio/sfx_hint_reveal` | `question_001.ogg` | 0.491 s | MP3, mono, 44.1 kHz, 128 kbps |
+| Wrong tap | `audio/sfx_wrong_tap` | `error_003.ogg` | 0.533 s | MP3, stereo, 44.1 kHz, 128 kbps |
 
-The files are already compact, short feedback clips. They are retained in their
-original encoding to avoid a lossy transcode. Runtime playback and volume tuning
-are tracked separately from this asset-intake batch.
+The CC0 source filenames remain recorded above. Runtime copies are transcoded
+to MP3 because Cocos Creator 3.8 documents that iOS does not support OGG. The
+runtime resource paths and Cocos UUIDs remain stable across the format change.

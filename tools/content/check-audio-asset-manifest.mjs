@@ -88,7 +88,7 @@ function validateManifest() {
 }
 
 function validateRuntimeFile(asset) {
-  if (!/^cocos\/assets\/resources\/audio\/[a-z0-9_]+\.ogg$/.test(asset.runtimeFile ?? "")) {
+  if (!/^cocos\/assets\/resources\/audio\/[a-z0-9_]+\.mp3$/.test(asset.runtimeFile ?? "")) {
     failures.push(`${asset.assetId} runtimeFile is invalid: ${asset.runtimeFile}`);
     return;
   }
@@ -98,9 +98,9 @@ function validateRuntimeFile(asset) {
     failures.push(`${asset.assetId} runtime file is missing: ${asset.runtimeFile}`);
     return;
   }
-  const header = fs.readFileSync(runtimeFile).subarray(0, 4).toString("ascii");
-  if (header !== "OggS") {
-    failures.push(`${asset.assetId} runtime file is not an OGG stream`);
+  const header = fs.readFileSync(runtimeFile).subarray(0, 3).toString("ascii");
+  if (header !== "ID3") {
+    failures.push(`${asset.assetId} runtime file is not an MP3 stream`);
   }
 
   if (!isFile(`${runtimeFile}.meta`)) {
