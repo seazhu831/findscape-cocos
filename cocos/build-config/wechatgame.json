@@ -1,0 +1,16 @@
+{
+  "taskName": "wechatgame",
+  "name": "findscape-cocos-client",
+  "platform": "wechatgame",
+  "buildPath": "project://build",
+  "debug": true,
+  "md5Cache": false,
+  "packages": {
+    "wechatgame": {
+      "appid": "wx04421302f08791bc",
+      "orientation": "portrait",
+      "buildOpenDataContextTemplate": false,
+      "separateEngine": false
+    }
+  }
+}
