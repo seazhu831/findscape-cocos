@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "batchId": "demo_sfx_batch_01",
+  "downloadedAt": "2026-07-15",
+  "source": {
+    "provider": "Kenney",
+    "pack": "Interface Sounds 1.0",
+    "pageUrl": "https://kenney.nl/assets/interface-sounds",
+    "downloadUrl": "https://kenney.nl/media/pages/assets/interface-sounds/fa43c1dd4d-1677589452/kenney_interface-sounds.zip",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "assets": [
+    {
+      "assetId": "sfx_find_success",
+      "feedbackPresetId": "find_success",
+      "runtimePath": "audio/sfx_find_success",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_find_success.ogg",
+      "sourceFile": "confirmation_002.ogg",
+      "intendedUse": "Positive confirmation after a hidden object is found"
+    },
+    {
+      "assetId": "sfx_pop_success",
+      "feedbackPresetId": "pop_success",
+      "runtimePath": "audio/sfx_pop_success",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_pop_success.ogg",
+      "sourceFile": "pluck_001.ogg",
+      "intendedUse": "Short playful pluck after a balloon is popped"
+    },
+    {
+      "assetId": "sfx_catch_success",
+      "feedbackPresetId": "catch_success",
+      "runtimePath": "audio/sfx_catch_success",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_catch_success.ogg",
+      "sourceFile": "confirmation_004.ogg",
+      "intendedUse": "Friendly confirmation after a suspect is caught"
+    },
+    {
+      "assetId": "sfx_hint_reveal",
+      "feedbackPresetId": "hint_reveal",
+      "runtimePath": "audio/sfx_hint_reveal",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_hint_reveal.ogg",
+      "sourceFile": "question_001.ogg",
+      "intendedUse": "Attention cue when a hint reveals a target"
+    },
+    {
+      "assetId": "sfx_wrong_tap",
+      "feedbackPresetId": "wrong_tap",
+      "runtimePath": "audio/sfx_wrong_tap",
+      "runtimeFile": "cocos/assets/resources/audio/sfx_wrong_tap.ogg",
+      "sourceFile": "error_003.ogg",
+      "intendedUse": "Soft negative cue for an incorrect map tap"
+    }
+  ]
+}
