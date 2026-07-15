@@ -18,6 +18,10 @@ const feedbackSourcePath = path.join(
   cocosRoot,
   "assets/scripts/feedback/portrait-feedback.ts",
 );
+const audioFeedbackSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/feedback/portrait-audio-feedback.ts",
+);
 const roundSceneSourcePath = path.join(
   cocosRoot,
   "assets/scripts/app/portrait-round-scene.ts",
@@ -42,6 +46,7 @@ const projectSettings = JSON.parse(
 );
 const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
+const audioFeedbackSource = fs.readFileSync(audioFeedbackSourcePath, "utf8");
 const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
 const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
 const settlementSource = fs.readFileSync(settlementSourcePath, "utf8");
@@ -113,6 +118,19 @@ for (const requiredFeedbackContract of [
   }
 }
 
+for (const requiredAudioFeedbackContract of [
+  'resources.load(soundAsset, AudioClip',
+  "this.audioSource.playOneShot(clip, command.volume)",
+  "console.warn(",
+  "resolve();",
+]) {
+  if (!audioFeedbackSource.includes(requiredAudioFeedbackContract)) {
+    failures.push(
+      `PortraitAudioFeedback is missing contract: ${requiredAudioFeedbackContract}`,
+    );
+  }
+}
+
 for (const requiredRoundSceneContract of [
   'const DEFAULT_MODE_ID = "hidden_object_demo"',
   "applyDemoSessionTap",
@@ -127,6 +145,9 @@ for (const requiredRoundSceneContract of [
   "this.feedback?.playTarget(targetNode)",
   "this.feedback?.playWrongAt(feedbackLocal)",
   "this.feedback?.playHint(targetNode, hintEvent.durationSeconds)",
+  "this.node.addComponent(PortraitAudioFeedback)",
+  "await this.audioFeedback.preload(",
+  "this.audioFeedback?.playPlans(update.feedbackPlans)",
   'new Node("SettlementRoot")',
   "this.settlement?.show(viewModel.settlement)",
   "this.setToolsVisible(!viewModel.settlement)",

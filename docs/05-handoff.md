@@ -41,12 +41,10 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 
 ## Suggested Next Step
 
-The portrait Cocos demo is playable and verified. Select the next stage from
-the remaining external-dependency work:
+The portrait Cocos demo is playable and verified. The remaining
+external-dependency stage is:
 
-1. Bind the five imported CC0 SFX files to Cocos feedback plans and tune their
-   playback volume.
-2. Open the project in WeChat DevTools with a usable AppID, build the Mini Game,
+1. Open the project in WeChat DevTools with a usable AppID, build the Mini Game,
    bind the WeChat storage adapter, and validate on device.
 
 Recommended prompt:
@@ -117,5 +115,5 @@ The `cocos/` directory is initialized and pinned to Cocos Creator 3.8.8. The
 first Claude Design asset batch and five Kenney CC0 feedback clips are imported
 with stable runtime paths and typed `.meta` files. Scene creation, HUD binding,
 visual feedback, the shared round loop, three modes, Web Mobile builds, and
-browser persistence are complete. The remaining dependency chain is runtime SFX
-playback and WeChat DevTools/AppID validation.
+browser persistence are complete. Runtime SFX preload and one-shot playback are
+also bound. The remaining dependency chain is WeChat DevTools/AppID validation.

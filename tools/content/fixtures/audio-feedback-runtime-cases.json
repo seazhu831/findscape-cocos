@@ -1,0 +1,90 @@
+[
+  {
+    "name": "maps preset plans to one-shot commands",
+    "volume": 0.65,
+    "plans": [
+      {
+        "planId": "feedback_01_correctHit",
+        "kind": "preset",
+        "soundAsset": "audio/sfx_find_success"
+      },
+      {
+        "planId": "feedback_02_hintReveal",
+        "kind": "preset",
+        "soundAsset": "audio/sfx_hint_reveal"
+      }
+    ],
+    "expected": [
+      {
+        "planId": "feedback_01_correctHit",
+        "soundAsset": "audio/sfx_find_success",
+        "volume": 0.65
+      },
+      {
+        "planId": "feedback_02_hintReveal",
+        "soundAsset": "audio/sfx_hint_reveal",
+        "volume": 0.65
+      }
+    ]
+  },
+  {
+    "name": "ignores settlement and silent preset plans",
+    "plans": [
+      {
+        "planId": "feedback_01_roundCompleted",
+        "kind": "settlement"
+      },
+      {
+        "planId": "feedback_02_magnifierZoom",
+        "kind": "preset"
+      }
+    ],
+    "expected": []
+  },
+  {
+    "name": "preserves repeated commands from distinct feedback events",
+    "volume": 4,
+    "plans": [
+      {
+        "planId": "feedback_01_wrongTap",
+        "kind": "preset",
+        "soundAsset": "audio/sfx_wrong_tap"
+      },
+      {
+        "planId": "feedback_02_wrongTap",
+        "kind": "preset",
+        "soundAsset": "audio/sfx_wrong_tap"
+      }
+    ],
+    "expected": [
+      {
+        "planId": "feedback_01_wrongTap",
+        "soundAsset": "audio/sfx_wrong_tap",
+        "volume": 1
+      },
+      {
+        "planId": "feedback_02_wrongTap",
+        "soundAsset": "audio/sfx_wrong_tap",
+        "volume": 1
+      }
+    ]
+  },
+  {
+    "name": "clamps negative volume",
+    "volume": -1,
+    "plans": [
+      {
+        "planId": "feedback_01_correctHit",
+        "kind": "preset",
+        "soundAsset": "audio/sfx_catch_success"
+      }
+    ],
+    "expected": [
+      {
+        "planId": "feedback_01_correctHit",
+        "soundAsset": "audio/sfx_catch_success",
+        "volume": 0
+      }
+    ]
+  }
+]

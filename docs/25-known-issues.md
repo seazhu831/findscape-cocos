@@ -15,9 +15,8 @@ These require project owner input, tool access, or source material before the ne
 
 These do not block pure runtime, config, fixture, or static preview work.
 
-- Five CC0 feedback clips are imported at the configured runtime paths and pass
-  the audio asset manifest check. The Cocos scene does not play them yet; visual
-  target, hint, wrong-tap, magnifier, timer, and settlement feedback are implemented.
+- Five CC0 feedback clips are imported, preloaded, and played from configured
+  feedback plans. Final perceived-volume tuning still needs a physical-device pass.
 - Browser local storage is bound to the Cocos round flow. The WeChat storage
   adapter has deterministic fixtures but is not yet bound to a built WeChat
   Mini Game runtime.
@@ -36,13 +35,13 @@ These do not block pure runtime, config, fixture, or static preview work.
   builds have been verified locally.
 - The Cocos Web Mobile build has been exercised at `390x844` through the in-app
   browser, including targets, feedback, tools, mode switching, settlement,
-  replay, map dragging, timer urgency, and startup fallback states.
+  replay, map dragging, timer urgency, startup fallback states, and SFX loading
+  and triggering.
 
 ## Current Safe Work Areas
 
 The current dependency sequence is:
 
-- Bind the imported SFX files to configured feedback audio hooks.
 - Install/open WeChat DevTools and provide a usable AppID for Mini Game build
   and device validation.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.

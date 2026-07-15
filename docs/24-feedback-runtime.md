@@ -4,7 +4,7 @@
 
 Issue: https://github.com/seazhu831/findscape-cocos/issues/28
 
-This stage adds a pure feedback planning layer between gameplay events and future Cocos scene effects.
+This stage adds a pure feedback planning layer between gameplay events and Cocos scene effects.
 
 ## Files
 
@@ -33,6 +33,17 @@ Preset plans include:
 
 Settlement plans intentionally do not invent art or audio. The future Cocos scene can use them to open settlement UI, play native transitions, or trigger a later configured preset.
 
+## Runtime Playback
+
+Issue #58 binds preset audio hooks to the portrait Cocos scene:
+
+- `audio-feedback-runtime.ts` converts audible preset plans into one-shot commands.
+- `portrait-audio-feedback.ts` preloads unique `AudioClip` resources and plays
+  them through one dynamic `AudioSource`.
+- Playback uses a 0.65 volume scale so short UI cues sit below the visual action.
+- A missing clip logs a warning and does not block scene initialization.
+- Settlement and presets without `soundAsset` remain silent.
+
 ## Validate Fixtures
 
 From the repository root:
@@ -45,9 +56,11 @@ From `cocos/`:
 
 ```sh
 npm run check:feedback
+npm run check:audio-feedback
 ```
 
-Current limitation:
+Current boundaries:
 
-- This does not instantiate Cocos nodes, particles, tweens, or audio sources.
-- Actual visual/audio playback remains a scene adapter task after runtime assets exist.
+- Feedback plans remain engine-independent.
+- The portrait scene owns visual and audio adapters; settlement audio is not
+  configured.
