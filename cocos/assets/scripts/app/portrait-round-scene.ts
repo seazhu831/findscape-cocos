@@ -541,9 +541,13 @@ export class PortraitRoundScene extends Component {
   private resetTargetVisuals(): void {
     const selectedIds = new Set(this.targetConfigsById.keys());
     for (const [targetId, targetNode] of this.targetNodesById) {
+      Tween.stopAllByTarget(targetNode);
+      const opacity = targetNode.getComponent(UIOpacity);
+      if (opacity) {
+        Tween.stopAllByTarget(opacity);
+      }
       targetNode.active = selectedIds.has(targetId);
       targetNode.setScale(1, 1, 1);
-      const opacity = targetNode.getComponent(UIOpacity);
       if (opacity) {
         opacity.opacity = 255;
       }

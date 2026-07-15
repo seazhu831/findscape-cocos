@@ -179,6 +179,8 @@ for (const requiredRoundSceneContract of [
   "this.modeSelect.show(this.sessionContext.modeSummaries)",
   'name.replace("ModeButton_", "")',
   "this.configureRoundTargets()",
+  "Tween.stopAllByTarget(targetNode)",
+  "Tween.stopAllByTarget(opacity)",
   'toolIds.has("magnifier")',
   "this.handleMagnifierTouch",
   "this.handleTargetPanelToggleTouch",
