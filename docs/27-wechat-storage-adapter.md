@@ -2,6 +2,8 @@
 
 Issue: https://github.com/seazhu831/findscape-cocos/issues/35
 
+Runtime binding: https://github.com/seazhu831/findscape-cocos/issues/61
+
 This stage adds a WeChat-style async storage adapter for the existing save storage port.
 
 ## Files
@@ -20,6 +22,19 @@ This stage adds a WeChat-style async storage adapter for the existing save stora
 
 Unavailable APIs and callback failures are non-fatal. Reads return `undefined`; writes and removes resolve without throwing so gameplay can continue with in-memory state.
 
+## Runtime Selection
+
+`cocos/assets/scripts/platform/runtime-storage.ts` validates the global `wx`
+object and selects the WeChat adapter when `getStorage`, `setStorage`, and
+`removeStorage` are all available. Other builds use the existing browser
+adapter with `sys.localStorage`.
+
+`PortraitRoundScene` logs the selected platform during initialization, loads
+the local save before starting a round, and writes the updated save when a
+round settles. The release build logged `Using wechat storage` in DevTools, and
+the same `findscape.localSave.v1` payload was read before and after a simulator
+recompile.
+
 ## Validate Fixtures
 
 From `cocos/`:
@@ -28,6 +43,4 @@ From `cocos/`:
 npm run check:wechat-storage
 ```
 
-Current limitation:
-
-- This is only the API adapter. The Cocos/WeChat scene bootstrap still needs to provide the real `wx` object once mini game integration starts.
+Remaining validation is a physical-device pass through a preview QR code.

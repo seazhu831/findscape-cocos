@@ -42,11 +42,11 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 ## Suggested Next Step
 
 The portrait Cocos demo is playable, and both Web Mobile and WeChat Mini Game
-builds complete. The next platform stage is:
+builds complete. WeChat storage is bound and survives simulator recompilation.
+The next platform stage is:
 
-1. Bind the existing WeChat storage adapter to the Mini Game runtime, validate
-   persistence in the simulator, then generate a preview QR code for device
-   validation.
+1. Generate a WeChat preview QR code and run the first physical-device
+   validation pass, including touch, layout, persistence, and audio checks.
 
 Recommended prompt:
 
@@ -73,6 +73,9 @@ Recommended prompt:
 - The release WeChat build uses the production AppID, a trimmed/mangled engine,
   and a `resources` subpackage. Its measured main package is `2.48 MiB`, below
   the `4 MiB` limit, and the DevTools simulator reports zero runtime errors.
+- The scene selects the async `wx` storage adapter in WeChat and falls back to
+  browser storage elsewhere. `findscape.localSave.v1` was read before and after
+  a DevTools recompile with the same best-score and last-result payload.
 
 ## Files To Read First
 
@@ -118,11 +121,11 @@ findscape-cocos/
 The `cocos/` directory is initialized and pinned to Cocos Creator 3.8.8. The
 first Claude Design asset batch and five Kenney CC0 feedback clips are imported
 with stable runtime paths and typed `.meta` files. Scene creation, HUD binding,
-visual feedback, the shared round loop, three modes, Web Mobile builds, and
-browser persistence are complete. Runtime SFX preload and one-shot playback are
-also bound. WeChat DevTools is installed, production AppID
+visual feedback, the shared round loop, three modes, Web Mobile builds, browser
+and WeChat persistence are complete. Runtime SFX preload and one-shot playback
+are also bound. WeChat DevTools is installed, production AppID
 `wx04421302f08791bc` is pinned, and the portrait `wechatgame` package builds and
 runs in the DevTools simulator. Engine trimming, release mangling, and the
 `resources` subpackage reduce the measured main package to `2.48 MiB`. The
-remaining dependency chain is WeChat storage binding, preview QR/device
-validation, and final physical-device audio tuning.
+remaining dependency chain is preview QR/device validation and final
+physical-device audio tuning.

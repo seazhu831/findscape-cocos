@@ -47,6 +47,9 @@ Verified generated properties:
 - `game.json` uses `deviceOrientation: portrait`
 - `game.json` declares `subpackages/resources/`, which contains runtime art and
   all five OGG feedback clips
+- The checked-in WeChat build template adds
+  `subpackages/resources/index.js`, which loads Creator's generated `game.js`
+  and satisfies DevTools subpackage precompilation
 - The measured main package is `2,603,197` bytes (`2.48 MiB`); the resources
   subpackage is `4,069,260` bytes (`3.88 MiB`)
 - WeChat DevTools accepts the package and renders the portrait scene in its
@@ -84,8 +87,11 @@ npm run check:wechat-build-output
 - The simulator loads the main scene, portrait HUD, map, target art, and runtime
   diagnostics successfully.
 - The subpackaged release build loads in the iPhone simulator with zero runtime
-  errors; the scene load completed in approximately 176 ms. Three visible
+  errors; the latest scene load completed in approximately 148 ms. Three visible
   warnings are DevTools/base-library notices rather than project failures.
+- The release scene logs `[FindscapeStorage] Using wechat storage`.
+- `findscape.localSave.v1` returned the same versioned best-score and
+  last-result payload before and after a DevTools recompile.
 
-Remaining platform work is WeChat storage binding, preview QR/device
-validation, and physical-device audio tuning.
+Remaining platform work is preview QR/device validation and physical-device
+audio tuning.

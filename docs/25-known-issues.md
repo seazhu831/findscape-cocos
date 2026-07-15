@@ -15,9 +15,6 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 - Five CC0 feedback clips are imported, preloaded, and played from configured
   feedback plans. Final perceived-volume tuning still needs a physical-device pass.
-- Browser local storage is bound to the Cocos round flow. The WeChat storage
-  adapter has deterministic fixtures but is not yet bound to a built WeChat
-  Mini Game runtime.
 - The official WeChat DevTools 2.01.2510290 x64 and ARM64 stable archives fail
   strict code-signature verification despite matching the official release and
   Homebrew checksum. The x64 build runs under normal macOS policy without a
@@ -26,6 +23,10 @@ These do not block pure runtime, config, fixture, or static preview work.
 - Creator 3.8.8 emits repeated editor gizmo/material warnings and an extension-manager `forceUpdate` response error on macOS 26.5.1. These remain non-blocking after the AssetDB bootstrap fix, but must be monitored during scene editing and builds.
 - Creator 3.8.8 Web Mobile CLI builds finish successfully and emit complete
   output, but the macOS command exits with code 36 after completion.
+- Creator 3.8.8 emits `game.js` for the `resources` Mini Game subpackage while
+  WeChat DevTools 2.01.2510290 precompilation also expects `index.js`. The
+  checked-in WeChat build template supplies an `index.js` shim that loads
+  `game.js`; `check:wechat-build-output` guards the generated entry.
 - Automated WebGL screenshots occasionally contain transient black regions.
   A subsequent stable frame and browser console inspection are required before
   treating this as a runtime rendering failure.
@@ -44,5 +45,5 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current dependency sequence is:
 
-- Bind the WeChat storage adapter, then run preview QR/device validation.
+- Generate a preview QR code, then run physical-device validation.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.
