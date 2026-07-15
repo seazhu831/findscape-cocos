@@ -26,6 +26,10 @@ const roundSceneSourcePath = path.join(
   cocosRoot,
   "assets/scripts/app/portrait-round-scene.ts",
 );
+const runtimeStorageSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/platform/runtime-storage.ts",
+);
 const roundViewModelSourcePath = path.join(
   cocosRoot,
   "assets/scripts/ui/round-view-model.ts",
@@ -48,6 +52,7 @@ const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
 const audioFeedbackSource = fs.readFileSync(audioFeedbackSourcePath, "utf8");
 const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
+const runtimeStorageSource = fs.readFileSync(runtimeStorageSourcePath, "utf8");
 const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
 const settlementSource = fs.readFileSync(settlementSourcePath, "utf8");
 const modeSelectSource = fs.readFileSync(modeSelectSourcePath, "utf8");
@@ -152,7 +157,9 @@ for (const requiredRoundSceneContract of [
   "this.settlement?.show(viewModel.settlement)",
   "this.setToolsVisible(!viewModel.settlement)",
   'this.sessionState.screen !== "round"',
-  "createBrowserStoragePort(sys.localStorage)",
+  "createRuntimeStoragePort({",
+  "browserStorage: sys.localStorage",
+  "[FindscapeStorage] Using ${storage.platform} storage",
   "loadLocalSaveFromStorage(this.storagePort)",
   "createInitialDemoSessionState(saveData)",
   'this.sessionState?.screen === "round"',
@@ -193,6 +200,22 @@ for (const requiredRoundSceneContract of [
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
+  }
+}
+
+for (const requiredRuntimeStorageContract of [
+  'platform: "wechat"',
+  'platform: "browser"',
+  "createWeChatStoragePort(wechatStorage)",
+  "createBrowserStoragePort(environment.browserStorage)",
+  'typeof candidate?.getStorage !== "function"',
+  'typeof candidate.setStorage !== "function"',
+  'typeof candidate.removeStorage !== "function"',
+]) {
+  if (!runtimeStorageSource.includes(requiredRuntimeStorageContract)) {
+    failures.push(
+      `Runtime storage selector is missing contract: ${requiredRuntimeStorageContract}`,
+    );
   }
 }
 

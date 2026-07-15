@@ -39,7 +39,7 @@ import { PortraitFeedback } from "../feedback/portrait-feedback";
 import { PortraitHud } from "../ui/portrait-hud";
 import { PortraitModeSelect } from "../ui/portrait-mode-select";
 import { PortraitSettlement } from "../ui/portrait-settlement";
-import { createBrowserStoragePort } from "../platform/browser-storage";
+import { createRuntimeStoragePort } from "../platform/runtime-storage";
 import {
   loadLocalSaveFromStorage,
   saveLocalSaveToStorage,
@@ -163,7 +163,11 @@ export class PortraitRoundScene extends Component {
         preset.soundAsset ? [preset.soundAsset] : [],
       ),
     );
-    this.storagePort = createBrowserStoragePort(sys.localStorage);
+    const storage = createRuntimeStoragePort({
+      browserStorage: sys.localStorage,
+    });
+    this.storagePort = storage.port;
+    console.info(`[FindscapeStorage] Using ${storage.platform} storage`);
     const saveData = await loadLocalSaveFromStorage(this.storagePort);
     this.sessionContext = createDemoSessionContext(config);
     this.sessionState = startDemoRound(
