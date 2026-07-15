@@ -6,15 +6,19 @@ This document keeps current blockers and non-blocking limitations in one place s
 
 ## Hard Blockers
 
-No owner-input blocker is currently active. Device preview will require the
-owner's phone when the preview QR stage begins.
+The latest preview build is ready. Closing Issues #63, #64, and #65 requires an
+iPhone WeChat pass for audio, HUD usability, and full exit/re-entry persistence.
 
 ## Non-Blocking Limitations
 
 These do not block pure runtime, config, fixture, or static preview work.
 
-- Five CC0 feedback clips are imported, preloaded, and played from configured
-  feedback plans. Final perceived-volume tuning still needs a physical-device pass.
+- Five CC0 feedback clips are imported as iOS-compatible MP3, preloaded, and
+  played from configured feedback plans. DevTools loads all five; actual iPhone
+  playback and perceived-volume tuning still need a physical-device pass.
+- WeChat storage selection and simulator recompile persistence are verified.
+  Full process exit/re-entry restoration remains a device verification item in
+  Issue #65.
 - The official WeChat DevTools 2.01.2510290 x64 and ARM64 stable archives fail
   strict code-signature verification despite matching the official release and
   Homebrew checksum. The x64 build runs under normal macOS policy without a
@@ -45,5 +49,6 @@ These do not block pure runtime, config, fixture, or static preview work.
 
 The current dependency sequence is:
 
-- Generate a preview QR code, then run physical-device validation.
+- Run the second iPhone preview pass for MP3 audio, compact/collapsible HUD, and
+  full exit/re-entry persistence.
 - Continue Web Mobile regression checks whenever shared scene behavior changes.

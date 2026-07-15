@@ -41,12 +41,13 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 
 ## Suggested Next Step
 
-The portrait Cocos demo is playable, and both Web Mobile and WeChat Mini Game
-builds complete. WeChat storage is bound and survives simulator recompilation.
-The next platform stage is:
+The first iPhone preview pass confirmed startup, rendering, target taps, and map
+dragging. It also exposed two device-only usability problems: OGG feedback audio
+was silent on iOS, and the original top/bottom HUD obscured search targets. Both
+fixes are now in a new preview build. The next platform stage is:
 
-1. Generate a WeChat preview QR code and run the first physical-device
-   validation pass, including touch, layout, persistence, and audio checks.
+1. Scan the latest WeChat preview QR code and verify MP3 feedback audio, the
+   compact/collapsible HUD, and storage restoration after a full exit/re-entry.
 
 Recommended prompt:
 
@@ -73,9 +74,15 @@ Recommended prompt:
 - The release WeChat build uses the production AppID, a trimmed/mangled engine,
   and a `resources` subpackage. Its measured main package is `2.48 MiB`, below
   the `4 MiB` limit, and the DevTools simulator reports zero runtime errors.
+- All five feedback clips use iOS-compatible MP3 files. The latest WeChat build
+  contains five MP3 files and no OGG files; DevTools reports `Loaded 5/5 clips`.
+- The search HUD is compact, the target strip can be collapsed, and map gestures
+  temporarily fade the remaining HUD chrome. A `390x844` regression pass covered
+  collapse, restore, and dragging with zero browser console errors.
 - The scene selects the async `wx` storage adapter in WeChat and falls back to
   browser storage elsewhere. `findscape.localSave.v1` was read before and after
-  a DevTools recompile with the same best-score and last-result payload.
+  a DevTools recompile with the same best-score and last-result payload. Full
+  iPhone exit/re-entry restoration remains pending in Issue #65.
 
 ## Files To Read First
 
@@ -120,12 +127,12 @@ findscape-cocos/
 
 The `cocos/` directory is initialized and pinned to Cocos Creator 3.8.8. The
 first Claude Design asset batch and five Kenney CC0 feedback clips are imported
-with stable runtime paths and typed `.meta` files. Scene creation, HUD binding,
+as MP3 with stable runtime paths and typed `.meta` files. Scene creation, HUD binding,
 visual feedback, the shared round loop, three modes, Web Mobile builds, browser
 and WeChat persistence are complete. Runtime SFX preload and one-shot playback
 are also bound. WeChat DevTools is installed, production AppID
 `wx04421302f08791bc` is pinned, and the portrait `wechatgame` package builds and
 runs in the DevTools simulator. Engine trimming, release mangling, and the
 `resources` subpackage reduce the measured main package to `2.48 MiB`. The
-remaining dependency chain is preview QR/device validation and final
-physical-device audio tuning.
+remaining dependency chain is the second iPhone preview pass: audio confirmation,
+HUD usability confirmation, and full exit/re-entry persistence confirmation.

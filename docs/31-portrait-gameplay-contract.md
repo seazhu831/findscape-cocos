@@ -42,6 +42,19 @@ axis stays centered on the map and renders surrounding letterbox space. The
 camera center must never be pushed outside the map to satisfy impossible edge
 clamps.
 
+## Search HUD Rule
+
+- The top timer/score/combo panel stays compact and centered near the safe-area
+  top instead of spanning the map width.
+- The bottom target strip stays compact and can be collapsed with a dedicated
+  chevron control; the control remains available while the strip is hidden.
+- Hint and magnifier controls stay near the outer edges and must not cover the
+  central target strip.
+- Map touch and drag gestures reduce HUD chrome opacity for the duration of the
+  gesture, then restore it on touch end or cancellation.
+- HUD controls stop touch propagation so collapsing the target strip never moves
+  the map or triggers a target.
+
 ## Dependencies And Next Step
 
 Completed dependencies:
@@ -49,6 +62,7 @@ Completed dependencies:
 - Issue #38: accepted portrait production assets.
 - Issue #39: Creator 3.8.8 installation and typed asset import.
 
-The next stage can create the first portrait Cocos scene using this contract.
-Scene screenshots must verify anchor placement, target display size, HUD-safe
-regions, and viewport behavior before hit shapes are tuned.
+The portrait scene implements this contract. Anchor placement, target display
+size, viewport bounds, compact HUD layout, collapse/restore, and map dragging
+have been checked at `390x844`; physical-device confirmation remains in Issue
+#64.
