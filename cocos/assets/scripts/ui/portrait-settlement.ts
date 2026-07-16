@@ -29,6 +29,7 @@ const COLORS = {
 export class PortraitSettlement extends Component {
   private titleLabel: Label | null = null;
   private scoreLabel: Label | null = null;
+  private bestLabel: Label | null = null;
   private progressLabel: Label | null = null;
   private accuracyLabel: Label | null = null;
   private retryButton: Node | null = null;
@@ -36,7 +37,11 @@ export class PortraitSettlement extends Component {
   private starGraphics: Graphics[] = [];
   private built = false;
 
-  public show(viewModel: SettlementViewModel): void {
+  public show(
+    viewModel: SettlementViewModel,
+    bestScore?: number,
+    isNewBest = false,
+  ): void {
     this.ensureBuilt();
     this.node.active = true;
 
@@ -46,6 +51,11 @@ export class PortraitSettlement extends Component {
     }
     if (this.scoreLabel) {
       this.scoreLabel.string = String(viewModel.score);
+    }
+    if (this.bestLabel) {
+      this.bestLabel.string = bestScore === undefined
+        ? "BEST --"
+        : `${isNewBest ? "NEW BEST" : "BEST"} ${bestScore}`;
     }
     if (this.progressLabel) {
       this.progressLabel.string = `${viewModel.foundCount} / ${viewModel.totalCount}`;
@@ -116,14 +126,18 @@ export class PortraitSettlement extends Component {
     });
 
     this.createLabel(
-      "ScoreCaption", panel, "SCORE", 38, 260, 58, new Vec3(0, 78, 0),
+      "ScoreCaption", panel, "SCORE", 38, 260, 58, new Vec3(0, 88, 0),
     );
     this.scoreLabel = this.createLabel(
-      "Score", panel, "0", 96, 560, 122, new Vec3(0, -12, 0), COLORS.coral,
+      "Score", panel, "0", 84, 560, 100, new Vec3(0, 6, 0), COLORS.coral,
+    );
+    this.bestLabel = this.createLabel(
+      "BestScore", panel, "BEST --", 32, 560, 42,
+      new Vec3(0, -72, 0), COLORS.outline,
     );
 
     const divider = this.createNode(
-      "Divider", panel, new Vec3(0, -112, 0), 650, 4,
+      "Divider", panel, new Vec3(0, -122, 0), 650, 4,
     );
     const dividerGraphics = divider.addComponent(Graphics);
     dividerGraphics.fillColor = COLORS.muted;

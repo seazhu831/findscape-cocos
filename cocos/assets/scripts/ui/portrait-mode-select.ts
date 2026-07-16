@@ -11,6 +11,7 @@ import {
   Vec3,
 } from "cc";
 import type { ModeVariantSummary } from "../config/mode-capabilities";
+import type { ModeBestRecord } from "../storage/local-save";
 
 const { ccclass } = _decorator;
 
@@ -27,10 +28,15 @@ const COLORS = {
 @ccclass("PortraitModeSelect")
 export class PortraitModeSelect extends Component {
   private modeButtons = new Map<string, Node>();
+  private bestLabels = new Map<string, Label>();
   private built = false;
 
-  public show(summaries: ModeVariantSummary[]): void {
+  public show(
+    summaries: ModeVariantSummary[],
+    bestByModeId: Readonly<Record<string, ModeBestRecord>> = {},
+  ): void {
     this.ensureBuilt(summaries);
+    this.renderBestScores(summaries, bestByModeId);
     this.node.active = true;
   }
 
@@ -89,18 +95,41 @@ export class PortraitModeSelect extends Component {
       graphics.stroke();
       this.createLabel(
         "Name", button, summary.name.toUpperCase(), 48, 610, 68,
-        new Vec3(0, 45, 0), COLORS.white,
+        new Vec3(0, 55, 0), COLORS.white,
       );
       this.createLabel(
         "TargetCount", button, `${summary.selectedTargetCount} TARGETS`,
-        34, 610, 48, new Vec3(0, -12, 0), COLORS.white,
+        32, 610, 44, new Vec3(0, 4, 0), COLORS.white,
       );
       this.createLabel(
         "Rule", button, summary.targetSelectionLabel.toUpperCase(),
-        28, 610, 48, new Vec3(0, -62, 0), COLORS.white,
+        26, 610, 40, new Vec3(0, -42, 0), COLORS.white,
+      );
+      this.bestLabels.set(
+        summary.modeId,
+        this.createLabel(
+          "BestScore", button, "BEST --", 25, 610, 36,
+          new Vec3(0, -84, 0), COLORS.white,
+        ),
       );
       this.modeButtons.set(summary.modeId, button);
     });
+  }
+
+  private renderBestScores(
+    summaries: ModeVariantSummary[],
+    bestByModeId: Readonly<Record<string, ModeBestRecord>>,
+  ): void {
+    for (const summary of summaries) {
+      const label = this.bestLabels.get(summary.modeId);
+      if (!label) {
+        continue;
+      }
+      const best = bestByModeId[summary.modeId];
+      label.string = best
+        ? `BEST ${best.bestScore} | ${best.bestStarRating} ${best.bestStarRating === 1 ? "STAR" : "STARS"}`
+        : "BEST --";
+    }
   }
 
   private createNode(

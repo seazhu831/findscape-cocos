@@ -238,6 +238,8 @@ for (const requiredSettlementContract of [
   'viewModel.status === "completed"',
   '"RetryButton"',
   '"REPLAY"',
+  '"BestScore"',
+  '"NEW BEST"',
   "public getRetryButton(): Node",
   '"ModesButton"',
   '"MODES"',
@@ -256,6 +258,8 @@ for (const requiredModeSelectContract of [
   '"CHOOSE MODE"',
   "summary.selectedTargetCount",
   "summary.targetSelectionLabel",
+  '"BEST --"',
+  "bestByModeId[summary.modeId]",
   '`ModeButton_${summary.modeId}`',
   "addComponent(BlockInputEvents)",
 ]) {
