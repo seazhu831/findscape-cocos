@@ -175,10 +175,8 @@ export class PortraitRoundScene extends Component {
     console.info(`[FindscapeStorage] Using ${storage.platform} storage`);
     const saveData = await loadLocalSaveFromStorage(this.storagePort);
     this.sessionContext = createDemoSessionContext(config);
-    this.sessionState = startDemoRound(
-      this.sessionContext,
+    this.sessionState = returnToModeSelect(
       createInitialDemoSessionState(saveData),
-      DEFAULT_MODE_ID,
     );
 
     for (const child of this.mapWorld.children) {
@@ -211,6 +209,12 @@ export class PortraitRoundScene extends Component {
       this,
     );
     this.ready = true;
+    this.setToolsVisible(false);
+    this.modeSelect.show(
+      this.sessionContext.modeSummaries,
+      this.sessionState.saveData.bestByModeId,
+    );
+    this.bindModeButtons();
     this.renderHud();
   }
 
@@ -394,7 +398,10 @@ export class PortraitRoundScene extends Component {
 
     this.sessionState = returnToModeSelect(this.sessionState);
     this.settlement?.hide();
-    this.modeSelect.show(this.sessionContext.modeSummaries);
+    this.modeSelect.show(
+      this.sessionContext.modeSummaries,
+      this.sessionState.saveData.bestByModeId,
+    );
     this.bindModeButtons();
   }
 
@@ -427,7 +434,20 @@ export class PortraitRoundScene extends Component {
       this.hud?.render(viewModel.hud);
       this.setToolsVisible(!viewModel.settlement);
       if (viewModel.settlement) {
-        this.settlement?.show(viewModel.settlement);
+        const modeId = this.sessionState.selectedModeId;
+        const best = modeId
+          ? this.sessionState.saveData.bestByModeId[modeId]
+          : undefined;
+        const isNewBest = Boolean(
+          best &&
+          this.sessionState.lastResult?.modeId === modeId &&
+          best.updatedAtUnixMs === this.sessionState.lastResult.completedAtUnixMs,
+        );
+        this.settlement?.show(
+          viewModel.settlement,
+          best?.bestScore,
+          isNewBest,
+        );
       } else {
         this.settlement?.hide();
       }
