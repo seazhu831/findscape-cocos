@@ -297,6 +297,8 @@ Related controller feedback integration issue: https://github.com/seazhu831/find
 
 Related web preview loading/error states issue: https://github.com/seazhu831/findscape-cocos/issues/32
 
+Related visible best-score issue: https://github.com/seazhu831/findscape-cocos/issues/67
+
 Related asset manifest issue: https://github.com/seazhu831/findscape-cocos/issues/19
 
 Related source intake issue: https://github.com/seazhu831/findscape-cocos/issues/21

@@ -47,7 +47,8 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Scan the latest WeChat preview QR code and verify MP3 feedback audio, the
-   compact/collapsible HUD, and storage restoration after a full exit/re-entry.
+   compact/collapsible HUD, and visible best-score restoration after a full
+   exit/re-entry.
 
 Recommended prompt:
 
@@ -83,6 +84,10 @@ Recommended prompt:
   browser storage elsewhere. `findscape.localSave.v1` was read before and after
   a DevTools recompile with the same best-score and last-result payload. Full
   iPhone exit/re-entry restoration remains pending in Issue #65.
+- Startup now opens the native mode selector. Each mode card shows its restored
+  best score and star rating (`BEST --` for an unplayed mode); settlement shows
+  `NEW BEST` only when the current result replaced the saved record. A lower
+  follow-up score leaves the historical best unchanged.
 
 ## Files To Read First
 
@@ -135,4 +140,5 @@ are also bound. WeChat DevTools is installed, production AppID
 runs in the DevTools simulator. Engine trimming, release mangling, and the
 `resources` subpackage reduce the measured main package to `2.48 MiB`. The
 remaining dependency chain is the second iPhone preview pass: audio confirmation,
-HUD usability confirmation, and full exit/re-entry persistence confirmation.
+HUD usability confirmation, and full exit/re-entry persistence confirmation on
+the visible mode-card best scores.

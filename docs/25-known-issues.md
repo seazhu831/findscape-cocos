@@ -17,8 +17,8 @@ These do not block pure runtime, config, fixture, or static preview work.
   played from configured feedback plans. DevTools loads all five; actual iPhone
   playback and perceived-volume tuning still need a physical-device pass.
 - WeChat storage selection and simulator recompile persistence are verified.
-  Full process exit/re-entry restoration remains a device verification item in
-  Issue #65.
+  Mode cards now expose restored best scores on the first screen. Full process
+  exit/re-entry restoration remains a device verification item in Issue #65.
 - The official WeChat DevTools 2.01.2510290 x64 and ARM64 stable archives fail
   strict code-signature verification despite matching the official release and
   Homebrew checksum. The x64 build runs under normal macOS policy without a
