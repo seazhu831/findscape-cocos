@@ -10,6 +10,7 @@
     "check:assets": "node ../tools/content/check-design-asset-manifest.mjs",
     "check:browser-storage": "node ../tools/content/check-browser-storage-fixtures.mjs",
     "check:controller": "node ../tools/content/check-round-controller-fixtures.mjs",
+    "check:dense-assets": "node ../tools/content/check-dense-region-asset-manifest.mjs",
     "check:entity-runtime": "node --no-warnings ../tools/content/check-scene-entity-runtime-fixtures.mjs",
     "check:entity-motion": "node --no-warnings ../tools/content/check-entity-motion-scheduler-fixtures.mjs",
     "check:feedback": "node ../tools/content/check-feedback-runtime-fixtures.mjs",
