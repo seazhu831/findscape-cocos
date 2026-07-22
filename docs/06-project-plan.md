@@ -359,7 +359,5 @@ These should remain out of the first implementation path unless explicitly repri
 
 - Which first dense region and actor set Claude Design should produce after the
   Stage 4B schema is stable.
-- Whether the first actor-motion asset batch should use sprite frames or Cocos
-  AnimationClip-compatible parts; skeletal animation remains optional.
 - Physical-device node, animation, texture-memory, and frame-time budgets for the
   representative dense scene.

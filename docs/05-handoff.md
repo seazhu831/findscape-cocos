@@ -47,10 +47,9 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Continue Stage 4D from `docs/33-scene-runtime-capability-plan.md`: ingest the
-   focused motion frame batch defined in
-   `docs/36-claude-design-motion-asset-handoff.md`, then implement and verify the
-   sprite-frame and AnimationClip adapters.
+2. Start Stage 4E from `docs/33-scene-runtime-capability-plan.md`: implement the
+   pure focus camera state machine and coordinate conversion service, then bind
+   magnifier zoom and restore behavior to the portrait Cocos scene.
 
 Recommended prompt:
 
@@ -96,10 +95,13 @@ Recommended prompt:
 - Stage 4C is complete: a pure entity registry projects mode targets, the Cocos
   scene creates five semantic layer roots, missing nodes can load from Resources,
   and Replay/mode changes reset entity state through one path.
-- Stage 4D has deterministic motion planning, a 24-animation default budget,
-  stable phase offsets, offscreen policies, and a Cocos Tween adapter that moves
-  visual children without moving semantic hit nodes. Frame/clip adapters await
-  the focused Claude Design motion batch.
+- Stage 4D is complete. Deterministic motion planning, a 24-animation default
+  budget, stable phase offsets, offscreen policies, and Tween, sprite-frame, and
+  AnimationClip drivers animate visual children without moving semantic hit
+  nodes. The accepted Claude Design thief and puppy frame batch is preserved,
+  promoted, validated, imported, and covered by Web Mobile regression checks.
+- Stage 4D implementation and acceptance details are in
+  `docs/37-ambient-motion-runtime.md`.
 
 ## Files To Read First
 

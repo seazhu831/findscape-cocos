@@ -260,9 +260,8 @@ Dependencies: Stage 4B.
 
 ### Stage 4D: Ambient Motion Runtime
 
-Status: in progress in Issue #71. Deterministic scheduling and the Cocos Tween
-visual-child adapter are implemented. The focused frame batch requested in
-`docs/36-claude-design-motion-asset-handoff.md` is the next dependency.
+Status: complete in Issue #71. Asset intake, runtime behavior, cancellation,
+and verification are recorded in `docs/37-ambient-motion-runtime.md`.
 
 Outputs:
 
@@ -331,7 +330,6 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Start Stage 4D with the tween motion adapter and central motion scheduler using
-the existing balloon, puppy, and thief sprites. Do not request the large Claude
-Design batch yet; sprite-frame and clip adapters can follow their actual asset
-batch without blocking the low-cost motion foundation.
+Start Stage 4E with a pure focus camera state machine and coordinate conversion
+service. Bind the magnifier only after gesture cancellation, map clamping,
+replay, settlement, and mode-change transitions are deterministic in fixtures.
