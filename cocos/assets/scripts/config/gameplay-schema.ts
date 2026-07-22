@@ -7,6 +7,9 @@ export type GameModeId = string;
 export type FeedbackPresetId = string;
 export type ScoringRuleId = string;
 export type ToolId = string;
+export type SceneEntitySetId = string;
+export type SceneEntityId = string;
+export type MotionProfileId = string;
 
 export interface Vector2Config {
   x: number;
@@ -34,6 +37,104 @@ export interface MapConfig {
   minZoom: number;
   maxZoom: number;
   targetPointSetId: TargetPointSetId;
+  sceneEntitySetId?: SceneEntitySetId;
+}
+
+export type SceneLayerId =
+  | "background"
+  | "staticDecoration"
+  | "ambientActor"
+  | "interactive"
+  | "foregroundOccluder";
+
+export type SceneEntityKind =
+  | "decoration"
+  | "actor"
+  | "interactive"
+  | "occluder";
+
+export interface SceneEntityTransformConfig {
+  position: Vector2Config;
+  scale?: Vector2Config;
+  rotationDegrees?: number;
+  anchor?: Vector2Config;
+}
+
+export interface SceneEntityRenderConfig {
+  layer: SceneLayerId;
+  order: number;
+  visibleByDefault: boolean;
+}
+
+export type SceneEntityActivationPolicy =
+  | "always"
+  | "nearViewport"
+  | "modeSelected";
+
+export interface SceneEntityConfig {
+  entityId: SceneEntityId;
+  mapId: MapId;
+  kind: SceneEntityKind;
+  asset: AssetPath;
+  transform: SceneEntityTransformConfig;
+  render: SceneEntityRenderConfig;
+  motionProfileId?: MotionProfileId;
+  activationPolicy?: SceneEntityActivationPolicy;
+  tags: string[];
+}
+
+export interface SceneEntitySetConfig {
+  sceneEntitySetId: SceneEntitySetId;
+  mapId: MapId;
+  entities: SceneEntityConfig[];
+}
+
+export type MotionOffscreenPolicy = "pause" | "reducedRate" | "continue";
+export type TweenMotionEasing =
+  | "linear"
+  | "sineInOut"
+  | "quadInOut"
+  | "backInOut";
+
+export interface TweenMotionVariantConfig {
+  variantId: string;
+  driver: "tween";
+  durationMs: number;
+  offset?: Vector2Config;
+  rotationDegrees?: number;
+  scaleMultiplier?: Vector2Config;
+  easing?: TweenMotionEasing;
+  yoyo: boolean;
+  loop: boolean;
+}
+
+export interface SpriteFramesMotionVariantConfig {
+  variantId: string;
+  driver: "spriteFrames";
+  frameAssets: AssetPath[];
+  framesPerSecond: number;
+  loop: boolean;
+}
+
+export interface AnimationClipMotionVariantConfig {
+  variantId: string;
+  driver: "animationClip";
+  clipAsset: AssetPath;
+  speed: number;
+  loop: boolean;
+}
+
+export type MotionVariantConfig =
+  | TweenMotionVariantConfig
+  | SpriteFramesMotionVariantConfig
+  | AnimationClipMotionVariantConfig;
+
+export interface MotionProfileConfig {
+  motionProfileId: MotionProfileId;
+  idleVariants: MotionVariantConfig[];
+  startDelayMinMs?: number;
+  startDelayMaxMs?: number;
+  offscreenPolicy: MotionOffscreenPolicy;
 }
 
 export type HitShapeType = "circle" | "rectangle" | "polygon" | "spriteBounds";
@@ -86,6 +187,7 @@ export interface TargetPointConfig {
   targetId: TargetPointId;
   mapId: MapId;
   typeId: TargetTypeId;
+  entityId?: SceneEntityId;
   position: Vector2Config;
   hitShape: HitShape;
   difficulty: 1 | 2 | 3 | 4 | 5;
@@ -93,7 +195,16 @@ export interface TargetPointConfig {
   triggerBehavior: TriggerBehavior;
   feedbackPresetId: FeedbackPresetId;
   reward: RewardConfig;
+  concealment?: TargetConcealmentConfig;
   tags: string[];
+}
+
+export interface TargetConcealmentConfig {
+  occluderEntityIds: SceneEntityId[];
+  intendedVisibleRatio?: number;
+  visualSimilarityTags?: string[];
+  edgePlacement?: "none" | "soft" | "strong";
+  scaleClass?: "small" | "medium" | "large";
 }
 
 export interface TargetPointSetConfig {
@@ -199,6 +310,8 @@ export interface GameplayConfig {
   maps: MapConfig[];
   targetTypes: TargetTypeConfig[];
   targetPointSets: TargetPointSetConfig[];
+  sceneEntitySets?: SceneEntitySetConfig[];
+  motionProfiles?: MotionProfileConfig[];
   feedbackPresets: FeedbackPresetConfig[];
   scoringRules: ScoringRuleConfig[];
   tools: ToolConfig[];
