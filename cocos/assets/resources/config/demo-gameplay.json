@@ -20,7 +20,8 @@
       },
       "minZoom": 0.5,
       "maxZoom": 2,
-      "targetPointSetId": "demo_cozy_town_points"
+      "targetPointSetId": "demo_cozy_town_points",
+      "sceneEntitySetId": "demo_cozy_town_entities"
     }
   ],
   "targetTypes": [
@@ -79,6 +80,7 @@
           "targetId": "demo_pineapple_001",
           "mapId": "demo_cozy_town",
           "typeId": "pineapple",
+          "entityId": "entity_demo_pineapple_001",
           "position": {
             "x": 330,
             "y": 860
@@ -95,12 +97,20 @@
             "score": 100,
             "comboValue": 1
           },
+          "concealment": {
+            "occluderEntityIds": [],
+            "intendedVisibleRatio": 0.75,
+            "visualSimilarityTags": ["green", "food", "market"],
+            "edgePlacement": "soft",
+            "scaleClass": "medium"
+          },
           "tags": ["demo", "food"]
         },
         {
           "targetId": "demo_pineapple_002",
           "mapId": "demo_cozy_town",
           "typeId": "pineapple",
+          "entityId": "entity_demo_pineapple_002",
           "position": {
             "x": 1330,
             "y": 1040
@@ -118,12 +128,20 @@
             "score": 100,
             "comboValue": 1
           },
+          "concealment": {
+            "occluderEntityIds": [],
+            "intendedVisibleRatio": 0.55,
+            "visualSimilarityTags": ["green", "food", "market"],
+            "edgePlacement": "strong",
+            "scaleClass": "small"
+          },
           "tags": ["demo", "food"]
         },
         {
           "targetId": "demo_balloon_001",
           "mapId": "demo_cozy_town",
           "typeId": "balloon",
+          "entityId": "entity_demo_balloon_001",
           "position": {
             "x": 930,
             "y": 360
@@ -146,6 +164,7 @@
           "targetId": "demo_balloon_002",
           "mapId": "demo_cozy_town",
           "typeId": "balloon",
+          "entityId": "entity_demo_balloon_002",
           "position": {
             "x": 1170,
             "y": 1620
@@ -168,6 +187,7 @@
           "targetId": "demo_thief_001",
           "mapId": "demo_cozy_town",
           "typeId": "thief",
+          "entityId": "entity_demo_thief_001",
           "position": {
             "x": 1060,
             "y": 1310
@@ -191,6 +211,7 @@
           "targetId": "demo_puppy_001",
           "mapId": "demo_cozy_town",
           "typeId": "puppy",
+          "entityId": "entity_demo_puppy_001",
           "position": {
             "x": 480,
             "y": 1980
@@ -207,12 +228,20 @@
             "score": 120,
             "comboValue": 1
           },
+          "concealment": {
+            "occluderEntityIds": [],
+            "intendedVisibleRatio": 0.6,
+            "visualSimilarityTags": ["brown", "animal", "path"],
+            "edgePlacement": "soft",
+            "scaleClass": "medium"
+          },
           "tags": ["demo", "hidden-object"]
         },
         {
           "targetId": "demo_gem_001",
           "mapId": "demo_cozy_town",
           "typeId": "gem",
+          "entityId": "entity_demo_gem_001",
           "position": {
             "x": 1200,
             "y": 2090
@@ -250,7 +279,191 @@
             "score": 130,
             "comboValue": 1
           },
+          "concealment": {
+            "occluderEntityIds": [],
+            "intendedVisibleRatio": 0.45,
+            "visualSimilarityTags": ["blue", "sparkle", "path"],
+            "edgePlacement": "strong",
+            "scaleClass": "small"
+          },
           "tags": ["demo", "treasure"]
+        }
+      ]
+    }
+  ],
+  "motionProfiles": [
+    {
+      "motionProfileId": "ambient_bob_subtle",
+      "idleVariants": [
+        {
+          "variantId": "gentle_vertical_bob",
+          "driver": "tween",
+          "durationMs": 1800,
+          "offset": {
+            "x": 0,
+            "y": -8
+          },
+          "easing": "sineInOut",
+          "yoyo": true,
+          "loop": true
+        }
+      ],
+      "startDelayMinMs": 0,
+      "startDelayMaxMs": 600,
+      "offscreenPolicy": "pause"
+    },
+    {
+      "motionProfileId": "character_sway_subtle",
+      "idleVariants": [
+        {
+          "variantId": "gentle_character_sway",
+          "driver": "tween",
+          "durationMs": 2200,
+          "rotationDegrees": 2,
+          "easing": "sineInOut",
+          "yoyo": true,
+          "loop": true
+        }
+      ],
+      "startDelayMinMs": 100,
+      "startDelayMaxMs": 800,
+      "offscreenPolicy": "pause"
+    }
+  ],
+  "sceneEntitySets": [
+    {
+      "sceneEntitySetId": "demo_cozy_town_entities",
+      "mapId": "demo_cozy_town",
+      "entities": [
+        {
+          "entityId": "entity_demo_balloon_001",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_balloon",
+          "transform": {
+            "position": { "x": 930, "y": 360 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 360,
+            "visibleByDefault": true
+          },
+          "motionProfileId": "ambient_bob_subtle",
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "balloon", "target"]
+        },
+        {
+          "entityId": "entity_demo_pineapple_001",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_pineapple",
+          "transform": {
+            "position": { "x": 330, "y": 860 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 860,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "pineapple", "target"]
+        },
+        {
+          "entityId": "entity_demo_pineapple_002",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_pineapple",
+          "transform": {
+            "position": { "x": 1330, "y": 1040 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 1040,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "pineapple", "target"]
+        },
+        {
+          "entityId": "entity_demo_thief_001",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_thief",
+          "transform": {
+            "position": { "x": 1060, "y": 1310 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 1310,
+            "visibleByDefault": true
+          },
+          "motionProfileId": "character_sway_subtle",
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "thief", "character", "target"]
+        },
+        {
+          "entityId": "entity_demo_balloon_002",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_balloon",
+          "transform": {
+            "position": { "x": 1170, "y": 1620 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 1620,
+            "visibleByDefault": true
+          },
+          "motionProfileId": "ambient_bob_subtle",
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "balloon", "target"]
+        },
+        {
+          "entityId": "entity_demo_puppy_001",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_puppy",
+          "transform": {
+            "position": { "x": 480, "y": 1980 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 1980,
+            "visibleByDefault": true
+          },
+          "motionProfileId": "ambient_bob_subtle",
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "puppy", "animal", "target"]
+        },
+        {
+          "entityId": "entity_demo_gem_001",
+          "mapId": "demo_cozy_town",
+          "kind": "interactive",
+          "asset": "art/targets/target_gem",
+          "transform": {
+            "position": { "x": 1200, "y": 2090 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.5 }
+          },
+          "render": {
+            "layer": "interactive",
+            "order": 2090,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "modeSelected",
+          "tags": ["demo", "gem", "treasure", "target"]
         }
       ]
     }
