@@ -47,9 +47,9 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Begin Stage 4B from `docs/33-scene-runtime-capability-plan.md`: add the
-   backward-compatible scene entity, layer, motion, and target-reference schema
-   before requesting the next large Claude Design asset batch.
+2. Continue Stage 4C from `docs/33-scene-runtime-capability-plan.md`: bind the
+   completed scene entity schema and demo manifest to a layered runtime before
+   requesting the next large Claude Design asset batch.
 
 Recommended prompt:
 
@@ -89,6 +89,9 @@ Recommended prompt:
   best score and star rating (`BEST --` for an unplayed mode); settlement shows
   `NEW BEST` only when the current result replaced the saved record. A lower
   follow-up score leaves the historical best unchanged.
+- Stage 4B is complete: config v1 now supports scene entities, semantic layers,
+  reusable motion profiles, target/entity links, concealment metadata, and
+  deterministic validation while preserving legacy configs.
 
 ## Files To Read First
 

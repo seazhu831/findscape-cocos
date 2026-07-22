@@ -233,6 +233,9 @@ editor or spreadsheet import.
 
 ### Stage 4B: Schema V2 And Validation
 
+Status: complete in Issue #69. Authoring rules are recorded in
+`docs/34-scene-entity-authoring.md`.
+
 Outputs:
 
 - Backward-compatible scene entity, layer, motion, and target-reference types.
@@ -321,7 +324,7 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Start Stage 4B with schema and fixtures only. Do not request the large Claude
-Design batch yet. The asset handoff should follow the stable entity, layer,
-motion, anchor, and occluder contract so generated output does not need another
-normalization pass.
+Start Stage 4C with a pure scene entity registry, followed by Cocos layer-root
+and target-node binding. Do not request the large Claude Design batch yet. The
+current target assets are sufficient to validate entity projection and reset
+behavior before dense content is introduced.
