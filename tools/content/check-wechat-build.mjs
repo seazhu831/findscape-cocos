@@ -202,7 +202,8 @@ function validateOutput(outputPath) {
     );
   }
 
-  const currentRegressionLimitBytes = 7 * 1024 * 1024;
+  // Stage 4G adds the accepted dense-region batch to the resources subpackage.
+  const currentRegressionLimitBytes = 8 * 1024 * 1024;
   if (outputBytes > currentRegressionLimitBytes) {
     failures.push(
       `generated output is ${formatMiB(outputBytes)}, above the current ${formatMiB(currentRegressionLimitBytes)} regression limit`,
