@@ -333,7 +333,8 @@ Execution stages:
 - Stage 4D: budgeted ambient motion runtime.
 - Stage 4E: focused camera state machine and region magnifier.
 - Stage 4F: target lift, fly-to-HUD, counter pulse, and settlement barrier.
-- Stage 4G: authored dense scene slice and concealment metadata.
+- Stage 4G: authored dense scene slice and concealment metadata (complete,
+  Issue #75).
 - Stage 4H: region activation, diagnostics, pooling, and device budgets.
 
 Dependencies:
@@ -357,7 +358,5 @@ These should remain out of the first implementation path unless explicitly repri
 
 ## Open Decisions
 
-- Which first dense region and actor set Claude Design should produce after the
-  Stage 4B schema is stable.
 - Physical-device node, animation, texture-memory, and frame-time budgets for the
   representative dense scene.

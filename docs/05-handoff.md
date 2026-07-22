@@ -47,9 +47,8 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Prepare and send the focused Stage 4G dense-region handoff to Claude Design.
-   Ingest the returned batch only after its render order, anchors, runtime paths,
-   and concealment relationships pass deterministic intake checks.
+2. Start Stage 4H region activation and diagnostics against the accepted dense
+   lower-garden slice, then establish physical-device budgets.
 
 Recommended prompt:
 
@@ -85,6 +84,10 @@ Recommended prompt:
   browser storage elsewhere. `findscape.localSave.v1` was read before and after
   a DevTools recompile with the same best-score and last-result payload. Full
   iPhone exit/re-entry restoration remains pending in Issue #65.
+- Stage 4G is complete: the dense lower garden now contains four static clusters,
+  two six-frame ambient actors, and target-linked puppy and gem occluders. Its
+  intake, runtime mapping, tuning, and browser acceptance are recorded in
+  `docs/41-dense-region-runtime.md`.
 - Startup now opens the native mode selector. Each mode card shows its restored
   best score and star rating (`BEST --` for an unplayed mode); settlement shows
   `NEW BEST` only when the current result replaced the saved record. A lower

@@ -300,6 +300,10 @@ Dependencies: Stage 4C and Stage 4E coordinate conversions.
 
 ### Stage 4G: Concealment And Dense Scene Slice
 
+Status: complete in Issue #75. Source intake, normalized runtime assets,
+target-linked occluder activation, composition tuning, and acceptance are
+recorded in `docs/41-dense-region-runtime.md`.
+
 Outputs:
 
 - Foreground occluder relationships and difficulty metadata.
@@ -337,7 +341,6 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Prepare the focused Claude Design handoff for Stage 4G. The batch must describe
-one dense region with explicit static decoration, ambient actors, interactive
-targets, foreground occluders, render order, anchors, and concealment intent.
-Do not expand the runtime contract until the authored slice exposes a real gap.
+Start Stage 4H with deterministic region activation and runtime diagnostics.
+Measure the representative Stage 4G slice before choosing pooling or animation
+budgets, then record Web and physical-device results separately.
