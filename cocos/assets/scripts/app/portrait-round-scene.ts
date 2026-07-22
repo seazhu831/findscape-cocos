@@ -37,6 +37,7 @@ import type {
 } from "../config/gameplay-schema";
 import { PortraitAudioFeedback } from "../feedback/portrait-audio-feedback";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
+import { PortraitTargetPresentation } from "../feedback/portrait-target-presentation";
 import {
   beginCameraFocus,
   beginCameraRestore,
@@ -51,6 +52,14 @@ import type { ViewportState } from "../gameplay/map-viewport";
 import { PortraitEntityMotion } from "../gameplay/portrait-entity-motion";
 import { PortraitSceneEntityBinder } from "../gameplay/portrait-scene-entity-binder";
 import { SceneEntityRegistry } from "../gameplay/scene-entity-runtime";
+import {
+  cancelTargetPresentations,
+  completeTargetPresentation,
+  createTargetPresentationState,
+  startTargetPresentation,
+  type TargetPresentationPlan,
+  type TargetPresentationState,
+} from "../gameplay/target-presentation";
 import { PortraitHud } from "../ui/portrait-hud";
 import { PortraitModeSelect } from "../ui/portrait-mode-select";
 import { PortraitSettlement } from "../ui/portrait-settlement";
@@ -80,6 +89,9 @@ export class PortraitRoundScene extends Component {
   private sceneEntityRegistry: SceneEntityRegistry | null = null;
   private sceneEntityBinder: PortraitSceneEntityBinder | null = null;
   private readonly entityMotion = new PortraitEntityMotion();
+  private targetPresentation: PortraitTargetPresentation | null = null;
+  private targetPresentationState: TargetPresentationState =
+    createTargetPresentationState();
   private targetNodesById = new Map<string, Node>();
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
@@ -152,6 +164,7 @@ export class PortraitRoundScene extends Component {
       button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
     }
     this.entityMotion.stopAll();
+    this.targetPresentation?.dispose();
     this.sceneEntityBinder?.dispose();
     this.stopMagnifierZoom();
     this.hideLoadState();
@@ -171,6 +184,7 @@ export class PortraitRoundScene extends Component {
       this.node.addComponent(PortraitAudioFeedback);
     this.settlement = this.createSettlement();
     this.modeSelect = this.createModeSelect();
+    this.targetPresentation = new PortraitTargetPresentation(this.node, this.hud);
     this.settlement.getRetryButton().on(
       Node.EventType.TOUCH_END,
       this.handleRetryTouch,
@@ -256,14 +270,45 @@ export class PortraitRoundScene extends Component {
     const update = applyDemoSessionTap(this.sessionState, targetConfig.position, {
       completedAtUnixMs: Date.now(),
     });
-    this.applySessionUpdate(update);
-    if (update.roundEvents.some((roundEvent) => roundEvent.type === "correctHit")) {
+    const correctHit = update.roundEvents.find(
+      (roundEvent) => roundEvent.type === "correctHit",
+    );
+    let presentationPlan: TargetPresentationPlan | undefined;
+    let presentationStarted = false;
+    if (correctHit?.type === "correctHit") {
       const foundEntity = this.sceneEntityRegistry?.markTargetFound(
         targetConfig.targetId,
       );
       if (foundEntity) {
         this.entityMotion.stopEntity(foundEntity.entity.entityId);
       }
+      const presentationStart = startTargetPresentation(
+        this.targetPresentationState,
+        targetConfig,
+        correctHit.isRoundComplete,
+      );
+      this.targetPresentationState = presentationStart.state;
+      presentationPlan = presentationStart.plan;
+      const targetVisual = foundEntity
+        ? this.sceneEntityBinder?.getVisualNodeByEntityId(
+            foundEntity.entity.entityId,
+          )
+        : undefined;
+      if (presentationPlan && targetVisual) {
+        presentationStarted =
+          this.targetPresentation?.play(
+            targetNode,
+            targetVisual,
+            presentationPlan,
+            () => this.handleTargetPresentationComplete(presentationPlan),
+          ) ?? false;
+      }
+    }
+    this.applySessionUpdate(update);
+    if (presentationPlan && !presentationStarted) {
+      this.handleTargetPresentationComplete(presentationPlan);
+    }
+    if (correctHit?.type === "correctHit" && !presentationStarted) {
       this.feedback?.playTarget(targetNode);
     }
     this.renderHud();
@@ -416,6 +461,7 @@ export class PortraitRoundScene extends Component {
     }
 
     this.sessionState = returnToModeSelect(this.sessionState);
+    this.resetTargetPresentations();
     this.sceneEntityRegistry?.projectMode([]);
     if (this.sceneEntityRegistry) {
       this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
@@ -455,9 +501,9 @@ export class PortraitRoundScene extends Component {
   private renderHud(): void {
     if (this.sessionState?.roundViewModel) {
       const viewModel = this.sessionState.roundViewModel;
-      this.hud?.render(viewModel.hud);
+      this.hud?.render(viewModel.hud, this.getPendingFoundCountsByType());
       this.setToolsVisible(!viewModel.settlement);
-      if (viewModel.settlement) {
+      if (viewModel.settlement && !this.targetPresentationState.settlementPending) {
         const modeId = this.sessionState.selectedModeId;
         const best = modeId
           ? this.sessionState.saveData.bestByModeId[modeId]
@@ -586,6 +632,7 @@ export class PortraitRoundScene extends Component {
   }
 
   private resetTargetVisuals(): void {
+    this.resetTargetPresentations();
     this.sceneEntityRegistry?.resetRound();
     if (this.sceneEntityRegistry) {
       this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
@@ -744,6 +791,36 @@ export class PortraitRoundScene extends Component {
       this.focusCameraState = this.createInitialFocusCameraState(this.activeMap);
       this.applyCameraViewport(this.focusCameraState.viewport);
     }
+  }
+
+  private handleTargetPresentationComplete(
+    plan: TargetPresentationPlan,
+  ): void {
+    const completion = completeTargetPresentation(
+      this.targetPresentationState,
+      plan.targetId,
+      plan.token,
+    );
+    if (!completion.completed) {
+      return;
+    }
+    this.targetPresentationState = completion.state;
+    this.renderHud();
+  }
+
+  private resetTargetPresentations(): void {
+    this.targetPresentation?.cancelAll();
+    this.targetPresentationState = cancelTargetPresentations(
+      this.targetPresentationState,
+    );
+  }
+
+  private getPendingFoundCountsByType(): ReadonlyMap<string, number> {
+    const counts = new Map<string, number>();
+    for (const plan of this.targetPresentationState.activeByTargetId.values()) {
+      counts.set(plan.typeId, (counts.get(plan.typeId) ?? 0) + 1);
+    }
+    return counts;
   }
 
   private createInitialFocusCameraState(map: MapConfig): FocusCameraState {
