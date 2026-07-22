@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "sets": [
+    {
+      "motionAssetId": "thief_idle_v1",
+      "entityId": "entity_demo_thief_001",
+      "runtimeDirectory": "art/motion/thief_idle",
+      "driver": "spriteFrames",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "framesPerSecond": 8,
+      "loop": true,
+      "stableBaselineY": 455,
+      "notes": "Breathing via vertical scale about the foot baseline (max +1.6%) with slight width compensation; glance via pupil offset ±4.5px on a sine cycle. frame_00 is the untouched static reference."
+    },
+    {
+      "motionAssetId": "puppy_idle_v1",
+      "entityId": "entity_demo_puppy_001",
+      "runtimeDirectory": "art/motion/puppy_idle",
+      "driver": "spriteFrames",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "framesPerSecond": 8,
+      "loop": true,
+      "stableBaselineY": 442,
+      "notes": "Tail wag ±10.5° on a sine cycle around the hidden tail root (383,352); one blink on frames 03(half)-04(closed)-05(half). Body, paws and baseline untouched. frame_00 is the untouched static reference."
+    }
+  ]
+}
