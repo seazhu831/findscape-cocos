@@ -116,6 +116,11 @@ for (const requiredHudContract of [
   "Tween.stopAllByTarget(this.timerNode)",
   'urgency === "critical"',
   ".repeatForever()",
+  "pendingFoundCountsByType.get(item.typeId)",
+  "public getTargetArrivalNode(typeId: string)",
+  "this.targetPanelExpanded && this.targetPanel?.active && slot?.active",
+  "public playTargetArrival(typeId: string, durationSeconds: number)",
+  "Tween.stopAllByTarget(arrivalNode)",
 ]) {
   if (!hudSource.includes(requiredHudContract)) {
     failures.push(`PortraitHud is missing contract: ${requiredHudContract}`);

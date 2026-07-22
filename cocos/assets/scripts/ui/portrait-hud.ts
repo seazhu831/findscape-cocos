@@ -220,7 +220,10 @@ export class PortraitHud extends Component {
     });
   }
 
-  public render(viewModel: RoundHudViewModel): void {
+  public render(
+    viewModel: RoundHudViewModel,
+    pendingFoundCountsByType: ReadonlyMap<string, number> = new Map(),
+  ): void {
     if (this.timerLabel) {
       this.timerLabel.string = viewModel.timer.label;
     }
@@ -255,14 +258,18 @@ export class PortraitHud extends Component {
       if (!slotNode || !countLabel) {
         return;
       }
+      const displayedFoundCount = Math.max(
+        0,
+        item.foundCount - (pendingFoundCountsByType.get(item.typeId) ?? 0),
+      );
       slotNode.active = true;
       slotNode.setPosition(startX + index * spacing, 0, 0);
       countLabel.string = String(
-        Math.max(0, item.requiredCount - item.foundCount),
+        Math.max(0, item.requiredCount - displayedFoundCount),
       );
       const opacity =
         slotNode.getComponent(UIOpacity) ?? slotNode.addComponent(UIOpacity);
-      opacity.opacity = item.isComplete ? 120 : 255;
+      opacity.opacity = displayedFoundCount >= item.requiredCount ? 120 : 255;
     });
   }
 
@@ -276,6 +283,36 @@ export class PortraitHud extends Component {
 
   public getTargetPanelToggle(): Node | null {
     return this.node.getChildByName("TargetPanelToggle");
+  }
+
+  public getTargetArrivalNode(typeId: string): Node | null {
+    const slot = this.targetPanel?.getChildByName(`TargetSlot_${typeId}`) ?? null;
+    if (this.targetPanelExpanded && this.targetPanel?.active && slot?.active) {
+      return slot;
+    }
+    return this.getTargetPanelToggle();
+  }
+
+  public playTargetArrival(typeId: string, durationSeconds: number): void {
+    const arrivalNode = this.getTargetArrivalNode(typeId);
+    if (!arrivalNode) {
+      return;
+    }
+    Tween.stopAllByTarget(arrivalNode);
+    arrivalNode.setScale(1, 1, 1);
+    const halfDuration = Math.max(0.05, durationSeconds / 2);
+    tween(arrivalNode)
+      .to(
+        halfDuration,
+        { scale: new Vec3(1.2, 1.2, 1) },
+        { easing: "sineOut" },
+      )
+      .to(
+        halfDuration,
+        { scale: new Vec3(1, 1, 1) },
+        { easing: "sineIn" },
+      )
+      .start();
   }
 
   public toggleTargetPanel(): void {
