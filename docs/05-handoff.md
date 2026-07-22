@@ -47,9 +47,10 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Continue Stage 4D from `docs/33-scene-runtime-capability-plan.md`: add the
-   central tween motion scheduler on top of the completed layered entity
-   runtime before requesting the next large Claude Design asset batch.
+2. Continue Stage 4D from `docs/33-scene-runtime-capability-plan.md`: ingest the
+   focused motion frame batch defined in
+   `docs/36-claude-design-motion-asset-handoff.md`, then implement and verify the
+   sprite-frame and AnimationClip adapters.
 
 Recommended prompt:
 
@@ -95,6 +96,10 @@ Recommended prompt:
 - Stage 4C is complete: a pure entity registry projects mode targets, the Cocos
   scene creates five semantic layer roots, missing nodes can load from Resources,
   and Replay/mode changes reset entity state through one path.
+- Stage 4D has deterministic motion planning, a 24-animation default budget,
+  stable phase offsets, offscreen policies, and a Cocos Tween adapter that moves
+  visual children without moving semantic hit nodes. Frame/clip adapters await
+  the focused Claude Design motion batch.
 
 ## Files To Read First
 

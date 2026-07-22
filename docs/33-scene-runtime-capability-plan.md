@@ -260,6 +260,10 @@ Dependencies: Stage 4B.
 
 ### Stage 4D: Ambient Motion Runtime
 
+Status: in progress in Issue #71. Deterministic scheduling and the Cocos Tween
+visual-child adapter are implemented. The focused frame batch requested in
+`docs/36-claude-design-motion-asset-handoff.md` is the next dependency.
+
 Outputs:
 
 - Tween and sprite/clip idle motion adapters.
