@@ -316,6 +316,7 @@ for (const requiredEntityMotionContract of [
   'sprite.spriteFrame = frames[index]',
   '`${assetPath}/spriteFrame`',
   'this.isCurrent(plan.entityId, generation, version)',
+  'typeof Animation === "function"',
   'animation.removeClip(clip, true)',
   'Tween.stopAllByTarget(visual)',
   'visual.setPosition(0, 0, 0)',

@@ -197,12 +197,22 @@ export class PortraitEntityMotion {
       return;
     }
 
+    const animationComponent =
+      typeof Animation === "function" ? Animation : null;
+    if (!animationComponent) {
+      console.warn(
+        `[EntityMotion] Animation module is unavailable for ${plan.entityId}`,
+      );
+      return;
+    }
+
     const clip = await loadAnimationClip(variant.clipAsset);
     if (!this.isCurrent(plan.entityId, generation, version)) {
       return;
     }
     const animation =
-      visual.getComponent(Animation) ?? visual.addComponent(Animation);
+      visual.getComponent(animationComponent) ??
+      visual.addComponent(animationComponent);
     const stateName = `EntityMotion_${plan.entityId}`;
     clip.name = stateName;
     clip.speed = variant.speed * plan.playbackRate;
@@ -223,7 +233,11 @@ export class PortraitEntityMotion {
 
   private resetEntityVisual(entityId: string, visual: Node): void {
     resetVisual(visual);
-    const animation = visual.getComponent(Animation);
+    const animationComponent =
+      typeof Animation === "function" ? Animation : null;
+    const animation = animationComponent
+      ? visual.getComponent(animationComponent)
+      : null;
     const clip = this.activeClipsByEntityId.get(entityId);
     animation?.stop();
     if (animation && clip) {
