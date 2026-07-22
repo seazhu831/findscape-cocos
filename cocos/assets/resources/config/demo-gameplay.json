@@ -328,6 +328,51 @@
       "startDelayMinMs": 100,
       "startDelayMaxMs": 800,
       "offscreenPolicy": "pause"
+    },
+    {
+      "motionProfileId": "thief_idle_frames",
+      "idleVariants": [
+        {
+          "variantId": "thief_breathe_and_glance",
+          "driver": "spriteFrames",
+          "frameAssets": [
+            "art/motion/thief_idle/frame_00",
+            "art/motion/thief_idle/frame_01",
+            "art/motion/thief_idle/frame_02",
+            "art/motion/thief_idle/frame_03",
+            "art/motion/thief_idle/frame_04",
+            "art/motion/thief_idle/frame_05"
+          ],
+          "framesPerSecond": 8,
+          "loop": true
+        }
+      ],
+      "startDelayMinMs": 100,
+      "startDelayMaxMs": 500,
+      "offscreenPolicy": "pause"
+    },
+    {
+      "motionProfileId": "puppy_idle_clip",
+      "idleVariants": [
+        {
+          "variantId": "puppy_tail_and_blink_clip",
+          "driver": "animationClip",
+          "frameAssets": [
+            "art/motion/puppy_idle/frame_00",
+            "art/motion/puppy_idle/frame_01",
+            "art/motion/puppy_idle/frame_02",
+            "art/motion/puppy_idle/frame_03",
+            "art/motion/puppy_idle/frame_04",
+            "art/motion/puppy_idle/frame_05"
+          ],
+          "framesPerSecond": 8,
+          "speed": 1,
+          "loop": true
+        }
+      ],
+      "startDelayMinMs": 0,
+      "startDelayMaxMs": 400,
+      "offscreenPolicy": "pause"
     }
   ],
   "sceneEntitySets": [
@@ -405,7 +450,7 @@
             "order": 1310,
             "visibleByDefault": true
           },
-          "motionProfileId": "character_sway_subtle",
+          "motionProfileId": "thief_idle_frames",
           "activationPolicy": "modeSelected",
           "tags": ["demo", "thief", "character", "target"]
         },
@@ -424,7 +469,7 @@
             "order": 1620,
             "visibleByDefault": true
           },
-          "motionProfileId": "ambient_bob_subtle",
+          "motionProfileId": "puppy_idle_clip",
           "activationPolicy": "modeSelected",
           "tags": ["demo", "balloon", "target"]
         },

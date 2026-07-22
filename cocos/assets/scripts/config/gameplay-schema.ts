@@ -116,13 +116,27 @@ export interface SpriteFramesMotionVariantConfig {
   loop: boolean;
 }
 
-export interface AnimationClipMotionVariantConfig {
+interface AnimationClipMotionVariantBaseConfig {
   variantId: string;
   driver: "animationClip";
-  clipAsset: AssetPath;
   speed: number;
   loop: boolean;
 }
+
+export type AnimationClipMotionVariantConfig =
+  AnimationClipMotionVariantBaseConfig &
+    (
+      | {
+          clipAsset: AssetPath;
+          frameAssets?: never;
+          framesPerSecond?: never;
+        }
+      | {
+          clipAsset?: never;
+          frameAssets: AssetPath[];
+          framesPerSecond: number;
+        }
+    );
 
 export type MotionVariantConfig =
   | TweenMotionVariantConfig

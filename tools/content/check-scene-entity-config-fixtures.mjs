@@ -61,6 +61,18 @@ const fixtures = [
     error: "durationMs must be a positive number",
   },
   {
+    name: "animation clip source is required",
+    config: mutate(createEntityConfig(), (config) => {
+      config.motionProfiles[0].idleVariants.push({
+        variantId: "invalid_clip",
+        driver: "animationClip",
+        speed: 1,
+        loop: true,
+      });
+    }),
+    error: "must define exactly one of clipAsset or frameAssets",
+  },
+  {
     name: "non occluder concealment reference fails",
     config: mutate(createEntityConfig(), (config) => {
       config.targetPointSets[0].targetPoints[0].concealment.occluderEntityIds = [

@@ -339,7 +339,24 @@ function validateMotionVariant(variant, label) {
   }
 
   if (variant?.driver === "animationClip") {
-    requireString(variant.clipAsset, `${label}.clipAsset`);
+    const hasClipAsset = variant.clipAsset !== undefined;
+    const hasFrameAssets = variant.frameAssets !== undefined;
+    if (hasClipAsset === hasFrameAssets) {
+      errors.push(`${label} must define exactly one of clipAsset or frameAssets`);
+    }
+    if (hasClipAsset) {
+      requireString(variant.clipAsset, `${label}.clipAsset`);
+    }
+    if (hasFrameAssets) {
+      const frameAssets = requireArray(variant, "frameAssets");
+      if (frameAssets.length === 0) {
+        errors.push(`${label}.frameAssets must not be empty`);
+      }
+      frameAssets.forEach((asset, index) =>
+        requireString(asset, `${label}.frameAssets[${index}]`),
+      );
+      requirePositiveNumber(variant.framesPerSecond, `${label}.framesPerSecond`);
+    }
     requirePositiveNumber(variant.speed, `${label}.speed`);
     requireBoolean(variant.loop, `${label}.loop`);
     return;
