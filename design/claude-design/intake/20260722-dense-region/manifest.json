@@ -1,0 +1,295 @@
+{
+  "version": 1,
+  "batchId": "findscape_dense_region_batch_v1",
+  "designTool": "Claude Design",
+  "mapId": "demo_cozy_town",
+  "region": {
+    "regionId": "region_lower_garden_v1",
+    "bounds": {
+      "x": 320,
+      "y": 1500,
+      "width": 1000,
+      "height": 760
+    }
+  },
+  "assets": [
+    {
+      "assetId": "garden_picnic_basket",
+      "sourceFile": "static/garden_picnic_basket.png",
+      "runtimePath": "art/dense/lower_garden/garden_picnic_basket",
+      "kind": "staticDecoration",
+      "canvasSize": {
+        "width": 384,
+        "height": 384
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.2
+      },
+      "mapPosition": {
+        "x": 570,
+        "y": 1710
+      },
+      "layer": "decoration",
+      "renderOrder": 1710,
+      "activationPolicy": "regionVisible",
+      "sha256": "428f889587f29a549a09d78794fec99fe02094b0c96ef26487bd10e5daa87ffd"
+    },
+    {
+      "assetId": "garden_planter_cluster",
+      "sourceFile": "static/garden_planter_cluster.png",
+      "runtimePath": "art/dense/lower_garden/garden_planter_cluster",
+      "kind": "staticDecoration",
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.18
+      },
+      "mapPosition": {
+        "x": 395,
+        "y": 1925
+      },
+      "layer": "decoration",
+      "renderOrder": 1935,
+      "activationPolicy": "regionVisible",
+      "visualSimilarityTags": [
+        "warm",
+        "rounded",
+        "garden"
+      ],
+      "sha256": "5c11e49ae32878864793d0781428e100748a75f1616fcb847eb3ec1b99492305"
+    },
+    {
+      "assetId": "garden_scattered_toys",
+      "sourceFile": "static/garden_scattered_toys.png",
+      "runtimePath": "art/dense/lower_garden/garden_scattered_toys",
+      "kind": "staticDecoration",
+      "canvasSize": {
+        "width": 512,
+        "height": 384
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.2
+      },
+      "mapPosition": {
+        "x": 960,
+        "y": 1880
+      },
+      "layer": "decoration",
+      "renderOrder": 1880,
+      "activationPolicy": "regionVisible",
+      "sha256": "dbc4130b93f8c64669d22a8ecfb79bed6d9cf7f958e822c502a1ccbe2560c2ca"
+    },
+    {
+      "assetId": "garden_blue_glass_cluster",
+      "sourceFile": "static/garden_blue_glass_cluster.png",
+      "runtimePath": "art/dense/lower_garden/garden_blue_glass_cluster",
+      "kind": "staticDecoration",
+      "canvasSize": {
+        "width": 384,
+        "height": 384
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.2
+      },
+      "mapPosition": {
+        "x": 1065,
+        "y": 2130
+      },
+      "layer": "decoration",
+      "renderOrder": 2170,
+      "activationPolicy": "regionVisible",
+      "visualSimilarityTags": [
+        "blue",
+        "glass",
+        "sparkle"
+      ],
+      "sha256": "52211950af568ad8647790e558c4dfdf8902c249b0bd7a4339c9d21ef0e18a91"
+    },
+    {
+      "assetId": "actor_gardener_kneeling",
+      "sourceDirectory": "actors/actor_gardener_kneeling",
+      "runtimeDirectory": "art/dense/lower_garden/actor_gardener_kneeling",
+      "kind": "ambientActor",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.12
+      },
+      "mapPosition": {
+        "x": 760,
+        "y": 1840
+      },
+      "layer": "actor",
+      "renderOrder": 1840,
+      "activationPolicy": "regionVisible",
+      "motion": {
+        "driver": "spriteFrames",
+        "framesPerSecond": 6,
+        "loop": true,
+        "stableBaselineY": 450
+      },
+      "sha256ByFrame": {
+        "frame_00.png": "450418811cd5977038fb5988d35938d39e4461cb3067bd7de8ebc7d1570a2768",
+        "frame_01.png": "a9f87ed02a31ebdffcecfde49ddb5a81b86b0ce83b7f527a5bd8d64f8179fc7f",
+        "frame_02.png": "2dc0baab39cb831d1762c457e33e8dc081e3f90b245c2e07cdae62f84c61be95",
+        "frame_03.png": "fe766fb7f18fe5e61fc8549eb334c2d868060099b01f7e99b586dad6c03e9df8",
+        "frame_04.png": "cc762a5d279fbed473ad7678a6f3c411cd4d04ac3b5cfc3422fee782d577f2f8",
+        "frame_05.png": "0e16278554b20109c481a677a4f0df7b3f9c2eb401cfdf3017916e584c1d9f29"
+      }
+    },
+    {
+      "assetId": "actor_reader_seated",
+      "sourceDirectory": "actors/actor_reader_seated",
+      "runtimeDirectory": "art/dense/lower_garden/actor_reader_seated",
+      "kind": "ambientActor",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.12
+      },
+      "mapPosition": {
+        "x": 980,
+        "y": 2070
+      },
+      "layer": "actor",
+      "renderOrder": 2070,
+      "activationPolicy": "regionVisible",
+      "motion": {
+        "driver": "spriteFrames",
+        "framesPerSecond": 6,
+        "loop": true,
+        "stableBaselineY": 450
+      },
+      "sha256ByFrame": {
+        "frame_00.png": "f39d150858b13bbbd2ee5067416b4d17b8c8c026226677dcf761d9ac3992131c",
+        "frame_01.png": "15d5d68871e9c088dd1e6ef6d5e9c3be1bd0edf2e4c32242e061be73b54ffa2c",
+        "frame_02.png": "de1b31387570f97e773dfe1390303ec517cce0d091cd6cbdd13c7baeb1d08fc9",
+        "frame_03.png": "784672ffde67d5681642ff51d89034308eb18c6b6ed13c74b89303ac47d60f05",
+        "frame_04.png": "8c54477c912663c2388459da980a3a072a0fbf4bc8e9de728827a6f627b0906d",
+        "frame_05.png": "862d00f83a60c6351b540489d89097d3dc6031d7134e6084aaacafebd40ae48f"
+      }
+    },
+    {
+      "assetId": "occluder_puppy_planter",
+      "sourceFile": "occluders/occluder_puppy_planter.png",
+      "runtimePath": "art/dense/lower_garden/occluder_puppy_planter",
+      "kind": "foregroundOccluder",
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.15
+      },
+      "mapPosition": {
+        "x": 444,
+        "y": 2003
+      },
+      "layer": "foreground",
+      "renderOrder": 2010,
+      "activationPolicy": "modeSelected",
+      "occludesEntityIds": [
+        "entity_demo_puppy_001"
+      ],
+      "concealment": {
+        "intendedVisibleRatio": 0.55,
+        "edgePlacement": "soft",
+        "visualSimilarityTags": [
+          "warm",
+          "garden",
+          "rounded"
+        ],
+        "measuredVisibleRatio": 0.55
+      },
+      "sha256": "b2451c577e4ca4e99dbcefa95465ddf15b3f521fab615ad074207bec80a39155"
+    },
+    {
+      "assetId": "occluder_gem_flower_basket",
+      "sourceFile": "occluders/occluder_gem_flower_basket.png",
+      "runtimePath": "art/dense/lower_garden/occluder_gem_flower_basket",
+      "kind": "foregroundOccluder",
+      "canvasSize": {
+        "width": 512,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.15
+      },
+      "mapPosition": {
+        "x": 1236,
+        "y": 2105
+      },
+      "layer": "foreground",
+      "renderOrder": 2120,
+      "activationPolicy": "modeSelected",
+      "occludesEntityIds": [
+        "entity_demo_gem_001"
+      ],
+      "concealment": {
+        "intendedVisibleRatio": 0.42,
+        "edgePlacement": "strong",
+        "visualSimilarityTags": [
+          "blue",
+          "flowers",
+          "sparkle"
+        ],
+        "measuredVisibleRatio": 0.411
+      },
+      "sha256": "bf8448d0de8de04743d19716ae9d0fdd5d4a3058fd4c9ed727032fd33c85844b"
+    },
+    {
+      "assetId": "occluder_lane_shrub",
+      "sourceFile": "occluders/occluder_lane_shrub.png",
+      "runtimePath": "art/dense/lower_garden/occluder_lane_shrub",
+      "kind": "foregroundOccluder",
+      "canvasSize": {
+        "width": 640,
+        "height": 512
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.15
+      },
+      "mapPosition": {
+        "x": 740,
+        "y": 2190
+      },
+      "layer": "foreground",
+      "renderOrder": 2190,
+      "activationPolicy": "regionVisible",
+      "occludesEntityIds": [],
+      "sha256": "e50de9da56eda1e2814fcfbe1eb338eb48d1510871ba50e5138226d58ad2bdca"
+    }
+  ],
+  "notes": "Target references composited at scale 0.45 of their 512 canvases (subject ~150 map px) for preview and concealment measurement."
+}
