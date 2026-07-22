@@ -32,10 +32,13 @@ import {
 } from "./demo-session";
 import type {
   GameplayConfig,
+  MapConfig,
   TargetPointConfig,
 } from "../config/gameplay-schema";
 import { PortraitAudioFeedback } from "../feedback/portrait-audio-feedback";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
+import { PortraitSceneEntityBinder } from "../gameplay/portrait-scene-entity-binder";
+import { SceneEntityRegistry } from "../gameplay/scene-entity-runtime";
 import { PortraitHud } from "../ui/portrait-hud";
 import { PortraitModeSelect } from "../ui/portrait-mode-select";
 import { PortraitSettlement } from "../ui/portrait-settlement";
@@ -63,6 +66,8 @@ export class PortraitRoundScene extends Component {
   private settlement: PortraitSettlement | null = null;
   private modeSelect: PortraitModeSelect | null = null;
   private storagePort: KeyValueStoragePort | null = null;
+  private sceneEntityRegistry: SceneEntityRegistry | null = null;
+  private sceneEntityBinder: PortraitSceneEntityBinder | null = null;
   private targetNodesById = new Map<string, Node>();
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
@@ -133,6 +138,7 @@ export class PortraitRoundScene extends Component {
     for (const button of this.modeSelect?.getModeButtons().values() ?? []) {
       button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
     }
+    this.sceneEntityBinder?.dispose();
     this.stopMagnifierZoom();
     this.hideLoadState();
   }
@@ -179,11 +185,7 @@ export class PortraitRoundScene extends Component {
       createInitialDemoSessionState(saveData),
     );
 
-    for (const child of this.mapWorld.children) {
-      if (child.name.startsWith("demo_")) {
-        this.targetNodesById.set(child.name, child);
-      }
-    }
+    await this.initializeSceneEntities(config);
     this.configureRoundTargets();
     for (const targetNode of this.targetNodesById.values()) {
       targetNode.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
@@ -229,7 +231,10 @@ export class PortraitRoundScene extends Component {
       return;
     }
     const targetNode = event.currentTarget as Node;
-    const targetConfig = this.targetConfigsById.get(targetNode.name);
+    const targetId = this.sceneEntityBinder?.getTargetIdForNode(targetNode);
+    const targetConfig = targetId
+      ? this.targetConfigsById.get(targetId)
+      : undefined;
     if (!targetConfig) {
       return;
     }
@@ -239,6 +244,7 @@ export class PortraitRoundScene extends Component {
     });
     this.applySessionUpdate(update);
     if (update.roundEvents.some((roundEvent) => roundEvent.type === "correctHit")) {
+      this.sceneEntityRegistry?.markTargetFound(targetConfig.targetId);
       this.feedback?.playTarget(targetNode);
     }
     this.renderHud();
@@ -397,6 +403,10 @@ export class PortraitRoundScene extends Component {
     }
 
     this.sessionState = returnToModeSelect(this.sessionState);
+    this.sceneEntityRegistry?.projectMode([]);
+    if (this.sceneEntityRegistry) {
+      this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
+    }
     this.settlement?.hide();
     this.modeSelect.show(
       this.sessionContext.modeSummaries,
@@ -555,23 +565,71 @@ export class PortraitRoundScene extends Component {
       .selectedTargets ?? []) {
       this.targetConfigsById.set(target.targetId, target);
     }
+    this.sceneEntityRegistry?.projectMode(
+      this.sessionState?.roundContext?.modeRuntimeConfig.selectedTargets ?? [],
+    );
     this.resetTargetVisuals();
   }
 
   private resetTargetVisuals(): void {
-    const selectedIds = new Set(this.targetConfigsById.keys());
+    this.sceneEntityRegistry?.resetRound();
+    if (this.sceneEntityRegistry) {
+      this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
+    }
     for (const [targetId, targetNode] of this.targetNodesById) {
       Tween.stopAllByTarget(targetNode);
       const opacity = targetNode.getComponent(UIOpacity);
       if (opacity) {
         Tween.stopAllByTarget(opacity);
       }
-      targetNode.active = selectedIds.has(targetId);
-      targetNode.setScale(1, 1, 1);
+      targetNode.active =
+        this.sceneEntityRegistry?.getByTargetId(targetId)?.active ??
+        this.targetConfigsById.has(targetId);
+      const configuredScale = this.sceneEntityRegistry
+        ?.getByTargetId(targetId)
+        ?.entity.transform.scale ?? { x: 1, y: 1 };
+      targetNode.setScale(configuredScale.x, configuredScale.y, 1);
       if (opacity) {
         opacity.opacity = 255;
       }
     }
+  }
+
+  private async initializeSceneEntities(config: GameplayConfig): Promise<void> {
+    if (!this.mapWorld || !this.sessionContext) {
+      return;
+    }
+    const map = this.getInitialMap(config);
+    const targetPointSet = this.sessionContext.index.targetPointSetsById.get(
+      map.targetPointSetId,
+    );
+    if (!targetPointSet) {
+      throw new Error(`Unknown target point set: ${map.targetPointSetId}`);
+    }
+    const sceneEntitySet = config.sceneEntitySets?.find(
+      (entitySet) => entitySet.sceneEntitySetId === map.sceneEntitySetId,
+    );
+    this.sceneEntityRegistry = new SceneEntityRegistry({
+      map,
+      targetPointSet,
+      targetTypesById: this.sessionContext.targetTypesById,
+      sceneEntitySet,
+    });
+    this.sceneEntityRegistry.projectMode([]);
+    this.sceneEntityBinder = new PortraitSceneEntityBinder(this.mapWorld);
+    await this.sceneEntityBinder.initialize(this.sceneEntityRegistry, map);
+    this.targetNodesById = this.sceneEntityBinder.getTargetNodes();
+  }
+
+  private getInitialMap(config: GameplayConfig): MapConfig {
+    const firstMode = config.gameModes[0];
+    const map = firstMode
+      ? this.sessionContext?.index.mapsById.get(firstMode.mapId)
+      : config.maps[0];
+    if (!map) {
+      throw new Error("At least one gameplay map is required");
+    }
+    return map;
   }
 
   private playMagnifierZoom(

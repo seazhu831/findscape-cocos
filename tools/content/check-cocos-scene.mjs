@@ -26,6 +26,10 @@ const roundSceneSourcePath = path.join(
   cocosRoot,
   "assets/scripts/app/portrait-round-scene.ts",
 );
+const sceneEntityBinderSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/gameplay/portrait-scene-entity-binder.ts",
+);
 const runtimeStorageSourcePath = path.join(
   cocosRoot,
   "assets/scripts/platform/runtime-storage.ts",
@@ -52,6 +56,10 @@ const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
 const audioFeedbackSource = fs.readFileSync(audioFeedbackSourcePath, "utf8");
 const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
+const sceneEntityBinderSource = fs.readFileSync(
+  sceneEntityBinderSourcePath,
+  "utf8",
+);
 const runtimeStorageSource = fs.readFileSync(runtimeStorageSourcePath, "utf8");
 const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
 const settlementSource = fs.readFileSync(settlementSourcePath, "utf8");
@@ -147,7 +155,10 @@ for (const requiredRoundSceneContract of [
   "applyDemoSessionTick",
   "applyDemoSessionHint",
   "applyDemoSessionMagnifier",
-  "targetNode.active = selectedIds.has(targetId)",
+  "this.sceneEntityRegistry?.projectMode(",
+  "this.sceneEntityBinder?.apply(this.sceneEntityRegistry)",
+  "this.sceneEntityRegistry?.markTargetFound(targetConfig.targetId)",
+  "this.sceneEntityBinder?.getTargetIdForNode(targetNode)",
   "event.propagationStopped = true",
   "x: mapLocal.x + 800",
   "y: 1200 - mapLocal.y",
@@ -214,6 +225,26 @@ for (const requiredRoundSceneContract of [
 ]) {
   if (!roundSceneSource.includes(requiredRoundSceneContract)) {
     failures.push(`PortraitRoundScene is missing contract: ${requiredRoundSceneContract}`);
+  }
+}
+
+for (const requiredSceneEntityBinderContract of [
+  "for (const layer of SCENE_LAYER_ORDER)",
+  "`SceneLayer_${layer}`",
+  'this.bindBackground()',
+  'this.rootsByLayer.get("background")',
+  'this.findExistingNode(state.targetId, state.entity.entityId)',
+  'await this.createEntityNode(state.entity)',
+  'resources.load(`${assetPath}/spriteFrame`, SpriteFrame',
+  'entity.transform.position.x - map.worldSize.width / 2',
+  'map.worldSize.height / 2 - entity.transform.position.y',
+  'node.active = state.active',
+  'this.sortLayerChildren()',
+]) {
+  if (!sceneEntityBinderSource.includes(requiredSceneEntityBinderContract)) {
+    failures.push(
+      `PortraitSceneEntityBinder is missing contract: ${requiredSceneEntityBinderContract}`,
+    );
   }
 }
 

@@ -110,7 +110,7 @@ export class SceneEntityRegistry {
     const layerOrder = new Map(
       SCENE_LAYER_ORDER.map((layer, index) => [layer, index]),
     );
-    return [...this.statesByEntityId.values()].sort((left, right) => {
+    return Array.from(this.statesByEntityId.values()).sort((left, right) => {
       const layerDifference =
         (layerOrder.get(left.entity.render.layer) ?? 0) -
         (layerOrder.get(right.entity.render.layer) ?? 0);
