@@ -17,7 +17,7 @@ const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "findscape-entity-fixtures
 const fixtures = [
   {
     name: "legacy config remains valid",
-    config: structuredClone(baseConfig),
+    config: createLegacyConfig(),
     valid: true,
   },
   {
@@ -106,7 +106,7 @@ try {
 console.log(`Validated ${fixtures.length} scene entity config fixture groups`);
 
 function createEntityConfig() {
-  const config = structuredClone(baseConfig);
+  const config = createLegacyConfig();
   const target = config.targetPointSets[0].targetPoints[0];
   config.maps[0].sceneEntitySetId = "fixture_entities";
   config.motionProfiles = [
@@ -182,6 +182,22 @@ function createEntityConfig() {
     edgePlacement: "soft",
     scaleClass: "medium",
   };
+  return config;
+}
+
+function createLegacyConfig() {
+  const config = structuredClone(baseConfig);
+  delete config.motionProfiles;
+  delete config.sceneEntitySets;
+  for (const map of config.maps) {
+    delete map.sceneEntitySetId;
+  }
+  for (const pointSet of config.targetPointSets) {
+    for (const target of pointSet.targetPoints) {
+      delete target.entityId;
+      delete target.concealment;
+    }
+  }
   return config;
 }
 
