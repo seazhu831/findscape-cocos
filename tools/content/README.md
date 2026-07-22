@@ -22,6 +22,8 @@ npm run check:all
 Individual checks:
 
 - `npm run validate:config`: validate gameplay config references and basic structure.
+- `npm run check:scene-entities`: validate layered entity config and failures.
+- `npm run check:entity-runtime`: validate entity projection, reset, ordering, and legacy fallback.
 - `npm run preview:modes`: print selected target counts for each demo mode.
 - `npm run check:assets`: validate the Claude Design asset manifest, source export states, and gameplay config references.
 - `npm run check:modes`: validate mode capability summaries for demo variants.
