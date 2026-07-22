@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "designTool": "Claude Design",
+  "batchId": "findscape_motion_batch_v1",
+  "sets": [
+    {
+      "motionAssetId": "thief_idle_v1",
+      "entityId": "entity_demo_thief_001",
+      "sourceDirectory": "source/motion_thief_idle",
+      "runtimeDirectory": "art/motion/thief_idle",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "canvasSize": { "width": 512, "height": 512 },
+      "anchor": { "x": 0.5, "y": 0.5 },
+      "framesPerSecond": 8,
+      "loop": true,
+      "stableBaselineY": 455,
+      "baselineTolerancePixels": 2,
+      "referenceRuntimeAsset": "art/targets/target_thief.png",
+      "visualReview": "accepted"
+    },
+    {
+      "motionAssetId": "puppy_idle_v1",
+      "entityId": "entity_demo_puppy_001",
+      "sourceDirectory": "source/motion_puppy_idle",
+      "runtimeDirectory": "art/motion/puppy_idle",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "canvasSize": { "width": 512, "height": 512 },
+      "anchor": { "x": 0.5, "y": 0.5 },
+      "framesPerSecond": 8,
+      "loop": true,
+      "stableBaselineY": 442,
+      "baselineTolerancePixels": 0,
+      "referenceRuntimeAsset": "art/targets/target_puppy.png",
+      "visualReview": "verifyLoopSeamInGame"
+    }
+  ]
+}
