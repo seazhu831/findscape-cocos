@@ -165,29 +165,57 @@ export class PortraitEntityMotion {
     generation: number,
     version: number,
   ): Promise<void> {
-    const clip = variant.clipAsset
-      ? await loadAnimationClip(variant.clipAsset)
-      : AnimationClip.createWithSpriteFrames(
-          await loadSpriteFrames(variant.frameAssets),
-          variant.framesPerSecond,
-        );
+    if (!variant.clipAsset) {
+      const frames = await loadSpriteFrames(variant.frameAssets);
+      if (!this.isCurrent(plan.entityId, generation, version)) {
+        return;
+      }
+      const sprite = visual.getComponent(Sprite);
+      if (!sprite) {
+        return;
+      }
+      const frameDuration =
+        1 /
+        variant.framesPerSecond /
+        variant.speed /
+        plan.playbackRate;
+      let cycle = tween<Node>();
+      frames.forEach((_frame, index) => {
+        cycle = cycle
+          .call(() => {
+            sprite.spriteFrame = frames[index];
+          })
+          .delay(frameDuration);
+      });
+      const sequence = tween(visual).delay(plan.startDelayMs / 1000);
+      if (variant.loop) {
+        sequence.repeatForever(cycle);
+      } else {
+        sequence.then(cycle);
+      }
+      sequence.start();
+      return;
+    }
+
+    const clip = await loadAnimationClip(variant.clipAsset);
     if (!this.isCurrent(plan.entityId, generation, version)) {
       return;
     }
     const animation =
       visual.getComponent(Animation) ?? visual.addComponent(Animation);
     const stateName = `EntityMotion_${plan.entityId}`;
-    const state = animation.addClip(clip, stateName);
-    state.speed = variant.speed * plan.playbackRate;
-    state.wrapMode = variant.loop
+    clip.name = stateName;
+    clip.speed = variant.speed * plan.playbackRate;
+    clip.wrapMode = variant.loop
       ? AnimationClip.WrapMode.Loop
       : AnimationClip.WrapMode.Normal;
+    const state = animation.addClip(clip, stateName);
     this.activeClipsByEntityId.set(plan.entityId, clip);
     tween(visual)
       .delay(plan.startDelayMs / 1000)
       .call(() => {
         if (this.isCurrent(plan.entityId, generation, version)) {
-          animation.play(stateName);
+          state.play();
         }
       })
       .start();

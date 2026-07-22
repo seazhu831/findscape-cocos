@@ -9,7 +9,9 @@ const repoRoot = path.resolve(toolDir, "../..");
 const designRoot = path.join(repoRoot, "design/claude-design");
 const resourcesRoot = path.join(repoRoot, "cocos/assets/resources");
 const manifestPath = path.join(designRoot, "motion-asset-manifest.json");
+const gameplayConfigPath = path.join(resourcesRoot, "config/demo-gameplay.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const gameplayConfig = JSON.parse(fs.readFileSync(gameplayConfigPath, "utf8"));
 const failures = [];
 
 if (manifest.version !== 1) {
@@ -50,6 +52,7 @@ function validateSet(set) {
     failures.push(`${label} entityId must be present and unique`);
   }
   entityIds.add(set.entityId);
+  validateRuntimeBinding(set, label);
   if (!Array.isArray(set.frameFiles) || set.frameFiles.length < 2) {
     failures.push(`${label} must contain at least two frame files`);
     return;
@@ -64,6 +67,7 @@ function validateSet(set) {
   const sourceDirectory = path.join(designRoot, set.sourceDirectory ?? "");
   const runtimeDirectory = path.join(resourcesRoot, set.runtimeDirectory ?? "");
   const frameAnalyses = [];
+  const analysesByFrameFile = new Map();
   for (const frameFile of set.frameFiles) {
     if (!/^frame_[0-9]{2}\.png$/.test(frameFile)) {
       failures.push(`${label} has invalid frame file name: ${frameFile}`);
@@ -83,9 +87,31 @@ function validateSet(set) {
       failures.push(`${label} runtime frame differs from source: ${frameFile}`);
     }
     try {
-      frameAnalyses.push(analyzeRgbaPng(runtimePath));
+      const analysis = analyzeRgbaPng(runtimePath);
+      frameAnalyses.push(analysis);
+      analysesByFrameFile.set(frameFile, analysis);
     } catch (error) {
       failures.push(`${label} ${frameFile}: ${error.message}`);
+    }
+  }
+
+  const playbackFrameFiles = set.playbackFrameFiles ?? set.frameFiles;
+  for (const frameFile of playbackFrameFiles) {
+    if (!set.frameFiles.includes(frameFile)) {
+      failures.push(`${label} playback frame is not in frameFiles: ${frameFile}`);
+    }
+  }
+  const referenceVisiblePixels = analysesByFrameFile.get(set.frameFiles[0])?.visiblePixelCount;
+  for (const frameFile of playbackFrameFiles) {
+    const visiblePixelCount = analysesByFrameFile.get(frameFile)?.visiblePixelCount;
+    if (
+      referenceVisiblePixels &&
+      visiblePixelCount !== undefined &&
+      visiblePixelCount / referenceVisiblePixels < 0.75
+    ) {
+      failures.push(
+        `${label} playback frame ${frameFile} contains less than 75% of the reference subject`,
+      );
     }
   }
 
@@ -118,6 +144,43 @@ function validateSet(set) {
     failures.push(`${label} reference runtime asset is missing`);
   } else if (fs.existsSync(frameZero) && sha256(frameZero) !== sha256(reference)) {
     failures.push(`${label} frame_00 must exactly match its static reference`);
+  }
+}
+
+function validateRuntimeBinding(set, label) {
+  const entity = (gameplayConfig.sceneEntitySets ?? [])
+    .flatMap((entitySet) => entitySet.entities ?? [])
+    .find((candidate) => candidate.entityId === set.entityId);
+  if (!entity) {
+    failures.push(`${label} entity is missing from gameplay config`);
+    return;
+  }
+  if (entity.motionProfileId !== set.motionProfileId) {
+    failures.push(
+      `${label} expected ${set.entityId} to use ${set.motionProfileId}, received ${entity.motionProfileId ?? "none"}`,
+    );
+    return;
+  }
+  const profile = (gameplayConfig.motionProfiles ?? []).find(
+    (candidate) => candidate.motionProfileId === set.motionProfileId,
+  );
+  if (!profile) {
+    failures.push(`${label} motion profile is missing: ${set.motionProfileId}`);
+    return;
+  }
+  const expectedFrameAssets = (set.playbackFrameFiles ?? set.frameFiles).map(
+    (frameFile) =>
+      `${set.runtimeDirectory}/${frameFile.replace(/\.png$/, "")}`,
+  );
+  const matchingVariant = profile.idleVariants?.find(
+    (variant) =>
+      Array.isArray(variant.frameAssets) &&
+      JSON.stringify(variant.frameAssets) === JSON.stringify(expectedFrameAssets),
+  );
+  if (!matchingVariant) {
+    failures.push(
+      `${label} profile ${set.motionProfileId} does not reference the manifest frame sequence`,
+    );
   }
 }
 
@@ -160,6 +223,7 @@ function analyzeRgbaPng(filePath) {
   let sourceOffset = 0;
   let hasTransparentPixel = false;
   let hasVisiblePixel = false;
+  let visiblePixelCount = 0;
   let left = width;
   let top = height;
   let right = -1;
@@ -175,6 +239,7 @@ function analyzeRgbaPng(filePath) {
       hasTransparentPixel ||= alpha < 255;
       hasVisiblePixel ||= alpha > 0;
       if (alpha > 0) {
+        visiblePixelCount += 1;
         left = Math.min(left, x);
         top = Math.min(top, y);
         right = Math.max(right, x);
@@ -188,6 +253,7 @@ function analyzeRgbaPng(filePath) {
     height,
     hasTransparentPixel,
     hasVisiblePixel,
+    visiblePixelCount,
     alphaBounds:
       right >= 0 ? { left, top, right, bottom } : undefined,
   };

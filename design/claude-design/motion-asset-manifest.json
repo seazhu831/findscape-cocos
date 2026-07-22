@@ -6,6 +6,7 @@
     {
       "motionAssetId": "thief_idle_v1",
       "entityId": "entity_demo_thief_001",
+      "motionProfileId": "thief_idle_frames",
       "sourceDirectory": "source/motion_thief_idle",
       "runtimeDirectory": "art/motion/thief_idle",
       "frameFiles": [
@@ -28,6 +29,7 @@
     {
       "motionAssetId": "puppy_idle_v1",
       "entityId": "entity_demo_puppy_001",
+      "motionProfileId": "puppy_idle_clip",
       "sourceDirectory": "source/motion_puppy_idle",
       "runtimeDirectory": "art/motion/puppy_idle",
       "frameFiles": [
@@ -38,6 +40,12 @@
         "frame_04.png",
         "frame_05.png"
       ],
+      "playbackFrameFiles": [
+        "frame_00.png",
+        "frame_02.png",
+        "frame_04.png",
+        "frame_02.png"
+      ],
       "canvasSize": { "width": 512, "height": 512 },
       "anchor": { "x": 0.5, "y": 0.5 },
       "framesPerSecond": 8,
@@ -45,7 +53,8 @@
       "stableBaselineY": 442,
       "baselineTolerancePixels": 0,
       "referenceRuntimeAsset": "art/targets/target_puppy.png",
-      "visualReview": "verifyLoopSeamInGame"
+      "visualReview": "acceptedWithSparseFrameExclusions",
+      "deliveryNote": "Frames 01, 03, and 05 contain only partial overlays and are preserved for source audit but excluded from runtime playback."
     }
   ]
 }

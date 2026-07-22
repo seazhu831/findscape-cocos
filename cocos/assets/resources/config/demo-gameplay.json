@@ -359,11 +359,9 @@
           "driver": "animationClip",
           "frameAssets": [
             "art/motion/puppy_idle/frame_00",
-            "art/motion/puppy_idle/frame_01",
             "art/motion/puppy_idle/frame_02",
-            "art/motion/puppy_idle/frame_03",
             "art/motion/puppy_idle/frame_04",
-            "art/motion/puppy_idle/frame_05"
+            "art/motion/puppy_idle/frame_02"
           ],
           "framesPerSecond": 8,
           "speed": 1,
@@ -469,7 +467,7 @@
             "order": 1620,
             "visibleByDefault": true
           },
-          "motionProfileId": "puppy_idle_clip",
+          "motionProfileId": "ambient_bob_subtle",
           "activationPolicy": "modeSelected",
           "tags": ["demo", "balloon", "target"]
         },
@@ -488,7 +486,7 @@
             "order": 1980,
             "visibleByDefault": true
           },
-          "motionProfileId": "ambient_bob_subtle",
+          "motionProfileId": "puppy_idle_clip",
           "activationPolicy": "modeSelected",
           "tags": ["demo", "puppy", "animal", "target"]
         },
