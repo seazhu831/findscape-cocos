@@ -88,6 +88,33 @@ const fixtures = [
     }),
     error: "position must match the linked entity position",
   },
+  {
+    name: "linked mode activation is valid",
+    config: mutate(createEntityConfig(), (config) => {
+      const occluder = config.sceneEntitySets[0].entities[1];
+      occluder.activationPolicy = "modeSelected";
+      occluder.activationTargetEntityIds = ["entity_fixture_target"];
+    }),
+    valid: true,
+  },
+  {
+    name: "unknown linked activation target fails",
+    config: mutate(createEntityConfig(), (config) => {
+      const occluder = config.sceneEntitySets[0].entities[1];
+      occluder.activationPolicy = "modeSelected";
+      occluder.activationTargetEntityIds = ["missing_entity"];
+    }),
+    error: "activationTargetEntityIds references unknown id: missing_entity",
+  },
+  {
+    name: "linked activation requires mode selected policy",
+    config: mutate(createEntityConfig(), (config) => {
+      config.sceneEntitySets[0].entities[1].activationTargetEntityIds = [
+        "entity_fixture_target",
+      ];
+    }),
+    error: "activationTargetEntityIds requires activationPolicy modeSelected",
+  },
 ];
 
 try {

@@ -80,6 +80,7 @@ export interface SceneEntityConfig {
   render: SceneEntityRenderConfig;
   motionProfileId?: MotionProfileId;
   activationPolicy?: SceneEntityActivationPolicy;
+  activationTargetEntityIds?: SceneEntityId[];
   tags: string[];
 }
 

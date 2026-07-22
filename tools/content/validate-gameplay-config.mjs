@@ -412,6 +412,24 @@ function validateSceneEntity(entitySet, entity) {
   ) {
     errors.push(`${label}.activationPolicy is unsupported: ${entity.activationPolicy}`);
   }
+  if (entity?.activationTargetEntityIds !== undefined) {
+    validateStringArray(
+      entity.activationTargetEntityIds,
+      `${label}.activationTargetEntityIds`,
+    );
+    if (entity.activationPolicy !== "modeSelected") {
+      errors.push(
+        `${label}.activationTargetEntityIds requires activationPolicy modeSelected`,
+      );
+    }
+    for (const targetEntityId of entity.activationTargetEntityIds) {
+      requireRef(
+        new Set(entitiesById.keys()),
+        targetEntityId,
+        `${label}.activationTargetEntityIds`,
+      );
+    }
+  }
   if (entity?.motionProfileId !== undefined) {
     requireRef(motionProfileIds, entity.motionProfileId, `${label}.motionProfileId`);
   }
