@@ -314,6 +314,33 @@ Dependencies:
 - Accepted Claude Design visual direction.
 - Working Web preview build.
 
+## Stage 8: Layered Scene Runtime
+
+Architecture plan: `docs/33-scene-runtime-capability-plan.md`
+
+Related planning issue: https://github.com/seazhu831/findscape-cocos/issues/68
+
+Goal:
+
+- Upgrade the demo from a background image with target nodes into a reusable,
+  data-driven scene of static decoration, ambient actors, interactive entities,
+  foreground occluders, and explicit render layers.
+
+Execution stages:
+
+- Stage 4B: backward-compatible scene entity schema and validation.
+- Stage 4C: layered entity registry and mode target projection.
+- Stage 4D: budgeted ambient motion runtime.
+- Stage 4E: focused camera state machine and region magnifier.
+- Stage 4F: target lift, fly-to-HUD, counter pulse, and settlement barrier.
+- Stage 4G: authored dense scene slice and concealment metadata.
+- Stage 4H: region activation, diagnostics, pooling, and device budgets.
+
+Dependencies:
+
+- Current portrait gameplay loop and config v1.
+- Claude Design asset production after the Stage 4B contract is stable.
+
 ## Deferred Scope
 
 These should remain out of the first implementation path unless explicitly reprioritized:
@@ -330,9 +357,9 @@ These should remain out of the first implementation path unless explicitly repri
 
 ## Open Decisions
 
-- Cocos Creator version.
-- First preview target: Web-only first, or WeChat mini game immediately.
-- Exact Claude Design export format and handoff process.
-- Whether raw generated assets should be committed, or only normalized runtime assets.
-- Initial art fidelity target.
-- First mode set: one core mode only, or three variants from the beginning.
+- Which first dense region and actor set Claude Design should produce after the
+  Stage 4B schema is stable.
+- Whether the first actor-motion asset batch should use sprite frames or Cocos
+  AnimationClip-compatible parts; skeletal animation remains optional.
+- Physical-device node, animation, texture-memory, and frame-time budgets for the
+  representative dense scene.

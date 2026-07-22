@@ -46,9 +46,10 @@ dragging. It also exposed two device-only usability problems: OGG feedback audio
 was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
-1. Scan the latest WeChat preview QR code and verify MP3 feedback audio, the
-   compact/collapsible HUD, and visible best-score restoration after a full
-   exit/re-entry.
+1. Complete the pending physical-device acceptance pass when available.
+2. Begin Stage 4B from `docs/33-scene-runtime-capability-plan.md`: add the
+   backward-compatible scene entity, layer, motion, and target-reference schema
+   before requesting the next large Claude Design asset batch.
 
 Recommended prompt:
 
@@ -98,6 +99,7 @@ Recommended prompt:
 - `docs/30-cocos-creator-version-and-initialization.md`
 - `docs/31-portrait-gameplay-contract.md`
 - `docs/32-wechat-build-environment.md`
+- `docs/33-scene-runtime-capability-plan.md`
 - `docs/25-known-issues.md`
 - `docs/08-work-loop.md`
 - `design/claude-design/source/README.md`
