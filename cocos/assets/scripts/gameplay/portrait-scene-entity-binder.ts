@@ -22,6 +22,7 @@ const DONT_SAVE_OBJECT_FLAG = 8;
 export class PortraitSceneEntityBinder {
   private readonly rootsByLayer = new Map<SceneLayerId, Node>();
   private readonly nodesByEntityId = new Map<string, Node>();
+  private readonly visualNodesByEntityId = new Map<string, Node>();
   private readonly targetIdsByNode = new Map<Node, string>();
   private readonly renderOrdersByNode = new Map<Node, number>();
   private readonly ownedNodes = new Set<Node>();
@@ -41,6 +42,10 @@ export class PortraitSceneEntityBinder {
         (await this.createEntityNode(state.entity));
       this.bindNode(node, state.entity, map);
       this.nodesByEntityId.set(state.entity.entityId, node);
+      this.visualNodesByEntityId.set(
+        state.entity.entityId,
+        this.ensureVisualNode(node),
+      );
       if (state.targetId) {
         this.targetIdsByNode.set(node, state.targetId);
       }
@@ -60,6 +65,10 @@ export class PortraitSceneEntityBinder {
 
   public getNodeByEntityId(entityId: string): Node | undefined {
     return this.nodesByEntityId.get(entityId);
+  }
+
+  public getVisualNodeByEntityId(entityId: string): Node | undefined {
+    return this.visualNodesByEntityId.get(entityId);
   }
 
   public getNodeByTargetId(targetId: string): Node | undefined {
@@ -97,6 +106,7 @@ export class PortraitSceneEntityBinder {
     this.ownedNodes.clear();
     this.rootsByLayer.clear();
     this.nodesByEntityId.clear();
+    this.visualNodesByEntityId.clear();
     this.targetIdsByNode.clear();
     this.renderOrdersByNode.clear();
   }
@@ -174,6 +184,36 @@ export class PortraitSceneEntityBinder {
       transform.setAnchorPoint(anchor.x, anchor.y);
     }
     this.renderOrdersByNode.set(node, entity.render.order);
+  }
+
+  private ensureVisualNode(node: Node): Node {
+    const existing = node.getChildByName("SceneEntityVisual");
+    if (existing) {
+      return existing;
+    }
+    const visual = new Node("SceneEntityVisual");
+    visual._objFlags |= DONT_SAVE_OBJECT_FLAG;
+    visual.layer = Layers.Enum.UI_2D;
+    const sourceTransform = node.getComponent(UITransform);
+    const visualTransform = visual.addComponent(UITransform);
+    if (sourceTransform) {
+      visualTransform.setContentSize(sourceTransform.contentSize);
+      visualTransform.setAnchorPoint(
+        sourceTransform.anchorPoint.x,
+        sourceTransform.anchorPoint.y,
+      );
+    }
+    const sourceSprite = node.getComponent(Sprite);
+    if (sourceSprite) {
+      const visualSprite = visual.addComponent(Sprite);
+      visualSprite.sizeMode = Sprite.SizeMode.CUSTOM;
+      visualSprite.spriteFrame = sourceSprite.spriteFrame;
+      visualSprite.color = sourceSprite.color.clone();
+      sourceSprite.enabled = false;
+    }
+    node.addChild(visual);
+    visual.setPosition(0, 0, 0);
+    return visual;
   }
 
   private sortLayerChildren(): void {

@@ -37,6 +37,8 @@ import type {
 } from "../config/gameplay-schema";
 import { PortraitAudioFeedback } from "../feedback/portrait-audio-feedback";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
+import { createEntityMotionSchedule } from "../gameplay/entity-motion-scheduler";
+import { PortraitEntityMotion } from "../gameplay/portrait-entity-motion";
 import { PortraitSceneEntityBinder } from "../gameplay/portrait-scene-entity-binder";
 import { SceneEntityRegistry } from "../gameplay/scene-entity-runtime";
 import { PortraitHud } from "../ui/portrait-hud";
@@ -68,6 +70,7 @@ export class PortraitRoundScene extends Component {
   private storagePort: KeyValueStoragePort | null = null;
   private sceneEntityRegistry: SceneEntityRegistry | null = null;
   private sceneEntityBinder: PortraitSceneEntityBinder | null = null;
+  private readonly entityMotion = new PortraitEntityMotion();
   private targetNodesById = new Map<string, Node>();
   private targetConfigsById = new Map<string, TargetPointConfig>();
   private ready = false;
@@ -138,6 +141,7 @@ export class PortraitRoundScene extends Component {
     for (const button of this.modeSelect?.getModeButtons().values() ?? []) {
       button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
     }
+    this.entityMotion.stopAll();
     this.sceneEntityBinder?.dispose();
     this.stopMagnifierZoom();
     this.hideLoadState();
@@ -244,7 +248,12 @@ export class PortraitRoundScene extends Component {
     });
     this.applySessionUpdate(update);
     if (update.roundEvents.some((roundEvent) => roundEvent.type === "correctHit")) {
-      this.sceneEntityRegistry?.markTargetFound(targetConfig.targetId);
+      const foundEntity = this.sceneEntityRegistry?.markTargetFound(
+        targetConfig.targetId,
+      );
+      if (foundEntity) {
+        this.entityMotion.stopEntity(foundEntity.entity.entityId);
+      }
       this.feedback?.playTarget(targetNode);
     }
     this.renderHud();
@@ -407,6 +416,7 @@ export class PortraitRoundScene extends Component {
     if (this.sceneEntityRegistry) {
       this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
     }
+    this.refreshEntityMotions();
     this.settlement?.hide();
     this.modeSelect.show(
       this.sessionContext.modeSummaries,
@@ -593,6 +603,23 @@ export class PortraitRoundScene extends Component {
         opacity.opacity = 255;
       }
     }
+    this.refreshEntityMotions();
+  }
+
+  private refreshEntityMotions(): void {
+    if (
+      !this.sceneEntityRegistry ||
+      !this.sceneEntityBinder ||
+      !this.sessionContext
+    ) {
+      this.entityMotion.stopAll();
+      return;
+    }
+    const schedule = createEntityMotionSchedule(
+      this.sceneEntityRegistry.getAll(),
+      this.sessionContext.config.motionProfiles ?? [],
+    );
+    this.entityMotion.play(schedule, this.sceneEntityBinder);
   }
 
   private async initializeSceneEntities(config: GameplayConfig): Promise<void> {
@@ -685,6 +712,7 @@ export class PortraitRoundScene extends Component {
     this.sessionState = update.state;
     if (reachedSettlement) {
       this.stopMagnifierZoom();
+      this.entityMotion.stopAll();
     }
     if (reachedSettlement && this.storagePort) {
       void saveLocalSaveToStorage(

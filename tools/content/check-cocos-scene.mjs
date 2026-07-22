@@ -30,6 +30,10 @@ const sceneEntityBinderSourcePath = path.join(
   cocosRoot,
   "assets/scripts/gameplay/portrait-scene-entity-binder.ts",
 );
+const entityMotionSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/gameplay/portrait-entity-motion.ts",
+);
 const runtimeStorageSourcePath = path.join(
   cocosRoot,
   "assets/scripts/platform/runtime-storage.ts",
@@ -60,6 +64,7 @@ const sceneEntityBinderSource = fs.readFileSync(
   sceneEntityBinderSourcePath,
   "utf8",
 );
+const entityMotionSource = fs.readFileSync(entityMotionSourcePath, "utf8");
 const runtimeStorageSource = fs.readFileSync(runtimeStorageSourcePath, "utf8");
 const roundViewModelSource = fs.readFileSync(roundViewModelSourcePath, "utf8");
 const settlementSource = fs.readFileSync(settlementSourcePath, "utf8");
@@ -157,8 +162,11 @@ for (const requiredRoundSceneContract of [
   "applyDemoSessionMagnifier",
   "this.sceneEntityRegistry?.projectMode(",
   "this.sceneEntityBinder?.apply(this.sceneEntityRegistry)",
-  "this.sceneEntityRegistry?.markTargetFound(targetConfig.targetId)",
+  "this.sceneEntityRegistry?.markTargetFound(",
   "this.sceneEntityBinder?.getTargetIdForNode(targetNode)",
+  "createEntityMotionSchedule(",
+  "this.entityMotion.play(schedule, this.sceneEntityBinder)",
+  "this.entityMotion.stopEntity(foundEntity.entity.entityId)",
   "event.propagationStopped = true",
   "x: mapLocal.x + 800",
   "y: 1200 - mapLocal.y",
@@ -240,10 +248,28 @@ for (const requiredSceneEntityBinderContract of [
   'map.worldSize.height / 2 - entity.transform.position.y',
   'node.active = state.active',
   'this.sortLayerChildren()',
+  'new Node("SceneEntityVisual")',
+  'sourceSprite.enabled = false',
+  'getVisualNodeByEntityId(entityId: string)',
 ]) {
   if (!sceneEntityBinderSource.includes(requiredSceneEntityBinderContract)) {
     failures.push(
       `PortraitSceneEntityBinder is missing contract: ${requiredSceneEntityBinderContract}`,
+    );
+  }
+}
+
+for (const requiredEntityMotionContract of [
+  'plan.variant.driver !== "tween"',
+  'binder.getVisualNodeByEntityId(plan.entityId)',
+  'offset.x, -offset.y, 0',
+  'sequence.repeatForever(cycle)',
+  'Tween.stopAllByTarget(visual)',
+  'visual.setPosition(0, 0, 0)',
+]) {
+  if (!entityMotionSource.includes(requiredEntityMotionContract)) {
+    failures.push(
+      `PortraitEntityMotion is missing contract: ${requiredEntityMotionContract}`,
     );
   }
 }
