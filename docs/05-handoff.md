@@ -44,11 +44,11 @@ The apparent differences are mostly in UI copy, target selection rules, touch be
 The first iPhone preview pass confirmed startup, rendering, target taps, and map
 dragging. It also exposed two device-only usability problems: OGG feedback audio
 was silent on iOS, and the original top/bottom HUD obscured search targets. Both
-fixes are now in a new preview build. The next platform stage is:
+fixes are now in the current build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Start Stage 4H region activation and diagnostics against the accepted dense
-   lower-garden slice, then establish physical-device budgets.
+2. Run the Stage 4H physical-device checklist and replace provisional runtime
+   budgets only when phone measurements support the change.
 
 Recommended prompt:
 
@@ -73,7 +73,7 @@ Recommended prompt:
 - Web Mobile has been repeatedly built and exercised at `390x844`; Creator CLI
   success currently returns the known non-zero exit code 36.
 - The release WeChat build uses the production AppID, a trimmed/mangled engine,
-  and a `resources` subpackage. Its measured main package is `2.48 MiB`, below
+  and a `resources` subpackage. Its measured main package is `2.52 MiB`, below
   the `4 MiB` limit, and the DevTools simulator reports zero runtime errors.
 - All five feedback clips use iOS-compatible MP3 files. The latest WeChat build
   contains five MP3 files and no OGG files; DevTools reports `Loaded 5/5 clips`.
@@ -88,6 +88,11 @@ Recommended prompt:
   two six-frame ambient actors, and target-linked puppy and gem occluders. Its
   intake, runtime mapping, tuning, and browser acceptance are recorded in
   `docs/41-dense-region-runtime.md`.
+- Stage 4H implementation and simulator acceptance are complete. Authored
+  viewport regions, visibility-driven motion projection, opt-in diagnostics,
+  static scale budgets, package checks, and the pooling decision are recorded
+  in `docs/42-scene-runtime-diagnostics-and-budget.md`. Physical-device frame,
+  memory, audio, and persistence calibration remains open in Issue #76.
 - Startup now opens the native mode selector. Each mode card shows its restored
   best score and star rating (`BEST --` for an unplayed mode); settlement shows
   `NEW BEST` only when the current result replaced the saved record. A lower
@@ -168,7 +173,8 @@ and WeChat persistence are complete. Runtime SFX preload and one-shot playback
 are also bound. WeChat DevTools is installed, production AppID
 `wx04421302f08791bc` is pinned, and the portrait `wechatgame` package builds and
 runs in the DevTools simulator. Engine trimming, release mangling, and the
-`resources` subpackage reduce the measured main package to `2.48 MiB`. The
-remaining dependency chain is the second iPhone preview pass: audio confirmation,
-HUD usability confirmation, and full exit/re-entry persistence confirmation on
-the visible mode-card best scores.
+`resources` subpackage keep the dense build's measured main package at `2.52
+MiB`. The remaining dependency chain is the second iPhone preview pass: frame
+and memory calibration, audio confirmation, HUD usability confirmation, and
+full exit/re-entry persistence confirmation on the visible mode-card best
+scores.

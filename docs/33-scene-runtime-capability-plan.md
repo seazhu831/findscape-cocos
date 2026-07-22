@@ -315,6 +315,11 @@ Dependencies: Stages 4C-4F and a focused Claude Design asset batch.
 
 ### Stage 4H: Scale, Diagnostics, And Device Budget
 
+Status: implementation and simulator acceptance complete in Issue #76. Region
+activation, diagnostics, static budgets, pooling assessment, and measurements
+are recorded in `docs/42-scene-runtime-diagnostics-and-budget.md`. Production
+budget calibration remains pending on a physical device.
+
 Outputs:
 
 - Region activation, animation budget, pooling, and debug overlay.
@@ -341,6 +346,6 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Start Stage 4H with deterministic region activation and runtime diagnostics.
-Measure the representative Stage 4G slice before choosing pooling or animation
-budgets, then record Web and physical-device results separately.
+Run the Stage 4H physical-device checklist against a fresh preview build. Keep
+browser and DevTools measurements separate from phone frame-time, memory,
+audio, and persistence results before promoting provisional budgets.

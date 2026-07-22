@@ -335,7 +335,9 @@ Execution stages:
 - Stage 4F: target lift, fly-to-HUD, counter pulse, and settlement barrier.
 - Stage 4G: authored dense scene slice and concealment metadata (complete,
   Issue #75).
-- Stage 4H: region activation, diagnostics, pooling, and device budgets.
+- Stage 4H: region activation, diagnostics, pooling assessment, and provisional
+  budgets (implementation complete in Issue #76; physical-device calibration
+  pending).
 
 Dependencies:
 
