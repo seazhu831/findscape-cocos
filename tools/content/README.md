@@ -24,6 +24,9 @@ Individual checks:
 - `npm run validate:config`: validate gameplay config references and basic structure.
 - `npm run check:scene-entities`: validate layered entity config and failures.
 - `npm run check:entity-runtime`: validate entity projection, reset, ordering, and legacy fallback.
+- `npm run check:scene-regions`: validate viewport rectangles, region preloading, and visible entity projection.
+- `npm run check:scene-diagnostics`: validate deterministic scene diagnostics and frame timing snapshots.
+- `npm run check:scene-budget`: enforce provisional entity, motion, transient-node, and RGBA texture budgets.
 - `npm run check:entity-motion`: validate motion planning, phase, offscreen policy, and budget.
 - `npm run check:motion-assets`: validate motion frames, source parity, alpha, dimensions, and baselines.
 - `npm run preview:modes`: print selected target counts for each demo mode.

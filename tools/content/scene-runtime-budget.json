@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "status": "provisionalUntilPhysicalDeviceValidation",
+  "maxInstantiatedSceneEntities": 150,
+  "maxConfiguredMotionEntities": 24,
+  "maxTransientFeedbackNodes": 8,
+  "maxRgbaTextureBytes": 100663296,
+  "targetP95FrameTimeMs": 33.4
+}
