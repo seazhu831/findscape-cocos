@@ -102,10 +102,10 @@ coordinates without requiring visual offsets in code.
 ## Current Demo Mapping
 
 The seven existing target sprites are represented as interactive entities. The
-two balloons and puppy use `ambient_bob_subtle`; the thief uses
-`character_sway_subtle`. Pineapples and the gem stay static. Existing camouflage
-metadata intentionally has no occluder references because the current asset
-batch contains no honest independent foreground covers.
+two balloons use `ambient_bob_subtle`, the thief uses `thief_idle_frames`, and
+the puppy uses `puppy_idle_clip`. Pineapples and the gem stay static. Existing
+camouflage metadata intentionally has no occluder references because the current
+asset batch contains no honest independent foreground covers.
 
 ## Validation
 

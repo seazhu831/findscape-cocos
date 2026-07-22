@@ -27,8 +27,10 @@ budgets, and offscreen policy before the Cocos adapter starts any animation.
 
 - `tween`: low-cost bob, sway, scale, and rotation on a visual child.
 - `spriteFrames`: Resources-loaded frames advanced by a cancellable Tween.
-- `animationClip`: a Resources clip or a Cocos `AnimationClip` created from
-  Resources-loaded sprite frames.
+- `animationClip`: an external Resources clip plays through Cocos
+  `AnimationState`; a frame-backed variant uses the same deterministic frame
+  sequencer as `spriteFrames`. This avoids the Cocos 3.8.8 dynamic clip sampler
+  overwriting a SpriteFrame after the gameplay adapter assigns it.
 
 The visual child animates while its parent entity node remains stationary. This
 keeps hit coordinates, hint coordinates, concealment metadata, and map bounds
@@ -51,7 +53,8 @@ node remained active.
 The following acceptance was completed on the Web Mobile build at `390x844`:
 
 - thief sprite-frame motion visibly advances and remains clickable;
-- puppy frame-backed AnimationClip visibly advances with a stable footprint;
+- puppy frame-backed animation visibly advances with a stable footprint and no
+  transparent-frame disappearance;
 - target completion resets motion before presentation and settlement;
 - Replay followed by an immediate thief tap completes normally;
 - mode changes start only the selected mode's eligible motion plans;
@@ -59,9 +62,11 @@ The following acceptance was completed on the Web Mobile build at `390x844`:
 - the Cocos Creator Web Mobile build completes with the known success exit code
   36 and no TypeScript build errors.
 
-The puppy loop has a slightly larger final-to-first tail delta than its internal
-frame transitions. It is acceptable at the current display size and should be
-rechecked when a larger zoom level is introduced in Stage 4E.
+The accepted puppy source package contains sparse overlay-only frames 01, 03,
+and 05. They remain preserved for source audit but are excluded from playback;
+the runtime uses the complete 00/02/04/02 sequence. Manifest validation now
+checks runtime entity/profile ownership and rejects playback frames containing
+less than 75 percent of the reference subject's visible pixels.
 
 ## Next Dependency
 
