@@ -37,7 +37,17 @@ import type {
 } from "../config/gameplay-schema";
 import { PortraitAudioFeedback } from "../feedback/portrait-audio-feedback";
 import { PortraitFeedback } from "../feedback/portrait-feedback";
+import {
+  beginCameraFocus,
+  beginCameraRestore,
+  cancelCameraFocus,
+  completeCameraTransition,
+  createFocusCameraState,
+  panFocusCamera,
+  type FocusCameraState,
+} from "../gameplay/focus-camera";
 import { createEntityMotionSchedule } from "../gameplay/entity-motion-scheduler";
+import type { ViewportState } from "../gameplay/map-viewport";
 import { PortraitEntityMotion } from "../gameplay/portrait-entity-motion";
 import { PortraitSceneEntityBinder } from "../gameplay/portrait-scene-entity-binder";
 import { SceneEntityRegistry } from "../gameplay/scene-entity-runtime";
@@ -54,8 +64,7 @@ import {
 const { ccclass } = _decorator;
 const DEFAULT_MODE_ID = "hidden_object_demo";
 const DRAG_THRESHOLD = 12;
-const MAP_WIDTH = 1600;
-const MAP_HEIGHT = 2400;
+const CAMERA_TRANSITION_SECONDS = 0.25;
 
 @ccclass("PortraitRoundScene")
 export class PortraitRoundScene extends Component {
@@ -78,7 +87,8 @@ export class PortraitRoundScene extends Component {
   private mapGestureActive = false;
   private mapGestureDragged = false;
   private mapGestureDistance = 0;
-  private magnifierZoomActive = false;
+  private activeMap: MapConfig | null = null;
+  private focusCameraState: FocusCameraState | null = null;
   private loadStateRoot: Node | null = null;
 
   protected start(): void {
@@ -263,7 +273,7 @@ export class PortraitRoundScene extends Component {
     if (
       !this.sessionState ||
       this.sessionState.screen !== "round" ||
-      this.magnifierZoomActive
+      this.focusCameraState?.phase !== "idle"
     ) {
       return;
     }
@@ -274,7 +284,7 @@ export class PortraitRoundScene extends Component {
   }
 
   private handleMapTouchMove(event: EventTouch): void {
-    if (!this.mapGestureActive || !this.mapWorld) {
+    if (!this.mapGestureActive || !this.mapWorld || !this.focusCameraState) {
       return;
     }
     const delta = event.getUIDelta();
@@ -283,16 +293,9 @@ export class PortraitRoundScene extends Component {
       return;
     }
     this.mapGestureDragged = true;
-    const position = this.mapWorld.position;
-    const scale = this.mapWorld.scale.x;
-    const visibleSize = view.getVisibleSize();
-    const maxX = Math.max(0, (MAP_WIDTH * scale - visibleSize.width) / 2);
-    const maxY = Math.max(0, (MAP_HEIGHT * scale - visibleSize.height) / 2);
-    this.mapWorld.setPosition(
-      Math.min(maxX, Math.max(-maxX, position.x + delta.x)),
-      Math.min(maxY, Math.max(-maxY, position.y + delta.y)),
-      position.z,
-    );
+    const update = panFocusCamera(this.focusCameraState, delta);
+    this.focusCameraState = update.state;
+    this.applyCameraViewport(update.state.viewport);
   }
 
   private handleMapTouch(event: EventTouch): void {
@@ -317,9 +320,10 @@ export class PortraitRoundScene extends Component {
     const mapLocal = mapTransform.convertToNodeSpaceAR(
       new Vec3(location.x, location.y, 0),
     );
+    const mapSize = this.activeMap?.worldSize ?? { width: 1600, height: 2400 };
     const update = applyDemoSessionTap(this.sessionState, {
-      x: mapLocal.x + 800,
-      y: 1200 - mapLocal.y,
+      x: mapLocal.x + mapSize.width / 2,
+      y: mapSize.height / 2 - mapLocal.y,
     });
     this.applySessionUpdate(update);
     if (update.roundEvents.some((roundEvent) => roundEvent.type === "wrongTap")) {
@@ -643,6 +647,9 @@ export class PortraitRoundScene extends Component {
       sceneEntitySet,
     });
     this.sceneEntityRegistry.projectMode([]);
+    this.activeMap = map;
+    this.focusCameraState = this.createInitialFocusCameraState(map);
+    this.applyCameraViewport(this.focusCameraState.viewport);
     this.sceneEntityBinder = new PortraitSceneEntityBinder(this.mapWorld);
     await this.sceneEntityBinder.initialize(this.sceneEntityRegistry, map);
     this.targetNodesById = this.sceneEntityBinder.getTargetNodes();
@@ -663,22 +670,52 @@ export class PortraitRoundScene extends Component {
     zoomMultiplier: number,
     durationSeconds: number,
   ): void {
-    if (!this.mapWorld) {
+    if (!this.mapWorld || !this.focusCameraState) {
       return;
     }
-
-    this.stopMagnifierZoom();
-    this.magnifierZoomActive = true;
+    this.resetMapGesture();
+    const update = beginCameraFocus(this.focusCameraState, zoomMultiplier);
+    if (!update.transition) {
+      return;
+    }
+    this.focusCameraState = update.state;
+    const transform = this.cameraViewportToNodeTransform(update.transition.to);
     tween(this.mapWorld)
-      .to(
-        0.25,
-        { scale: new Vec3(zoomMultiplier, zoomMultiplier, 1) },
-        { easing: "quadOut" },
-      )
-      .delay(durationSeconds)
-      .to(0.25, { scale: new Vec3(1, 1, 1) }, { easing: "quadInOut" })
+      .to(CAMERA_TRANSITION_SECONDS, transform, { easing: "quadOut" })
       .call(() => {
-        this.magnifierZoomActive = false;
+        if (!this.focusCameraState) {
+          return;
+        }
+        this.focusCameraState = completeCameraTransition(
+          this.focusCameraState,
+          update.transition?.token ?? -1,
+        );
+      })
+      .delay(Math.max(0, durationSeconds))
+      .call(() => this.playMagnifierRestore())
+      .start();
+  }
+
+  private playMagnifierRestore(): void {
+    if (!this.mapWorld || !this.focusCameraState) {
+      return;
+    }
+    const update = beginCameraRestore(this.focusCameraState);
+    if (!update.transition) {
+      return;
+    }
+    this.focusCameraState = update.state;
+    const transform = this.cameraViewportToNodeTransform(update.transition.to);
+    tween(this.mapWorld)
+      .to(CAMERA_TRANSITION_SECONDS, transform, { easing: "quadInOut" })
+      .call(() => {
+        if (!this.focusCameraState) {
+          return;
+        }
+        this.focusCameraState = completeCameraTransition(
+          this.focusCameraState,
+          update.transition?.token ?? -1,
+        );
       })
       .start();
   }
@@ -688,8 +725,10 @@ export class PortraitRoundScene extends Component {
       return;
     }
     Tween.stopAllByTarget(this.mapWorld);
-    this.mapWorld.setScale(1, 1, 1);
-    this.magnifierZoomActive = false;
+    if (this.focusCameraState) {
+      this.focusCameraState = cancelCameraFocus(this.focusCameraState);
+      this.applyCameraViewport(this.focusCameraState.viewport);
+    }
   }
 
   private resetMapGesture(): void {
@@ -701,7 +740,52 @@ export class PortraitRoundScene extends Component {
 
   private resetMapPosition(): void {
     this.resetMapGesture();
-    this.mapWorld?.setPosition(0, 0, 0);
+    if (this.activeMap) {
+      this.focusCameraState = this.createInitialFocusCameraState(this.activeMap);
+      this.applyCameraViewport(this.focusCameraState.viewport);
+    }
+  }
+
+  private createInitialFocusCameraState(map: MapConfig): FocusCameraState {
+    const visibleSize = view.getVisibleSize();
+    const coverZoom = Math.max(
+      visibleSize.width / map.worldSize.width,
+      visibleSize.height / map.worldSize.height,
+    );
+    const initialZoom = Math.max(
+      coverZoom,
+      this.mapWorld?.scale.x ?? map.defaultCamera.zoom,
+    );
+    return createFocusCameraState({
+      viewSize: visibleSize,
+      mapSize: map.worldSize,
+      center: map.defaultCamera.center,
+      zoom: initialZoom,
+      minZoom: Math.max(map.minZoom, coverZoom),
+      maxZoom: Math.max(initialZoom, map.maxZoom),
+    });
+  }
+
+  private applyCameraViewport(viewport: ViewportState): void {
+    if (!this.mapWorld) {
+      return;
+    }
+    const transform = this.cameraViewportToNodeTransform(viewport);
+    this.mapWorld.setPosition(transform.position);
+    this.mapWorld.setScale(transform.scale);
+  }
+
+  private cameraViewportToNodeTransform(
+    viewport: ViewportState,
+  ): { position: Vec3; scale: Vec3 } {
+    return {
+      position: new Vec3(
+        (viewport.mapSize.width / 2 - viewport.center.x) * viewport.zoom,
+        (viewport.mapSize.height / 2 - viewport.center.y) * viewport.zoom,
+        this.mapWorld?.position.z ?? 0,
+      ),
+      scale: new Vec3(viewport.zoom, viewport.zoom, 1),
+    };
   }
 
   private applySessionUpdate(update: DemoSessionUpdate): void {
