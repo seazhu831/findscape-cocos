@@ -48,7 +48,10 @@ import {
   panFocusCamera,
   type FocusCameraState,
 } from "../gameplay/focus-camera";
-import { createEntityMotionSchedule } from "../gameplay/entity-motion-scheduler";
+import {
+  createEntityMotionSchedule,
+  type EntityMotionPlan,
+} from "../gameplay/entity-motion-scheduler";
 import type { ViewportState } from "../gameplay/map-viewport";
 import { PortraitEntityMotion } from "../gameplay/portrait-entity-motion";
 import { PortraitSceneEntityBinder } from "../gameplay/portrait-scene-entity-binder";
@@ -59,6 +62,11 @@ import {
   viewportToMapRectangle,
 } from "../gameplay/scene-region-runtime";
 import {
+  createSceneRuntimeDiagnosticsSnapshot,
+  SceneFrameTimeSampler,
+  type SceneRuntimeDiagnosticsSnapshot,
+} from "../gameplay/scene-runtime-diagnostics";
+import {
   cancelTargetPresentations,
   completeTargetPresentation,
   createTargetPresentationState,
@@ -68,6 +76,7 @@ import {
 } from "../gameplay/target-presentation";
 import { PortraitHud } from "../ui/portrait-hud";
 import { PortraitModeSelect } from "../ui/portrait-mode-select";
+import { PortraitSceneDiagnostics } from "../ui/portrait-scene-diagnostics";
 import { PortraitSettlement } from "../ui/portrait-settlement";
 import { createRuntimeStoragePort } from "../platform/runtime-storage";
 import {
@@ -96,6 +105,7 @@ export class PortraitRoundScene extends Component {
   private sceneEntityRegistry: SceneEntityRegistry | null = null;
   private sceneEntityBinder: PortraitSceneEntityBinder | null = null;
   private readonly entityMotion = new PortraitEntityMotion();
+  private readonly frameTimeSampler = new SceneFrameTimeSampler();
   private targetPresentation: PortraitTargetPresentation | null = null;
   private targetPresentationState: TargetPresentationState =
     createTargetPresentationState();
@@ -109,7 +119,11 @@ export class PortraitRoundScene extends Component {
   private activeMap: MapConfig | null = null;
   private focusCameraState: FocusCameraState | null = null;
   private sceneRegions: SceneRegionConfig[] = [];
+  private activeSceneRegionIds = new Set<string>();
   private visibleSceneEntityIds = new Set<string>();
+  private latestMotionPlans: EntityMotionPlan[] = [];
+  private sceneDiagnostics: PortraitSceneDiagnostics | null = null;
+  private diagnosticsFrameCounter = 0;
   private loadStateRoot: Node | null = null;
 
   protected start(): void {
@@ -127,6 +141,13 @@ export class PortraitRoundScene extends Component {
   protected update(deltaTime: number): void {
     if (!this.ready || !this.sessionState || this.sessionState.screen !== "round") {
       return;
+    }
+
+    this.frameTimeSampler.add(deltaTime);
+    this.diagnosticsFrameCounter += 1;
+    if (this.diagnosticsFrameCounter >= 30) {
+      this.diagnosticsFrameCounter = 0;
+      this.renderSceneDiagnostics();
     }
 
     const update = applyDemoSessionTick(this.sessionState, deltaTime, {
@@ -173,6 +194,8 @@ export class PortraitRoundScene extends Component {
       button.off(Node.EventType.TOUCH_END, this.handleModeTouch, this);
     }
     this.entityMotion.stopAll();
+    this.sceneDiagnostics?.dispose();
+    this.sceneDiagnostics = null;
     this.targetPresentation?.dispose();
     this.sceneEntityBinder?.dispose();
     this.stopMagnifierZoom();
@@ -223,6 +246,9 @@ export class PortraitRoundScene extends Component {
     );
 
     await this.initializeSceneEntities(config);
+    if (isSceneDiagnosticsEnabled()) {
+      this.sceneDiagnostics = new PortraitSceneDiagnostics(this.node);
+    }
     this.configureRoundTargets();
     for (const targetNode of this.targetNodesById.values()) {
       targetNode.on(Node.EventType.TOUCH_END, this.handleTargetTouch, this);
@@ -290,6 +316,7 @@ export class PortraitRoundScene extends Component {
       );
       if (foundEntity) {
         this.entityMotion.stopEntity(foundEntity.entity.entityId);
+        this.renderSceneDiagnostics();
       }
       const presentationStart = startTargetPresentation(
         this.targetPresentationState,
@@ -672,7 +699,9 @@ export class PortraitRoundScene extends Component {
       !this.sceneEntityBinder ||
       !this.sessionContext
     ) {
+      this.latestMotionPlans = [];
       this.entityMotion.stopAll();
+      this.renderSceneDiagnostics();
       return;
     }
     const schedule = createEntityMotionSchedule(
@@ -680,7 +709,9 @@ export class PortraitRoundScene extends Component {
       this.sessionContext.config.motionProfiles ?? [],
       { visibleEntityIds: this.visibleSceneEntityIds },
     );
+    this.latestMotionPlans = schedule;
     this.entityMotion.play(schedule, this.sceneEntityBinder);
+    this.renderSceneDiagnostics();
   }
 
   private async initializeSceneEntities(config: GameplayConfig): Promise<void> {
@@ -886,6 +917,7 @@ export class PortraitRoundScene extends Component {
       this.visibleSceneEntityIds,
       visibleEntityIds,
     );
+    this.activeSceneRegionIds = activeRegionIds;
     this.visibleSceneEntityIds = visibleEntityIds;
     if (activationChanged) {
       this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
@@ -893,6 +925,26 @@ export class PortraitRoundScene extends Component {
     if (activationChanged || visibilityChanged) {
       this.refreshEntityMotions();
     }
+  }
+
+  private renderSceneDiagnostics(): void {
+    if (!this.sceneDiagnostics || !this.sceneEntityRegistry) {
+      return;
+    }
+    const snapshot = createSceneRuntimeDiagnosticsSnapshot({
+      states: this.sceneEntityRegistry.getAll(),
+      regions: this.sceneRegions,
+      activeRegionIds: this.activeSceneRegionIds,
+      visibleEntityIds: this.visibleSceneEntityIds,
+      motionPlans: this.latestMotionPlans,
+      instantiatedNodeCount:
+        this.sceneEntityBinder?.getInstantiatedNodeCount() ?? 0,
+      residentTextureBytesEstimate:
+        this.sceneEntityBinder?.estimateResidentTextureBytes() ?? 0,
+      frameTiming: this.frameTimeSampler.snapshot(),
+    });
+    this.sceneDiagnostics.render(snapshot);
+    publishSceneDiagnostics(snapshot);
   }
 
   private cameraViewportToNodeTransform(
@@ -949,4 +1001,24 @@ function setsEqual(left: ReadonlySet<string>, right: ReadonlySet<string>): boole
     }
   }
   return true;
+}
+
+function isSceneDiagnosticsEnabled(): boolean {
+  const runtime = globalThis as typeof globalThis & {
+    __FINDSCAPE_SCENE_DIAGNOSTICS__?: boolean;
+    location?: { search?: string };
+  };
+  return (
+    runtime.__FINDSCAPE_SCENE_DIAGNOSTICS__ === true ||
+    runtime.location?.search?.includes("sceneDiagnostics=1") === true
+  );
+}
+
+function publishSceneDiagnostics(
+  snapshot: SceneRuntimeDiagnosticsSnapshot,
+): void {
+  const runtime = globalThis as typeof globalThis & {
+    __findscapeSceneDiagnostics?: SceneRuntimeDiagnosticsSnapshot;
+  };
+  runtime.__findscapeSceneDiagnostics = snapshot;
 }

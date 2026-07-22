@@ -21,6 +21,14 @@ export interface SceneRuntimeDiagnosticsInput {
   motionPlans: EntityMotionPlan[];
   instantiatedNodeCount: number;
   residentTextureBytesEstimate: number;
+  frameTiming: SceneFrameTiming;
+}
+
+export interface SceneFrameTiming {
+  sampleCount: number;
+  averageFrameTimeMs: number;
+  p95FrameTimeMs: number;
+  maxFrameTimeMs: number;
 }
 
 export interface SceneRuntimeDiagnosticsSnapshot {
@@ -36,7 +44,46 @@ export interface SceneRuntimeDiagnosticsSnapshot {
   offscreenMotionCount: number;
   instantiatedNodeCount: number;
   residentTextureBytesEstimate: number;
+  frameTiming: SceneFrameTiming;
   activeEntityCountByLayer: Record<SceneLayerId, number>;
+}
+
+export class SceneFrameTimeSampler {
+  private readonly samples: number[] = [];
+  private readonly maxSamples: number;
+
+  constructor(maxSamples = 120) {
+    this.maxSamples = maxSamples;
+  }
+
+  public add(deltaTimeSeconds: number): void {
+    if (!Number.isFinite(deltaTimeSeconds) || deltaTimeSeconds <= 0) {
+      return;
+    }
+    this.samples.push(deltaTimeSeconds * 1000);
+    while (this.samples.length > Math.max(1, this.maxSamples)) {
+      this.samples.shift();
+    }
+  }
+
+  public snapshot(): SceneFrameTiming {
+    if (this.samples.length === 0) {
+      return {
+        sampleCount: 0,
+        averageFrameTimeMs: 0,
+        p95FrameTimeMs: 0,
+        maxFrameTimeMs: 0,
+      };
+    }
+    const sorted = [...this.samples].sort((left, right) => left - right);
+    const total = this.samples.reduce((sum, sample) => sum + sample, 0);
+    return {
+      sampleCount: this.samples.length,
+      averageFrameTimeMs: total / this.samples.length,
+      p95FrameTimeMs: sorted[Math.ceil(sorted.length * 0.95) - 1],
+      maxFrameTimeMs: sorted[sorted.length - 1],
+    };
+  }
 }
 
 export function createSceneRuntimeDiagnosticsSnapshot(
@@ -68,6 +115,7 @@ export function createSceneRuntimeDiagnosticsSnapshot(
       0,
       Math.floor(input.residentTextureBytesEstimate),
     ),
+    frameTiming: input.frameTiming,
     activeEntityCountByLayer,
   };
 }

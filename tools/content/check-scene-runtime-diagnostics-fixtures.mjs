@@ -1,5 +1,6 @@
 import {
   createSceneRuntimeDiagnosticsSnapshot,
+  SceneFrameTimeSampler,
 } from "../../cocos/assets/scripts/gameplay/scene-runtime-diagnostics.ts";
 
 const states = [
@@ -8,6 +9,11 @@ const states = [
   createState("found", "interactive", true, false, true),
   createState("offscreen", "staticDecoration", false, false, false),
 ];
+const frameSampler = new SceneFrameTimeSampler(3);
+frameSampler.add(0.016);
+frameSampler.add(0.02);
+frameSampler.add(0.018);
+frameSampler.add(0.01);
 const snapshot = createSceneRuntimeDiagnosticsSnapshot({
   states,
   regions: [
@@ -39,6 +45,7 @@ const snapshot = createSceneRuntimeDiagnosticsSnapshot({
   ],
   instantiatedNodeCount: 7.8,
   residentTextureBytesEstimate: 1024.9,
+  frameTiming: frameSampler.snapshot(),
 });
 
 const expected = {
@@ -54,6 +61,12 @@ const expected = {
   offscreenMotionCount: 0,
   instantiatedNodeCount: 7,
   residentTextureBytesEstimate: 1024,
+  frameTiming: {
+    sampleCount: 3,
+    averageFrameTimeMs: 16,
+    p95FrameTimeMs: 20,
+    maxFrameTimeMs: 20,
+  },
   activeEntityCountByLayer: {
     background: 0,
     staticDecoration: 0,

@@ -92,6 +92,25 @@ export class PortraitSceneEntityBinder {
     return result;
   }
 
+  public getInstantiatedNodeCount(): number {
+    return this.nodesByEntityId.size;
+  }
+
+  public estimateResidentTextureBytes(): number {
+    const framesByUuid = new Map<string, SpriteFrame>();
+    for (const visual of this.visualNodesByEntityId.values()) {
+      const frame = visual.getComponent(Sprite)?.spriteFrame;
+      if (frame) {
+        framesByUuid.set(frame.uuid, frame);
+      }
+    }
+    let bytes = 0;
+    for (const frame of framesByUuid.values()) {
+      bytes += frame.originalSize.width * frame.originalSize.height * 4;
+    }
+    return bytes;
+  }
+
   public dispose(): void {
     for (const node of this.ownedNodes) {
       if (node.isValid) {
