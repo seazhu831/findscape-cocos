@@ -47,9 +47,9 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Start Stage 4F from `docs/33-scene-runtime-capability-plan.md`: implement a
-   cancellable target-presentation planner, then bind target lift, curved flight,
-   HUD arrival pulse, and the final-target settlement barrier.
+2. Prepare and send the focused Stage 4G dense-region handoff to Claude Design.
+   Ingest the returned batch only after its render order, anchors, runtime paths,
+   and concealment relationships pass deterministic intake checks.
 
 Recommended prompt:
 
@@ -108,6 +108,12 @@ Recommended prompt:
   focused target taps and Stage 4D motion were verified at `390x844`.
 - Stage 4E implementation and acceptance details are in
   `docs/38-focus-camera-runtime.md`.
+- Stage 4F is complete. `tapToFind` targets lift and fly to a matching HUD slot
+  through cancellable visual proxies. Counts update on arrival, collapsed HUD
+  state is respected, concurrent flights are supported, and final settlement
+  waits for all in-flight targets.
+- Stage 4F implementation and acceptance details are in
+  `docs/39-target-collection-presentation.md`.
 
 ## Files To Read First
 

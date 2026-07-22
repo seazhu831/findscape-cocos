@@ -286,6 +286,10 @@ Dependencies: Stage 4C. This can use current assets.
 
 ### Stage 4F: Target Collection Presentation
 
+Status: complete in Issue #73. Planner, HUD contract, Cocos presentation,
+settlement barrier, and verification are recorded in
+`docs/39-target-collection-presentation.md`.
+
 Outputs:
 
 - Cancellable presentation orchestrator.
@@ -333,6 +337,7 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Start Stage 4F with a pure, cancellable target-presentation planner. Define the
-lift, curved flight, HUD arrival, counter pulse, and final-target settlement
-barrier before binding those phases to Cocos Tweens.
+Prepare the focused Claude Design handoff for Stage 4G. The batch must describe
+one dense region with explicit static decoration, ambient actors, interactive
+targets, foreground occluders, render order, anchors, and concealment intent.
+Do not expand the runtime contract until the authored slice exposes a real gap.
