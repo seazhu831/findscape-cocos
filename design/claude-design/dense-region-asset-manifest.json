@@ -12,7 +12,7 @@
     "Design layers map to staticDecoration, ambientActor, and foregroundOccluder.",
     "regionVisible activation maps to nearViewport until Stage 4H region activation.",
     "Both delivered actor baselines normalize from declared y=450 to measured y=455.",
-    "Target occluders use scale 0.61 and proportionally adjusted offsets because runtime targets use a 140x140 custom canvas instead of preview scale 0.45."
+    "Runtime scales normalize transparent source canvases against their visible alpha bounds; target occluders retain the design preview scale 0.45."
   ],
   "assets": [
     {
@@ -23,7 +23,7 @@
       "kind": "decoration",
       "transform": {
         "position": { "x": 570, "y": 1710 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.52, "y": 0.52 },
         "anchor": { "x": 0.5, "y": 0.2 }
       },
       "render": { "layer": "staticDecoration", "order": 1710 },
@@ -37,7 +37,7 @@
       "kind": "decoration",
       "transform": {
         "position": { "x": 395, "y": 1925 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.52, "y": 0.52 },
         "anchor": { "x": 0.5, "y": 0.18 }
       },
       "render": { "layer": "staticDecoration", "order": 1935 },
@@ -51,7 +51,7 @@
       "kind": "decoration",
       "transform": {
         "position": { "x": 960, "y": 1880 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.52, "y": 0.52 },
         "anchor": { "x": 0.5, "y": 0.2 }
       },
       "render": { "layer": "staticDecoration", "order": 1880 },
@@ -65,7 +65,7 @@
       "kind": "decoration",
       "transform": {
         "position": { "x": 1065, "y": 2130 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.52, "y": 0.52 },
         "anchor": { "x": 0.5, "y": 0.2 }
       },
       "render": { "layer": "staticDecoration", "order": 2170 },
@@ -88,7 +88,7 @@
       "kind": "actor",
       "transform": {
         "position": { "x": 760, "y": 1840 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.52, "y": 0.52 },
         "anchor": { "x": 0.5, "y": 0.12 }
       },
       "render": { "layer": "ambientActor", "order": 1840 },
@@ -112,7 +112,7 @@
       "kind": "actor",
       "transform": {
         "position": { "x": 980, "y": 2070 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.52, "y": 0.52 },
         "anchor": { "x": 0.5, "y": 0.12 }
       },
       "render": { "layer": "ambientActor", "order": 2070 },
@@ -126,8 +126,8 @@
       "runtimePath": "art/dense/lower_garden/occluder_puppy_planter",
       "kind": "occluder",
       "transform": {
-        "position": { "x": 458, "y": 1994 },
-        "scale": { "x": 0.61, "y": 0.61 },
+        "position": { "x": 410, "y": 1905 },
+        "scale": { "x": 0.38, "y": 0.38 },
         "anchor": { "x": 0.5, "y": 0.15 }
       },
       "render": { "layer": "foregroundOccluder", "order": 2010 },
@@ -142,8 +142,8 @@
       "runtimePath": "art/dense/lower_garden/occluder_gem_flower_basket",
       "kind": "occluder",
       "transform": {
-        "position": { "x": 1222, "y": 2099 },
-        "scale": { "x": 0.61, "y": 0.61 },
+        "position": { "x": 1236, "y": 2105 },
+        "scale": { "x": 0.45, "y": 0.45 },
         "anchor": { "x": 0.5, "y": 0.15 }
       },
       "render": { "layer": "foregroundOccluder", "order": 2120 },
@@ -159,7 +159,7 @@
       "kind": "occluder",
       "transform": {
         "position": { "x": 740, "y": 2190 },
-        "scale": { "x": 1, "y": 1 },
+        "scale": { "x": 0.55, "y": 0.55 },
         "anchor": { "x": 0.5, "y": 0.15 }
       },
       "render": { "layer": "foregroundOccluder", "order": 2190 },

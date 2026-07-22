@@ -559,7 +559,7 @@
           "asset": "art/dense/lower_garden/garden_picnic_basket",
           "transform": {
             "position": { "x": 570, "y": 1710 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.52, "y": 0.52 },
             "anchor": { "x": 0.5, "y": 0.2 }
           },
           "render": {
@@ -577,7 +577,7 @@
           "asset": "art/dense/lower_garden/garden_planter_cluster",
           "transform": {
             "position": { "x": 395, "y": 1925 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.52, "y": 0.52 },
             "anchor": { "x": 0.5, "y": 0.18 }
           },
           "render": {
@@ -595,7 +595,7 @@
           "asset": "art/dense/lower_garden/garden_scattered_toys",
           "transform": {
             "position": { "x": 960, "y": 1880 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.52, "y": 0.52 },
             "anchor": { "x": 0.5, "y": 0.2 }
           },
           "render": {
@@ -613,7 +613,7 @@
           "asset": "art/dense/lower_garden/garden_blue_glass_cluster",
           "transform": {
             "position": { "x": 1065, "y": 2130 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.52, "y": 0.52 },
             "anchor": { "x": 0.5, "y": 0.2 }
           },
           "render": {
@@ -631,7 +631,7 @@
           "asset": "art/dense/lower_garden/actor_gardener_kneeling/frame_00",
           "transform": {
             "position": { "x": 760, "y": 1840 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.52, "y": 0.52 },
             "anchor": { "x": 0.5, "y": 0.12 }
           },
           "render": {
@@ -650,7 +650,7 @@
           "asset": "art/dense/lower_garden/actor_reader_seated/frame_00",
           "transform": {
             "position": { "x": 980, "y": 2070 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.52, "y": 0.52 },
             "anchor": { "x": 0.5, "y": 0.12 }
           },
           "render": {
@@ -668,8 +668,8 @@
           "kind": "occluder",
           "asset": "art/dense/lower_garden/occluder_puppy_planter",
           "transform": {
-            "position": { "x": 458, "y": 1994 },
-            "scale": { "x": 0.61, "y": 0.61 },
+            "position": { "x": 410, "y": 1905 },
+            "scale": { "x": 0.38, "y": 0.38 },
             "anchor": { "x": 0.5, "y": 0.15 }
           },
           "render": {
@@ -687,8 +687,8 @@
           "kind": "occluder",
           "asset": "art/dense/lower_garden/occluder_gem_flower_basket",
           "transform": {
-            "position": { "x": 1222, "y": 2099 },
-            "scale": { "x": 0.61, "y": 0.61 },
+            "position": { "x": 1236, "y": 2105 },
+            "scale": { "x": 0.45, "y": 0.45 },
             "anchor": { "x": 0.5, "y": 0.15 }
           },
           "render": {
@@ -707,7 +707,7 @@
           "asset": "art/dense/lower_garden/occluder_lane_shrub",
           "transform": {
             "position": { "x": 740, "y": 2190 },
-            "scale": { "x": 1, "y": 1 },
+            "scale": { "x": 0.55, "y": 0.55 },
             "anchor": { "x": 0.5, "y": 0.15 }
           },
           "render": {
