@@ -22,6 +22,10 @@ const audioFeedbackSourcePath = path.join(
   cocosRoot,
   "assets/scripts/feedback/portrait-audio-feedback.ts",
 );
+const targetPresentationSourcePath = path.join(
+  cocosRoot,
+  "assets/scripts/feedback/portrait-target-presentation.ts",
+);
 const roundSceneSourcePath = path.join(
   cocosRoot,
   "assets/scripts/app/portrait-round-scene.ts",
@@ -59,6 +63,10 @@ const projectSettings = JSON.parse(
 const hudSource = fs.readFileSync(hudSourcePath, "utf8");
 const feedbackSource = fs.readFileSync(feedbackSourcePath, "utf8");
 const audioFeedbackSource = fs.readFileSync(audioFeedbackSourcePath, "utf8");
+const targetPresentationSource = fs.readFileSync(
+  targetPresentationSourcePath,
+  "utf8",
+);
 const roundSceneSource = fs.readFileSync(roundSceneSourcePath, "utf8");
 const sceneEntityBinderSource = fs.readFileSync(
   sceneEntityBinderSourcePath,
@@ -155,6 +163,25 @@ for (const requiredAudioFeedbackContract of [
   if (!audioFeedbackSource.includes(requiredAudioFeedbackContract)) {
     failures.push(
       `PortraitAudioFeedback is missing contract: ${requiredAudioFeedbackContract}`,
+    );
+  }
+}
+
+for (const requiredTargetPresentationContract of [
+  'new Node("TargetPresentationRoot")',
+  'new Node("TargetFlightProxy")',
+  "targetVisual.worldPosition",
+  "destinationNode.worldPosition",
+  "targetVisual.worldScale",
+  "targetNode.active = false",
+  "Math.max(source.y, destination.y) + 190",
+  "this.hud.playTargetArrival(plan.typeId, arrivalSeconds)",
+  "Tween.stopAllByTarget(active.node)",
+  "generation === this.generation",
+]) {
+  if (!targetPresentationSource.includes(requiredTargetPresentationContract)) {
+    failures.push(
+      `PortraitTargetPresentation is missing contract: ${requiredTargetPresentationContract}`,
     );
   }
 }
