@@ -47,9 +47,9 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Continue Stage 4C from `docs/33-scene-runtime-capability-plan.md`: bind the
-   completed scene entity schema and demo manifest to a layered runtime before
-   requesting the next large Claude Design asset batch.
+2. Continue Stage 4D from `docs/33-scene-runtime-capability-plan.md`: add the
+   central tween motion scheduler on top of the completed layered entity
+   runtime before requesting the next large Claude Design asset batch.
 
 Recommended prompt:
 
@@ -92,6 +92,9 @@ Recommended prompt:
 - Stage 4B is complete: config v1 now supports scene entities, semantic layers,
   reusable motion profiles, target/entity links, concealment metadata, and
   deterministic validation while preserving legacy configs.
+- Stage 4C is complete: a pure entity registry projects mode targets, the Cocos
+  scene creates five semantic layer roots, missing nodes can load from Resources,
+  and Replay/mode changes reset entity state through one path.
 
 ## Files To Read First
 

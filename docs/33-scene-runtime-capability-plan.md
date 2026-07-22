@@ -246,6 +246,9 @@ Dependencies: none beyond the current config v1.
 
 ### Stage 4C: Layered Entity Runtime
 
+Status: complete in Issue #70. Runtime behavior and verification are recorded
+in `docs/35-layered-scene-entity-runtime.md`.
+
 Outputs:
 
 - Scene entity registry and layer roots.
@@ -324,7 +327,7 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Start Stage 4C with a pure scene entity registry, followed by Cocos layer-root
-and target-node binding. Do not request the large Claude Design batch yet. The
-current target assets are sufficient to validate entity projection and reset
-behavior before dense content is introduced.
+Start Stage 4D with the tween motion adapter and central motion scheduler using
+the existing balloon, puppy, and thief sprites. Do not request the large Claude
+Design batch yet; sprite-frame and clip adapters can follow their actual asset
+batch without blocking the low-cost motion foundation.
