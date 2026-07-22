@@ -33,6 +33,7 @@ import {
 import type {
   GameplayConfig,
   MapConfig,
+  SceneRegionConfig,
   TargetPointConfig,
 } from "../config/gameplay-schema";
 import { PortraitAudioFeedback } from "../feedback/portrait-audio-feedback";
@@ -52,6 +53,11 @@ import type { ViewportState } from "../gameplay/map-viewport";
 import { PortraitEntityMotion } from "../gameplay/portrait-entity-motion";
 import { PortraitSceneEntityBinder } from "../gameplay/portrait-scene-entity-binder";
 import { SceneEntityRegistry } from "../gameplay/scene-entity-runtime";
+import {
+  resolveActiveSceneRegionIds,
+  resolveVisibleSceneEntityIds,
+  viewportToMapRectangle,
+} from "../gameplay/scene-region-runtime";
 import {
   cancelTargetPresentations,
   completeTargetPresentation,
@@ -74,6 +80,7 @@ const { ccclass } = _decorator;
 const DEFAULT_MODE_ID = "hidden_object_demo";
 const DRAG_THRESHOLD = 12;
 const CAMERA_TRANSITION_SECONDS = 0.25;
+const MOTION_VISIBILITY_MARGIN = 96;
 
 @ccclass("PortraitRoundScene")
 export class PortraitRoundScene extends Component {
@@ -101,6 +108,8 @@ export class PortraitRoundScene extends Component {
   private mapGestureDistance = 0;
   private activeMap: MapConfig | null = null;
   private focusCameraState: FocusCameraState | null = null;
+  private sceneRegions: SceneRegionConfig[] = [];
+  private visibleSceneEntityIds = new Set<string>();
   private loadStateRoot: Node | null = null;
 
   protected start(): void {
@@ -669,6 +678,7 @@ export class PortraitRoundScene extends Component {
     const schedule = createEntityMotionSchedule(
       this.sceneEntityRegistry.getAll(),
       this.sessionContext.config.motionProfiles ?? [],
+      { visibleEntityIds: this.visibleSceneEntityIds },
     );
     this.entityMotion.play(schedule, this.sceneEntityBinder);
   }
@@ -693,6 +703,7 @@ export class PortraitRoundScene extends Component {
       targetTypesById: this.sessionContext.targetTypesById,
       sceneEntitySet,
     });
+    this.sceneRegions = sceneEntitySet?.regions ?? [];
     this.sceneEntityRegistry.projectMode([]);
     this.activeMap = map;
     this.focusCameraState = this.createInitialFocusCameraState(map);
@@ -726,6 +737,7 @@ export class PortraitRoundScene extends Component {
       return;
     }
     this.focusCameraState = update.state;
+    this.projectSceneViewport(update.transition.to);
     const transform = this.cameraViewportToNodeTransform(update.transition.to);
     tween(this.mapWorld)
       .to(CAMERA_TRANSITION_SECONDS, transform, { easing: "quadOut" })
@@ -752,6 +764,7 @@ export class PortraitRoundScene extends Component {
       return;
     }
     this.focusCameraState = update.state;
+    this.projectSceneViewport(update.transition.to);
     const transform = this.cameraViewportToNodeTransform(update.transition.to);
     tween(this.mapWorld)
       .to(CAMERA_TRANSITION_SECONDS, transform, { easing: "quadInOut" })
@@ -850,6 +863,36 @@ export class PortraitRoundScene extends Component {
     const transform = this.cameraViewportToNodeTransform(viewport);
     this.mapWorld.setPosition(transform.position);
     this.mapWorld.setScale(transform.scale);
+    this.projectSceneViewport(viewport);
+  }
+
+  private projectSceneViewport(viewport: ViewportState): void {
+    if (!this.sceneEntityRegistry) {
+      return;
+    }
+    const viewportRectangle = viewportToMapRectangle(viewport);
+    const activeRegionIds = resolveActiveSceneRegionIds(
+      this.sceneRegions,
+      viewportRectangle,
+    );
+    const visibleEntityIds = resolveVisibleSceneEntityIds(
+      this.sceneEntityRegistry.getAll().map((state) => state.entity),
+      viewportRectangle,
+      MOTION_VISIBILITY_MARGIN,
+    );
+    const activationChanged =
+      this.sceneEntityRegistry.projectRegions(activeRegionIds);
+    const visibilityChanged = !setsEqual(
+      this.visibleSceneEntityIds,
+      visibleEntityIds,
+    );
+    this.visibleSceneEntityIds = visibleEntityIds;
+    if (activationChanged) {
+      this.sceneEntityBinder?.apply(this.sceneEntityRegistry);
+    }
+    if (activationChanged || visibilityChanged) {
+      this.refreshEntityMotions();
+    }
   }
 
   private cameraViewportToNodeTransform(
@@ -894,4 +937,16 @@ export class PortraitRoundScene extends Component {
       });
     });
   }
+}
+
+function setsEqual(left: ReadonlySet<string>, right: ReadonlySet<string>): boolean {
+  if (left.size !== right.size) {
+    return false;
+  }
+  for (const item of left) {
+    if (!right.has(item)) {
+      return false;
+    }
+  }
+  return true;
 }
