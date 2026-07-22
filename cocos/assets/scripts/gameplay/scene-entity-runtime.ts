@@ -41,6 +41,7 @@ export class SceneEntityRegistry {
   private readonly entityIdsByTargetId = new Map<string, string>();
   private selectedTargetIds = new Set<string>();
   private selectedEntityIds = new Set<string>();
+  private activeRegionIds: ReadonlySet<string> | undefined;
 
   constructor(input: SceneEntityRegistryInput) {
     const configuredEntities = input.sceneEntitySet?.entities ?? [];
@@ -78,23 +79,14 @@ export class SceneEntityRegistry {
 
   resetRound(): void {
     for (const state of this.statesByEntityId.values()) {
-      const selected = Boolean(
-        state.targetId && this.selectedTargetIds.has(state.targetId),
-      );
-      const activationPolicy = state.entity.activationPolicy ?? "always";
-      const linkedTargetSelected =
-        state.entity.activationTargetEntityIds?.some((entityId) =>
-          this.selectedEntityIds.has(entityId),
-        ) ?? false;
-      const policyAllowsActivation =
-        activationPolicy !== "modeSelected" || selected || linkedTargetSelected;
-      state.selected = selected;
-      state.active =
-        state.entity.render.visibleByDefault && policyAllowsActivation;
-      state.interactive =
-        state.active && selected && state.entity.kind === "interactive";
       state.found = false;
     }
+    this.refreshActivation();
+  }
+
+  projectRegions(activeRegionIds: ReadonlySet<string>): boolean {
+    this.activeRegionIds = new Set(activeRegionIds);
+    return this.refreshActivation();
   }
 
   markTargetFound(targetId: string): SceneEntityRuntimeState | undefined {
@@ -137,6 +129,37 @@ export class SceneEntityRegistry {
 
   getLayer(layer: SceneLayerId): SceneEntityRuntimeState[] {
     return this.getAll().filter((state) => state.entity.render.layer === layer);
+  }
+
+  private refreshActivation(): boolean {
+    let changed = false;
+    for (const state of this.statesByEntityId.values()) {
+      const selected = Boolean(
+        state.targetId && this.selectedTargetIds.has(state.targetId),
+      );
+      const activationPolicy = state.entity.activationPolicy ?? "always";
+      const linkedTargetSelected =
+        state.entity.activationTargetEntityIds?.some((entityId) =>
+          this.selectedEntityIds.has(entityId),
+        ) ?? false;
+      const policyAllowsActivation =
+        activationPolicy !== "modeSelected" || selected || linkedTargetSelected;
+      const regionAllowsActivation =
+        state.entity.regionId === undefined ||
+        this.activeRegionIds === undefined ||
+        this.activeRegionIds.has(state.entity.regionId);
+      const active =
+        state.entity.render.visibleByDefault &&
+        policyAllowsActivation &&
+        regionAllowsActivation;
+      const interactive =
+        active && selected && !state.found && state.entity.kind === "interactive";
+      changed ||= state.active !== active || state.interactive !== interactive;
+      state.selected = selected;
+      state.active = active;
+      state.interactive = interactive;
+    }
+    return changed;
   }
 
   private addEntity(entity: SceneEntityConfig, legacyFallback: boolean): void {

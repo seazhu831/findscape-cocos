@@ -17,6 +17,7 @@ checkFoundAndReset();
 checkSemanticLayerOrder();
 checkLegacyFallback();
 checkTargetLinkedActivation();
+checkRegionProjection();
 
 if (failures.length > 0) {
   for (const failure of failures) {
@@ -25,7 +26,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Validated 5 scene entity runtime fixture groups");
+console.log("Validated 6 scene entity runtime fixture groups");
 
 function checkDemoModeProjection() {
   const registry = createRegistry(config);
@@ -190,6 +191,29 @@ function checkTargetLinkedActivation() {
     registry.get("fixture_puppy_occluder")?.active,
     false,
   );
+}
+
+function checkRegionProjection() {
+  const registry = createRegistry(config);
+  registry.projectMode(selectTargets(config, "hidden_object_demo"));
+  expectEqual(
+    "default projection preserves authored entities",
+    activeIds(registry).length,
+    13,
+  );
+  expectEqual("empty region projection changes state", registry.projectRegions(new Set()), true);
+  expectEqual("offscreen region removes dense entities", activeIds(registry).length, 4);
+  expectEqual(
+    "stable empty projection reports no change",
+    registry.projectRegions(new Set()),
+    false,
+  );
+  expectEqual(
+    "lower garden projection changes state",
+    registry.projectRegions(new Set(["region_lower_garden_v1"])),
+    true,
+  );
+  expectEqual("lower garden restores dense entities", activeIds(registry).length, 13);
 }
 
 function createRegistry(gameplayConfig) {
