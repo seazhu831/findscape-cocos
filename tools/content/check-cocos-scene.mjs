@@ -260,10 +260,15 @@ for (const requiredSceneEntityBinderContract of [
 }
 
 for (const requiredEntityMotionContract of [
-  'plan.variant.driver !== "tween"',
+  'plan.variant.driver === "spriteFrames"',
+  'this.playAnimationClip(',
   'binder.getVisualNodeByEntityId(plan.entityId)',
   'offset.x, -offset.y, 0',
   'sequence.repeatForever(cycle)',
+  'AnimationClip.createWithSpriteFrames(',
+  '`${assetPath}/spriteFrame`',
+  'this.isCurrent(plan.entityId, generation, version)',
+  'animation.removeClip(clip, true)',
   'Tween.stopAllByTarget(visual)',
   'visual.setPosition(0, 0, 0)',
 ]) {
