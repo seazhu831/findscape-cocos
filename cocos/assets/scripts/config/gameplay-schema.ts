@@ -9,6 +9,7 @@ export type ScoringRuleId = string;
 export type ToolId = string;
 export type SceneEntitySetId = string;
 export type SceneEntityId = string;
+export type SceneRegionId = string;
 export type MotionProfileId = string;
 
 export interface Vector2Config {
@@ -81,12 +82,21 @@ export interface SceneEntityConfig {
   motionProfileId?: MotionProfileId;
   activationPolicy?: SceneEntityActivationPolicy;
   activationTargetEntityIds?: SceneEntityId[];
+  regionId?: SceneRegionId;
+  tags: string[];
+}
+
+export interface SceneRegionConfig {
+  regionId: SceneRegionId;
+  bounds: Vector2Config & SizeConfig;
+  activationMargin: number;
   tags: string[];
 }
 
 export interface SceneEntitySetConfig {
   sceneEntitySetId: SceneEntitySetId;
   mapId: MapId;
+  regions?: SceneRegionConfig[];
   entities: SceneEntityConfig[];
 }
 

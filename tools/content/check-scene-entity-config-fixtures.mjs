@@ -115,6 +115,48 @@ const fixtures = [
     }),
     error: "activationTargetEntityIds requires activationPolicy modeSelected",
   },
+  {
+    name: "unknown entity region fails",
+    config: mutate(createEntityConfig(), (config) => {
+      config.sceneEntitySets[0].entities[1].regionId = "missing_region";
+    }),
+    error: "regionId references unknown id: missing_region",
+  },
+  {
+    name: "near viewport entity requires a region",
+    config: mutate(createEntityConfig(), (config) => {
+      delete config.sceneEntitySets[0].entities[1].regionId;
+    }),
+    error: "regionId is required for activationPolicy nearViewport",
+  },
+  {
+    name: "entity outside assigned region fails",
+    config: mutate(createEntityConfig(), (config) => {
+      config.sceneEntitySets[0].regions[0].bounds = {
+        x: 0,
+        y: 0,
+        width: 5,
+        height: 5,
+      };
+    }),
+    error: "transform.position must be inside assigned region",
+  },
+  {
+    name: "region outside map fails",
+    config: mutate(createEntityConfig(), (config) => {
+      config.sceneEntitySets[0].regions[0].bounds.x = -1;
+    }),
+    error: "bounds must be inside map bounds",
+  },
+  {
+    name: "duplicate region id fails",
+    config: mutate(createEntityConfig(), (config) => {
+      config.sceneEntitySets[0].regions.push(
+        structuredClone(config.sceneEntitySets[0].regions[0]),
+      );
+    }),
+    error: "Duplicate regionId",
+  },
 ];
 
 try {
@@ -171,6 +213,19 @@ function createEntityConfig() {
     {
       sceneEntitySetId: "fixture_entities",
       mapId: config.maps[0].mapId,
+      regions: [
+        {
+          regionId: "fixture_region",
+          bounds: {
+            x: 0,
+            y: 0,
+            width: config.maps[0].worldSize.width,
+            height: config.maps[0].worldSize.height,
+          },
+          activationMargin: 80,
+          tags: ["fixture"],
+        },
+      ],
       entities: [
         {
           entityId: "entity_fixture_target",
@@ -208,6 +263,7 @@ function createEntityConfig() {
             visibleByDefault: true,
           },
           activationPolicy: "nearViewport",
+          regionId: "fixture_region",
           tags: ["fixture", "occluder"],
         },
       ],

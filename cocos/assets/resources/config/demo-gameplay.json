@@ -421,6 +421,14 @@
     {
       "sceneEntitySetId": "demo_cozy_town_entities",
       "mapId": "demo_cozy_town",
+      "regions": [
+        {
+          "regionId": "region_lower_garden_v1",
+          "bounds": { "x": 320, "y": 1500, "width": 1000, "height": 760 },
+          "activationMargin": 180,
+          "tags": ["dense-region", "lower-garden"]
+        }
+      ],
       "entities": [
         {
           "entityId": "entity_demo_balloon_001",
@@ -554,6 +562,7 @@
         },
         {
           "entityId": "entity_dense_garden_picnic_basket",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "decoration",
           "asset": "art/dense/lower_garden/garden_picnic_basket",
@@ -572,6 +581,7 @@
         },
         {
           "entityId": "entity_dense_garden_planter_cluster",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "decoration",
           "asset": "art/dense/lower_garden/garden_planter_cluster",
@@ -590,6 +600,7 @@
         },
         {
           "entityId": "entity_dense_garden_scattered_toys",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "decoration",
           "asset": "art/dense/lower_garden/garden_scattered_toys",
@@ -608,6 +619,7 @@
         },
         {
           "entityId": "entity_dense_garden_blue_glass_cluster",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "decoration",
           "asset": "art/dense/lower_garden/garden_blue_glass_cluster",
@@ -626,6 +638,7 @@
         },
         {
           "entityId": "entity_dense_actor_gardener",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "actor",
           "asset": "art/dense/lower_garden/actor_gardener_kneeling/frame_00",
@@ -645,6 +658,7 @@
         },
         {
           "entityId": "entity_dense_actor_reader",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "actor",
           "asset": "art/dense/lower_garden/actor_reader_seated/frame_00",
@@ -664,6 +678,7 @@
         },
         {
           "entityId": "entity_dense_occluder_puppy_planter",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "occluder",
           "asset": "art/dense/lower_garden/occluder_puppy_planter",
@@ -683,6 +698,7 @@
         },
         {
           "entityId": "entity_dense_occluder_gem_basket",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "occluder",
           "asset": "art/dense/lower_garden/occluder_gem_flower_basket",
@@ -702,6 +718,7 @@
         },
         {
           "entityId": "entity_dense_occluder_lane_shrub",
+          "regionId": "region_lower_garden_v1",
           "mapId": "demo_cozy_town",
           "kind": "occluder",
           "asset": "art/dense/lower_garden/occluder_lane_shrub",

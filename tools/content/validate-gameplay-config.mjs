@@ -102,8 +102,18 @@ for (const motionProfile of motionProfiles) {
 
 for (const entitySet of sceneEntitySets) {
   requireRef(mapIds, entitySet.mapId, `sceneEntitySet ${entitySet.sceneEntitySetId}.mapId`);
+  const regions = optionalArray(entitySet, "regions");
+  const regionIds = uniqueIds(
+    regions,
+    "regionId",
+    `sceneEntitySet ${entitySet.sceneEntitySetId}.regions`,
+  );
+  const regionsById = new Map(regions.map((region) => [region.regionId, region]));
+  for (const region of regions) {
+    validateSceneRegion(entitySet, region);
+  }
   for (const entity of requireArray(entitySet, "entities")) {
-    validateSceneEntity(entitySet, entity);
+    validateSceneEntity(entitySet, entity, regionIds, regionsById);
   }
 }
 
@@ -365,7 +375,31 @@ function validateMotionVariant(variant, label) {
   errors.push(`${label}.driver is unsupported: ${variant?.driver}`);
 }
 
-function validateSceneEntity(entitySet, entity) {
+function validateSceneRegion(entitySet, region) {
+  const label = `sceneRegion ${region?.regionId}`;
+  const bounds = region?.bounds;
+  const mapConfig = mapsById.get(entitySet.mapId);
+  requirePosition(bounds, `${label}.bounds`);
+  requirePositiveNumber(bounds?.width, `${label}.bounds.width`);
+  requirePositiveNumber(bounds?.height, `${label}.bounds.height`);
+  requireNonNegativeNumber(region?.activationMargin, `${label}.activationMargin`);
+  validateStringArray(region?.tags, `${label}.tags`);
+  if (
+    mapConfig &&
+    typeof bounds?.x === "number" &&
+    typeof bounds?.y === "number" &&
+    typeof bounds?.width === "number" &&
+    typeof bounds?.height === "number" &&
+    (bounds.x < 0 ||
+      bounds.y < 0 ||
+      bounds.x + bounds.width > mapConfig.worldSize.width ||
+      bounds.y + bounds.height > mapConfig.worldSize.height)
+  ) {
+    errors.push(`${label}.bounds must be inside map bounds`);
+  }
+}
+
+function validateSceneEntity(entitySet, entity, regionIds, regionsById) {
   const label = `sceneEntity ${entity?.entityId}`;
   const kinds = new Set(["decoration", "actor", "interactive", "occluder"]);
   const layers = new Set([
@@ -429,6 +463,26 @@ function validateSceneEntity(entitySet, entity) {
         `${label}.activationTargetEntityIds`,
       );
     }
+  }
+  if (entity?.regionId !== undefined) {
+    requireRef(regionIds, entity.regionId, `${label}.regionId`);
+    const region = regionsById.get(entity.regionId);
+    const position = entity?.transform?.position;
+    const bounds = region?.bounds;
+    if (
+      bounds &&
+      typeof position?.x === "number" &&
+      typeof position?.y === "number" &&
+      (position.x < bounds.x ||
+        position.y < bounds.y ||
+        position.x > bounds.x + bounds.width ||
+        position.y > bounds.y + bounds.height)
+    ) {
+      errors.push(`${label}.transform.position must be inside assigned region`);
+    }
+  }
+  if (entity?.activationPolicy === "nearViewport" && entity?.regionId === undefined) {
+    errors.push(`${label}.regionId is required for activationPolicy nearViewport`);
   }
   if (entity?.motionProfileId !== undefined) {
     requireRef(motionProfileIds, entity.motionProfileId, `${label}.motionProfileId`);
