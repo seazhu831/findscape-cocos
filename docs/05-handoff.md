@@ -47,9 +47,9 @@ was silent on iOS, and the original top/bottom HUD obscured search targets. Both
 fixes are now in a new preview build. The next platform stage is:
 
 1. Complete the pending physical-device acceptance pass when available.
-2. Start Stage 4E from `docs/33-scene-runtime-capability-plan.md`: implement the
-   pure focus camera state machine and coordinate conversion service, then bind
-   magnifier zoom and restore behavior to the portrait Cocos scene.
+2. Start Stage 4F from `docs/33-scene-runtime-capability-plan.md`: implement a
+   cancellable target-presentation planner, then bind target lift, curved flight,
+   HUD arrival pulse, and the final-target settlement barrier.
 
 Recommended prompt:
 
@@ -102,6 +102,12 @@ Recommended prompt:
   promoted, validated, imported, and covered by Web Mobile regression checks.
 - Stage 4D implementation and acceptance details are in
   `docs/37-ambient-motion-runtime.md`.
+- Stage 4E is complete. Logical viewport state now drives map drag and
+  magnifier focus, preserving the current region and exact restore viewport.
+  Focus transitions are cancellable across settlement, Replay, and mode change;
+  focused target taps and Stage 4D motion were verified at `390x844`.
+- Stage 4E implementation and acceptance details are in
+  `docs/38-focus-camera-runtime.md`.
 
 ## Files To Read First
 

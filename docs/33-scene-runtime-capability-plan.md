@@ -273,6 +273,9 @@ Dependencies: Stage 4C and suitable asset variants from Claude Design.
 
 ### Stage 4E: Focus Camera And Magnifier
 
+Status: complete in Issue #72. Camera state, Cocos binding, cancellation, and
+verification are recorded in `docs/38-focus-camera-runtime.md`.
+
 Outputs:
 
 - Camera state machine and coordinate conversion service.
@@ -330,6 +333,6 @@ must remain separate commits when they can be reviewed independently.
 
 ## Immediate Next Step
 
-Start Stage 4E with a pure focus camera state machine and coordinate conversion
-service. Bind the magnifier only after gesture cancellation, map clamping,
-replay, settlement, and mode-change transitions are deterministic in fixtures.
+Start Stage 4F with a pure, cancellable target-presentation planner. Define the
+lift, curved flight, HUD arrival, counter pulse, and final-target settlement
+barrier before binding those phases to Cocos Tweens.
