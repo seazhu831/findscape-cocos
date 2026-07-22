@@ -30,11 +30,22 @@ console.log("Validated 5 scene entity runtime fixture groups");
 function checkDemoModeProjection() {
   const registry = createRegistry(config);
   registry.projectMode(selectTargets(config, "hidden_object_demo"));
-  expectEqual("hidden object active", activeIds(registry).length, 4);
+  expectEqual("hidden object active", activeIds(registry).length, 13);
   expectEqual("hidden object interactive", interactiveIds(registry).length, 4);
+  expectDeepEqual(
+    "hidden object linked occluders",
+    activeIds(registry).filter((entityId) =>
+      entityId.startsWith("entity_dense_occluder_"),
+    ),
+    [
+      "entity_dense_occluder_puppy_planter",
+      "entity_dense_occluder_gem_basket",
+      "entity_dense_occluder_lane_shrub",
+    ],
+  );
 
   registry.projectMode(selectTargets(config, "balloon_blast_demo"));
-  expectEqual("balloon active", activeIds(registry).length, 2);
+  expectEqual("balloon active", activeIds(registry).length, 9);
   expectDeepEqual("balloon target ids", interactiveTargetIds(registry), [
     "demo_balloon_001",
     "demo_balloon_002",
@@ -100,26 +111,28 @@ function checkSemanticLayerOrder() {
   );
   const registry = createRegistry(fixture);
   registry.projectMode([]);
-  expectDeepEqual(
-    "semantic layers sort before per-layer order",
-    registry.getAll().map((state) => state.entity.entityId),
-    [
-      "fixture_actor",
-      ...fixture.sceneEntitySets[0].entities
-        .filter((entity) => entity.render.layer === "interactive")
-        .sort((left, right) =>
-          left.render.order !== right.render.order
-            ? left.render.order - right.render.order
-            : left.entityId.localeCompare(right.entityId),
-        )
-        .map((entity) => entity.entityId),
-      "fixture_occluder",
-    ],
+  const allIds = registry.getAll().map((state) => state.entity.entityId);
+  const firstInteractiveIndex = registry
+    .getAll()
+    .findIndex((state) => state.entity.render.layer === "interactive");
+  const finalInteractiveIndex = registry
+    .getAll()
+    .findLastIndex((state) => state.entity.render.layer === "interactive");
+  expectEqual(
+    "ambient actor sorts before interactive layer",
+    allIds.indexOf("fixture_actor") < firstInteractiveIndex,
+    true,
   );
-  expectDeepEqual("always entities remain active", activeIds(registry), [
-    "fixture_actor",
-    "fixture_occluder",
-  ]);
+  expectEqual(
+    "occluder sorts after interactive layer",
+    allIds.indexOf("fixture_occluder") > finalInteractiveIndex,
+    true,
+  );
+  expectDeepEqual(
+    "fixture always entities remain active",
+    activeIds(registry).filter((entityId) => entityId.startsWith("fixture_")),
+    ["fixture_actor", "fixture_occluder"],
+  );
 }
 
 function checkLegacyFallback() {

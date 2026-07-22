@@ -229,8 +229,8 @@
             "comboValue": 1
           },
           "concealment": {
-            "occluderEntityIds": [],
-            "intendedVisibleRatio": 0.6,
+            "occluderEntityIds": ["entity_dense_occluder_puppy_planter"],
+            "intendedVisibleRatio": 0.55,
             "visualSimilarityTags": ["brown", "animal", "path"],
             "edgePlacement": "soft",
             "scaleClass": "medium"
@@ -280,8 +280,8 @@
             "comboValue": 1
           },
           "concealment": {
-            "occluderEntityIds": [],
-            "intendedVisibleRatio": 0.45,
+            "occluderEntityIds": ["entity_dense_occluder_gem_basket"],
+            "intendedVisibleRatio": 0.42,
             "visualSimilarityTags": ["blue", "sparkle", "path"],
             "edgePlacement": "strong",
             "scaleClass": "small"
@@ -370,6 +370,50 @@
       ],
       "startDelayMinMs": 0,
       "startDelayMaxMs": 400,
+      "offscreenPolicy": "pause"
+    },
+    {
+      "motionProfileId": "dense_gardener_idle_frames",
+      "idleVariants": [
+        {
+          "variantId": "gardener_breathe_and_tend",
+          "driver": "spriteFrames",
+          "frameAssets": [
+            "art/dense/lower_garden/actor_gardener_kneeling/frame_00",
+            "art/dense/lower_garden/actor_gardener_kneeling/frame_01",
+            "art/dense/lower_garden/actor_gardener_kneeling/frame_02",
+            "art/dense/lower_garden/actor_gardener_kneeling/frame_03",
+            "art/dense/lower_garden/actor_gardener_kneeling/frame_04",
+            "art/dense/lower_garden/actor_gardener_kneeling/frame_05"
+          ],
+          "framesPerSecond": 6,
+          "loop": true
+        }
+      ],
+      "startDelayMinMs": 100,
+      "startDelayMaxMs": 500,
+      "offscreenPolicy": "pause"
+    },
+    {
+      "motionProfileId": "dense_reader_idle_frames",
+      "idleVariants": [
+        {
+          "variantId": "reader_breathe_and_turn_page",
+          "driver": "spriteFrames",
+          "frameAssets": [
+            "art/dense/lower_garden/actor_reader_seated/frame_00",
+            "art/dense/lower_garden/actor_reader_seated/frame_01",
+            "art/dense/lower_garden/actor_reader_seated/frame_02",
+            "art/dense/lower_garden/actor_reader_seated/frame_03",
+            "art/dense/lower_garden/actor_reader_seated/frame_04",
+            "art/dense/lower_garden/actor_reader_seated/frame_05"
+          ],
+          "framesPerSecond": 6,
+          "loop": true
+        }
+      ],
+      "startDelayMinMs": 200,
+      "startDelayMaxMs": 700,
       "offscreenPolicy": "pause"
     }
   ],
@@ -507,6 +551,172 @@
           },
           "activationPolicy": "modeSelected",
           "tags": ["demo", "gem", "treasure", "target"]
+        },
+        {
+          "entityId": "entity_dense_garden_picnic_basket",
+          "mapId": "demo_cozy_town",
+          "kind": "decoration",
+          "asset": "art/dense/lower_garden/garden_picnic_basket",
+          "transform": {
+            "position": { "x": 570, "y": 1710 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.2 }
+          },
+          "render": {
+            "layer": "staticDecoration",
+            "order": 1710,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "decoration"]
+        },
+        {
+          "entityId": "entity_dense_garden_planter_cluster",
+          "mapId": "demo_cozy_town",
+          "kind": "decoration",
+          "asset": "art/dense/lower_garden/garden_planter_cluster",
+          "transform": {
+            "position": { "x": 395, "y": 1925 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.18 }
+          },
+          "render": {
+            "layer": "staticDecoration",
+            "order": 1935,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "decoration", "decoy"]
+        },
+        {
+          "entityId": "entity_dense_garden_scattered_toys",
+          "mapId": "demo_cozy_town",
+          "kind": "decoration",
+          "asset": "art/dense/lower_garden/garden_scattered_toys",
+          "transform": {
+            "position": { "x": 960, "y": 1880 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.2 }
+          },
+          "render": {
+            "layer": "staticDecoration",
+            "order": 1880,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "decoration"]
+        },
+        {
+          "entityId": "entity_dense_garden_blue_glass_cluster",
+          "mapId": "demo_cozy_town",
+          "kind": "decoration",
+          "asset": "art/dense/lower_garden/garden_blue_glass_cluster",
+          "transform": {
+            "position": { "x": 1065, "y": 2130 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.2 }
+          },
+          "render": {
+            "layer": "staticDecoration",
+            "order": 2170,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "decoration", "decoy", "blue"]
+        },
+        {
+          "entityId": "entity_dense_actor_gardener",
+          "mapId": "demo_cozy_town",
+          "kind": "actor",
+          "asset": "art/dense/lower_garden/actor_gardener_kneeling/frame_00",
+          "transform": {
+            "position": { "x": 760, "y": 1840 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.12 }
+          },
+          "render": {
+            "layer": "ambientActor",
+            "order": 1840,
+            "visibleByDefault": true
+          },
+          "motionProfileId": "dense_gardener_idle_frames",
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "ambient-actor"]
+        },
+        {
+          "entityId": "entity_dense_actor_reader",
+          "mapId": "demo_cozy_town",
+          "kind": "actor",
+          "asset": "art/dense/lower_garden/actor_reader_seated/frame_00",
+          "transform": {
+            "position": { "x": 980, "y": 2070 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.12 }
+          },
+          "render": {
+            "layer": "ambientActor",
+            "order": 2070,
+            "visibleByDefault": true
+          },
+          "motionProfileId": "dense_reader_idle_frames",
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "ambient-actor"]
+        },
+        {
+          "entityId": "entity_dense_occluder_puppy_planter",
+          "mapId": "demo_cozy_town",
+          "kind": "occluder",
+          "asset": "art/dense/lower_garden/occluder_puppy_planter",
+          "transform": {
+            "position": { "x": 458, "y": 1994 },
+            "scale": { "x": 0.61, "y": 0.61 },
+            "anchor": { "x": 0.5, "y": 0.15 }
+          },
+          "render": {
+            "layer": "foregroundOccluder",
+            "order": 2010,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "modeSelected",
+          "activationTargetEntityIds": ["entity_demo_puppy_001"],
+          "tags": ["dense-region", "lower-garden", "occluder", "puppy"]
+        },
+        {
+          "entityId": "entity_dense_occluder_gem_basket",
+          "mapId": "demo_cozy_town",
+          "kind": "occluder",
+          "asset": "art/dense/lower_garden/occluder_gem_flower_basket",
+          "transform": {
+            "position": { "x": 1222, "y": 2099 },
+            "scale": { "x": 0.61, "y": 0.61 },
+            "anchor": { "x": 0.5, "y": 0.15 }
+          },
+          "render": {
+            "layer": "foregroundOccluder",
+            "order": 2120,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "modeSelected",
+          "activationTargetEntityIds": ["entity_demo_gem_001"],
+          "tags": ["dense-region", "lower-garden", "occluder", "gem"]
+        },
+        {
+          "entityId": "entity_dense_occluder_lane_shrub",
+          "mapId": "demo_cozy_town",
+          "kind": "occluder",
+          "asset": "art/dense/lower_garden/occluder_lane_shrub",
+          "transform": {
+            "position": { "x": 740, "y": 2190 },
+            "scale": { "x": 1, "y": 1 },
+            "anchor": { "x": 0.5, "y": 0.15 }
+          },
+          "render": {
+            "layer": "foregroundOccluder",
+            "order": 2190,
+            "visibleByDefault": true
+          },
+          "activationPolicy": "nearViewport",
+          "tags": ["dense-region", "lower-garden", "occluder", "depth"]
         }
       ]
     }
