@@ -13,12 +13,17 @@ const handoffRoot = path.join(
   repoRoot,
   "design/claude-design/handoffs/stage-4g-dense-region-v1",
 );
+const designRoot = path.join(repoRoot, "design/claude-design");
+const resourcesRoot = path.join(repoRoot, "cocos/assets/resources");
 const configPath = path.join(
   repoRoot,
   "cocos/assets/resources/config/demo-gameplay.json",
 );
 const manifest = readJson(path.join(intakeRoot, "manifest.json"));
 const template = readJson(path.join(handoffRoot, "manifest-template.json"));
+const runtimeManifest = readJson(
+  path.join(designRoot, "dense-region-asset-manifest.json"),
+);
 const gameplayConfig = readJson(configPath);
 const failures = [];
 
@@ -58,6 +63,7 @@ expectJson(
   [...manifestById.keys()].sort(),
   [...templateById.keys()].sort(),
 );
+validateRuntimePromotion();
 
 if (failures.length > 0) {
   for (const failure of failures) {
@@ -106,6 +112,149 @@ function validateAsset(asset, expected) {
   }
   if (asset.kind === "foregroundOccluder") {
     validateOccluder(asset, expected, label);
+  }
+}
+
+function validateRuntimePromotion() {
+  expectEqual("runtime manifest version", runtimeManifest.version, 1);
+  expectEqual("runtime manifest batchId", runtimeManifest.batchId, manifest.batchId);
+  expectJson("runtime manifest region", runtimeManifest.region.bounds, manifest.region.bounds);
+  const deliveredById = new Map(
+    manifest.assets.map((asset) => [asset.assetId, asset]),
+  );
+  const entitiesById = new Map(
+    (gameplayConfig.sceneEntitySets ?? []).flatMap((set) =>
+      (set.entities ?? []).map((entity) => [entity.entityId, entity]),
+    ),
+  );
+  const profilesById = new Map(
+    (gameplayConfig.motionProfiles ?? []).map((profile) => [
+      profile.motionProfileId,
+      profile,
+    ]),
+  );
+  const targetPointsById = new Map(
+    gameplayConfig.targetPointSets.flatMap((set) =>
+      set.targetPoints.map((target) => [target.targetId, target]),
+    ),
+  );
+
+  for (const accepted of runtimeManifest.assets ?? []) {
+    const delivered = deliveredById.get(accepted.assetId);
+    if (!delivered) {
+      failures.push(`${accepted.assetId} is missing from delivered manifest`);
+      continue;
+    }
+    validatePromotedFiles(accepted, delivered);
+    const entity = entitiesById.get(accepted.entityId);
+    if (!entity) {
+      failures.push(`${accepted.assetId} runtime entity is missing: ${accepted.entityId}`);
+      continue;
+    }
+    const expectedAsset = accepted.runtimePath
+      ? accepted.runtimePath
+      : `${accepted.runtimeDirectory}/${accepted.frameFiles[0].replace(/\.png$/, "")}`;
+    expectEqual(`${accepted.assetId}.entity.asset`, entity.asset, expectedAsset);
+    expectEqual(`${accepted.assetId}.entity.kind`, entity.kind, accepted.kind);
+    expectJson(`${accepted.assetId}.entity.transform`, entity.transform, accepted.transform);
+    expectEqual(
+      `${accepted.assetId}.entity.render.layer`,
+      entity.render.layer,
+      accepted.render.layer,
+    );
+    expectEqual(
+      `${accepted.assetId}.entity.render.order`,
+      entity.render.order,
+      accepted.render.order,
+    );
+    expectEqual(
+      `${accepted.assetId}.entity.render.visibleByDefault`,
+      entity.render.visibleByDefault,
+      true,
+    );
+    expectEqual(
+      `${accepted.assetId}.entity.activationPolicy`,
+      entity.activationPolicy,
+      accepted.activationPolicy,
+    );
+    if (accepted.activationTargetEntityIds !== undefined) {
+      expectJson(
+        `${accepted.assetId}.entity.activationTargetEntityIds`,
+        entity.activationTargetEntityIds,
+        accepted.activationTargetEntityIds,
+      );
+    }
+    if (accepted.motionProfileId) {
+      expectEqual(
+        `${accepted.assetId}.entity.motionProfileId`,
+        entity.motionProfileId,
+        accepted.motionProfileId,
+      );
+      const profile = profilesById.get(accepted.motionProfileId);
+      const expectedFrames = accepted.frameFiles.map(
+        (frameFile) =>
+          `${accepted.runtimeDirectory}/${frameFile.replace(/\.png$/, "")}`,
+      );
+      const variant = profile?.idleVariants?.find(
+        (candidate) =>
+          JSON.stringify(candidate.frameAssets) === JSON.stringify(expectedFrames),
+      );
+      if (!variant) {
+        failures.push(
+          `${accepted.assetId} motion profile does not reference promoted frames`,
+        );
+      }
+      expectEqual(
+        `${accepted.assetId}.actualBaselineY`,
+        accepted.actualBaselineY,
+        455,
+      );
+    }
+    if (accepted.targetPointId) {
+      const targetPoint = targetPointsById.get(accepted.targetPointId);
+      if (!targetPoint?.concealment?.occluderEntityIds?.includes(accepted.entityId)) {
+        failures.push(
+          `${accepted.assetId} is not bound to target ${accepted.targetPointId}`,
+        );
+      }
+    }
+  }
+}
+
+function validatePromotedFiles(accepted, delivered) {
+  if (accepted.sourceFile) {
+    const sourcePath = path.join(designRoot, accepted.sourceFile);
+    const runtimePath = path.join(resourcesRoot, `${accepted.runtimePath}.png`);
+    validatePromotedFile(sourcePath, runtimePath, delivered.sha256, accepted.assetId);
+    return;
+  }
+  for (const frameFile of accepted.frameFiles ?? []) {
+    const sourcePath = path.join(designRoot, accepted.sourceDirectory, frameFile);
+    const runtimePath = path.join(resourcesRoot, accepted.runtimeDirectory, frameFile);
+    validatePromotedFile(
+      sourcePath,
+      runtimePath,
+      delivered.sha256ByFrame?.[frameFile],
+      `${accepted.assetId}/${frameFile}`,
+    );
+  }
+}
+
+function validatePromotedFile(sourcePath, runtimePath, expectedHash, label) {
+  if (!fs.existsSync(sourcePath)) {
+    failures.push(`${label} accepted source is missing`);
+    return;
+  }
+  if (!fs.existsSync(runtimePath)) {
+    failures.push(`${label} runtime PNG is missing`);
+    return;
+  }
+  const sourceHash = sha256(sourcePath);
+  if (sourceHash !== expectedHash) {
+    failures.push(`${label} accepted source differs from delivered hash`);
+  }
+  if (sha256(runtimePath) !== sourceHash) {
+    failures.push(`${label} runtime PNG differs from accepted source`);
   }
 }
 

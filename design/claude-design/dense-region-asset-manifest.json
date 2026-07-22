@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "batchId": "findscape_dense_region_batch_v1",
+  "designTool": "Claude Design",
+  "sourceManifest": "intake/20260722-dense-region/manifest.json",
+  "region": {
+    "regionId": "region_lower_garden_v1",
+    "mapId": "demo_cozy_town",
+    "bounds": { "x": 320, "y": 1500, "width": 1000, "height": 760 }
+  },
+  "normalizations": [
+    "Design layers map to staticDecoration, ambientActor, and foregroundOccluder.",
+    "regionVisible activation maps to nearViewport until Stage 4H region activation.",
+    "Both delivered actor baselines normalize from declared y=450 to measured y=455.",
+    "Target occluders use scale 0.61 and proportionally adjusted offsets because runtime targets use a 140x140 custom canvas instead of preview scale 0.45."
+  ],
+  "assets": [
+    {
+      "assetId": "garden_picnic_basket",
+      "entityId": "entity_dense_garden_picnic_basket",
+      "sourceFile": "source/dense_lower_garden/static/garden_picnic_basket.png",
+      "runtimePath": "art/dense/lower_garden/garden_picnic_basket",
+      "kind": "decoration",
+      "transform": {
+        "position": { "x": 570, "y": 1710 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.2 }
+      },
+      "render": { "layer": "staticDecoration", "order": 1710 },
+      "activationPolicy": "nearViewport"
+    },
+    {
+      "assetId": "garden_planter_cluster",
+      "entityId": "entity_dense_garden_planter_cluster",
+      "sourceFile": "source/dense_lower_garden/static/garden_planter_cluster.png",
+      "runtimePath": "art/dense/lower_garden/garden_planter_cluster",
+      "kind": "decoration",
+      "transform": {
+        "position": { "x": 395, "y": 1925 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.18 }
+      },
+      "render": { "layer": "staticDecoration", "order": 1935 },
+      "activationPolicy": "nearViewport"
+    },
+    {
+      "assetId": "garden_scattered_toys",
+      "entityId": "entity_dense_garden_scattered_toys",
+      "sourceFile": "source/dense_lower_garden/static/garden_scattered_toys.png",
+      "runtimePath": "art/dense/lower_garden/garden_scattered_toys",
+      "kind": "decoration",
+      "transform": {
+        "position": { "x": 960, "y": 1880 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.2 }
+      },
+      "render": { "layer": "staticDecoration", "order": 1880 },
+      "activationPolicy": "nearViewport"
+    },
+    {
+      "assetId": "garden_blue_glass_cluster",
+      "entityId": "entity_dense_garden_blue_glass_cluster",
+      "sourceFile": "source/dense_lower_garden/static/garden_blue_glass_cluster.png",
+      "runtimePath": "art/dense/lower_garden/garden_blue_glass_cluster",
+      "kind": "decoration",
+      "transform": {
+        "position": { "x": 1065, "y": 2130 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.2 }
+      },
+      "render": { "layer": "staticDecoration", "order": 2170 },
+      "activationPolicy": "nearViewport"
+    },
+    {
+      "assetId": "actor_gardener_kneeling",
+      "entityId": "entity_dense_actor_gardener",
+      "sourceDirectory": "source/dense_lower_garden/actors/actor_gardener_kneeling",
+      "runtimeDirectory": "art/dense/lower_garden/actor_gardener_kneeling",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "actualBaselineY": 455,
+      "kind": "actor",
+      "transform": {
+        "position": { "x": 760, "y": 1840 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.12 }
+      },
+      "render": { "layer": "ambientActor", "order": 1840 },
+      "activationPolicy": "nearViewport",
+      "motionProfileId": "dense_gardener_idle_frames"
+    },
+    {
+      "assetId": "actor_reader_seated",
+      "entityId": "entity_dense_actor_reader",
+      "sourceDirectory": "source/dense_lower_garden/actors/actor_reader_seated",
+      "runtimeDirectory": "art/dense/lower_garden/actor_reader_seated",
+      "frameFiles": [
+        "frame_00.png",
+        "frame_01.png",
+        "frame_02.png",
+        "frame_03.png",
+        "frame_04.png",
+        "frame_05.png"
+      ],
+      "actualBaselineY": 455,
+      "kind": "actor",
+      "transform": {
+        "position": { "x": 980, "y": 2070 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.12 }
+      },
+      "render": { "layer": "ambientActor", "order": 2070 },
+      "activationPolicy": "nearViewport",
+      "motionProfileId": "dense_reader_idle_frames"
+    },
+    {
+      "assetId": "occluder_puppy_planter",
+      "entityId": "entity_dense_occluder_puppy_planter",
+      "sourceFile": "source/dense_lower_garden/occluders/occluder_puppy_planter.png",
+      "runtimePath": "art/dense/lower_garden/occluder_puppy_planter",
+      "kind": "occluder",
+      "transform": {
+        "position": { "x": 458, "y": 1994 },
+        "scale": { "x": 0.61, "y": 0.61 },
+        "anchor": { "x": 0.5, "y": 0.15 }
+      },
+      "render": { "layer": "foregroundOccluder", "order": 2010 },
+      "activationPolicy": "modeSelected",
+      "activationTargetEntityIds": ["entity_demo_puppy_001"],
+      "targetPointId": "demo_puppy_001"
+    },
+    {
+      "assetId": "occluder_gem_flower_basket",
+      "entityId": "entity_dense_occluder_gem_basket",
+      "sourceFile": "source/dense_lower_garden/occluders/occluder_gem_flower_basket.png",
+      "runtimePath": "art/dense/lower_garden/occluder_gem_flower_basket",
+      "kind": "occluder",
+      "transform": {
+        "position": { "x": 1222, "y": 2099 },
+        "scale": { "x": 0.61, "y": 0.61 },
+        "anchor": { "x": 0.5, "y": 0.15 }
+      },
+      "render": { "layer": "foregroundOccluder", "order": 2120 },
+      "activationPolicy": "modeSelected",
+      "activationTargetEntityIds": ["entity_demo_gem_001"],
+      "targetPointId": "demo_gem_001"
+    },
+    {
+      "assetId": "occluder_lane_shrub",
+      "entityId": "entity_dense_occluder_lane_shrub",
+      "sourceFile": "source/dense_lower_garden/occluders/occluder_lane_shrub.png",
+      "runtimePath": "art/dense/lower_garden/occluder_lane_shrub",
+      "kind": "occluder",
+      "transform": {
+        "position": { "x": 740, "y": 2190 },
+        "scale": { "x": 1, "y": 1 },
+        "anchor": { "x": 0.5, "y": 0.15 }
+      },
+      "render": { "layer": "foregroundOccluder", "order": 2190 },
+      "activationPolicy": "nearViewport"
+    }
+  ]
+}
