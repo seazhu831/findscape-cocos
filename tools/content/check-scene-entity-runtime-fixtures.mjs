@@ -16,6 +16,7 @@ checkDemoModeProjection();
 checkFoundAndReset();
 checkSemanticLayerOrder();
 checkLegacyFallback();
+checkTargetLinkedActivation();
 
 if (failures.length > 0) {
   for (const failure of failures) {
@@ -24,7 +25,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Validated 4 scene entity runtime fixture groups");
+console.log("Validated 5 scene entity runtime fixture groups");
 
 function checkDemoModeProjection() {
   const registry = createRegistry(config);
@@ -139,6 +140,43 @@ function checkLegacyFallback() {
     true,
   );
   expectEqual("legacy selected count", interactiveIds(registry).length, 4);
+}
+
+function checkTargetLinkedActivation() {
+  const fixture = structuredClone(config);
+  fixture.sceneEntitySets[0].entities.push({
+    entityId: "fixture_puppy_occluder",
+    mapId: fixture.maps[0].mapId,
+    kind: "occluder",
+    asset: "art/targets/target_puppy",
+    transform: { position: { x: 490, y: 1990 } },
+    render: {
+      layer: "foregroundOccluder",
+      order: 2100,
+      visibleByDefault: true,
+    },
+    activationPolicy: "modeSelected",
+    activationTargetEntityIds: ["entity_demo_puppy_001"],
+    tags: ["fixture", "occluder"],
+  });
+  const registry = createRegistry(fixture);
+  registry.projectMode(selectTargets(fixture, "hidden_object_demo"));
+  expectEqual(
+    "linked occluder active with selected target",
+    registry.get("fixture_puppy_occluder")?.active,
+    true,
+  );
+  expectEqual(
+    "linked occluder remains non-interactive",
+    registry.get("fixture_puppy_occluder")?.interactive,
+    false,
+  );
+  registry.projectMode(selectTargets(fixture, "balloon_blast_demo"));
+  expectEqual(
+    "linked occluder inactive outside target mode",
+    registry.get("fixture_puppy_occluder")?.active,
+    false,
+  );
 }
 
 function createRegistry(gameplayConfig) {

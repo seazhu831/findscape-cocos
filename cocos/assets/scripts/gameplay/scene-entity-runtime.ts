@@ -40,6 +40,7 @@ export class SceneEntityRegistry {
   >();
   private readonly entityIdsByTargetId = new Map<string, string>();
   private selectedTargetIds = new Set<string>();
+  private selectedEntityIds = new Set<string>();
 
   constructor(input: SceneEntityRegistryInput) {
     const configuredEntities = input.sceneEntitySet?.entities ?? [];
@@ -67,6 +68,11 @@ export class SceneEntityRegistry {
     this.selectedTargetIds = new Set(
       selectedTargets.map((target) => target.targetId),
     );
+    this.selectedEntityIds = new Set(
+      selectedTargets
+        .map((target) => this.entityIdsByTargetId.get(target.targetId))
+        .filter((entityId): entityId is string => Boolean(entityId)),
+    );
     this.resetRound();
   }
 
@@ -76,8 +82,12 @@ export class SceneEntityRegistry {
         state.targetId && this.selectedTargetIds.has(state.targetId),
       );
       const activationPolicy = state.entity.activationPolicy ?? "always";
+      const linkedTargetSelected =
+        state.entity.activationTargetEntityIds?.some((entityId) =>
+          this.selectedEntityIds.has(entityId),
+        ) ?? false;
       const policyAllowsActivation =
-        activationPolicy !== "modeSelected" || selected;
+        activationPolicy !== "modeSelected" || selected || linkedTargetSelected;
       state.selected = selected;
       state.active =
         state.entity.render.visibleByDefault && policyAllowsActivation;
